@@ -40,6 +40,7 @@ func html_query() []model.Corp {
 	}
 
 	r := strings.NewReplacer("'", "\"")
+	r_br := strings.NewReplacer("\n", " ")
 
 	// Find each table
 	doc.Find("table").Each(func(index int, tablehtml *goquery.Selection) {
@@ -47,25 +48,26 @@ func html_query() []model.Corp {
 			var t model.Corp
 			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
 				td_txt :=  r.Replace(tablecell.Text()) 
+				td_txt2 :=  r_br.Replace(td_txt) 
 				if indexth == 0 {
-					t.Name = td_txt
+					t.Name = td_txt2
 				} else if indexth == 1 {
-					b, _ := strconv.Atoi(td_txt)
+					b, _ := strconv.Atoi(td_txt2)
 					t.Code = b
 				}else if indexth == 2 {
-					t.Industry = td_txt
+					t.Industry = td_txt2
 				}else if indexth == 3 {
-					t.Desc = td_txt
+					t.Desc = td_txt2
 				}else if indexth == 4 {
-					t.PublicDay = td_txt
+					t.PublicDay = td_txt2
 				}else if indexth == 5 {
-					t.SettlementMonth = td_txt
+					t.SettlementMonth = td_txt2
 				}else if indexth == 6 {
-					t.RprsnName = td_txt
+					t.RprsnName = td_txt2
 				}else if indexth == 7 {
-					t.Homepage = strings.TrimSpace(td_txt)
+					t.Homepage = strings.TrimSpace(td_txt2)
 				}else if indexth == 8 {
-					t.Location = td_txt
+					t.Location = td_txt2
 				}
 			})
 			if t.Name != ""{

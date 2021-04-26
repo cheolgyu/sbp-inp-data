@@ -21,8 +21,8 @@ CREATE TABLE "public"."corps" (
 ) WITH (oids = false);
 
 
-DROP FUNCTION IF EXISTS "crop_insert";
-CREATE FUNCTION crop_insert(name varchar(32), in_code INTEGER, industry varchar(32), summary varchar(32), public_day varchar(32), settlement_month varchar(32), rprsn_name varchar(32), homepage varchar(32), location varchar(32) )
+DROP FUNCTION IF EXISTS "corp_insert";
+CREATE FUNCTION corp_insert(name varchar(32), in_code INTEGER, industry varchar(32), summary varchar(32), public_day varchar(32), settlement_month varchar(32), rprsn_name varchar(32), homepage varchar(32), location varchar(32) )
  RETURNS integer  AS
  $BODY$
 DECLARE
