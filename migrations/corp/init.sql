@@ -1,28 +1,31 @@
 
 
-DROP TABLE IF EXISTS "corps";
-DROP SEQUENCE IF EXISTS corps_id_seq;
+DROP TABLE IF EXISTS "corps_basic";
+DROP SEQUENCE IF EXISTS corps_basic_id_seq;
 
-CREATE SEQUENCE corps_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;
-CREATE TABLE "public"."corps" (
-    "id" bigint DEFAULT nextval('corps_id_seq') NOT NULL,
-    "name" text,
-    "code" integer,
-    "industry" text,
-    "summary" text,
-    "public_day" text,
-    "settlement_month" text,
-    "rprsn_name" text,
-    "homepage" text,
-    "location" text,
+CREATE SEQUENCE corps_basic_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;
+CREATE TABLE "public"."corps_basic" (
+    "id" bigint DEFAULT nextval('corps_basic_id_seq') NOT NULL,
+    "full_code" text,
+    "short_code" text,
+    "full_name_kr" text,
+    "short_name_kr" text,
+    "full_name_eng" text,
+    "listing_date" text,
+    "market" text,
+    "securities_classification" text,
+    "department" text,
+    "stock_type" text,
+    "face_value" text,
+    "listed_stocks" integer,
     "created_date" timestamp,
     "updated_date" timestamp,
-    CONSTRAINT "corps_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "corps_basic_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 
 
-DROP FUNCTION IF EXISTS "corp_insert";
-CREATE FUNCTION corp_insert(name varchar(32), in_code INTEGER, industry varchar(32), summary varchar(32), public_day varchar(32), settlement_month varchar(32), rprsn_name varchar(32), homepage varchar(32), location varchar(32) )
+DROP FUNCTION IF EXISTS "corps_basic_insert";
+CREATE FUNCTION corps_basic_insert(full_code varchar(32), short_code varchar(32), full_name_kr varchar(32), short_name_kr varchar(32), full_name_eng varchar(32), listing_date varchar(32), market varchar(32), securities_classification varchar(32), department varchar(32), stock_type varchar(32), face_value varchar(32), listed_stocks varchar(32) )
  RETURNS integer  AS
  $BODY$
 DECLARE
@@ -34,8 +37,8 @@ BEGIN
     IF i_counter > 0 THEN
         UPDATE corps SET updated_date = current_timestamp WHERE code = in_code;
     ELSE 
-        INSERT INTO "corps" ("name", "code", "industry", "summary", "public_day", "settlement_month", "rprsn_name", "homepage", "location", "created_date", "updated_date")
-            VALUES (name, in_code, industry, summary , public_day, settlement_month, rprsn_name, homepage, location, current_timestamp, current_timestamp);
+        INSERT INTO "corps_basic" ("full_code", "short_code", "full_name_kr", "short_name_kr", "full_name_eng", "listing_date", "market", "securities_classification", "department", "stock_type", "face_value", "listed_stocks", "created_date", "updated_date")
+            VALUES (full_code, short_code, full_name_kr, short_name_kr , full_name_eng, listing_date, market, securities_classification, department,stock_type,face_value, listed_stocks,  current_timestamp, current_timestamp);
 
     END IF;
     RETURN i_counter;
