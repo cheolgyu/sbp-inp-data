@@ -1,4 +1,4 @@
-package download
+package kind_krx
 
 import (
 	"fmt"
@@ -62,7 +62,6 @@ func httpClient() *http.Client {
 
 func createFile() *os.File {
 	file, err := os.Create(fileName)
-
 	checkError(err)
 	return file
 }

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	//"corplist/download"
+	download "corplist/download/data_krx"
 	"corplist/parse"
 	"corplist/db"
 	"corplist/model"
@@ -15,9 +15,16 @@ var corp_list []model.Corp
 func main() {
 	fmt.Println("hello world ")
 
-	run()
-	mk_seed_file()
-	exec_sql()
+	//run()
+	//mk_seed_file()
+	//exec_sql()
+
+	test()
+
+}
+
+func test(){
+	download.Save()
 }
 
 func run(){

@@ -5,7 +5,7 @@
 POST http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd HTTP/1.1
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms%2FMDC%2FSTAT%2Fstandard%2FMDCSTAT01901
+mktId=ALL&share=1&csvxls_isNo=false&name=fileDown
 
 
 ### 전종목 기본정보 파일요청
