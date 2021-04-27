@@ -2,19 +2,16 @@ package model
 
 type Corp struct {
     Id     int
-    Name   string
-    Code     int
-	Industry string
-	//주요제품
-	Desc string
-	//상장일
-	PublicDay string
-	//결산월
-	SettlementMonth string
-	//대표자명
-	RprsnName string
-	//홈페이지
-	Homepage string
-	//지역
-	Location string
+    Full_code   string
+    Short_code     string
+	Full_name_kr string
+	Short_name_kr string
+	Full_name_eng string
+	Listing_date string
+	Market string
+	Securities_classification string
+	Department string
+	Stock_type string
+	Face_value string
+	Listed_stocks string
 }

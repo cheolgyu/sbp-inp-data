@@ -6,7 +6,6 @@ import (
 
 	"corplist/model"
 	"os"
-	"strconv"
 )
 
 func Mk_seed_file(seed []model.Corp){
@@ -27,7 +26,7 @@ func Mk_seed_file(seed []model.Corp){
 	}
 
 	for _, item := range seed {
-		_, err2 := f.WriteString(`SELECT "corp_insert" ('`+item.Name+`', '` + strconv.Itoa(item.Code)+`', '`+item.Industry+`', '`+item.Desc+`', '`+item.PublicDay+`', '`+item.SettlementMonth+`', '`+item.RprsnName+`', '`+item.Homepage+`', '`+item.Location+`');`+"\n")
+		_, err2 := f.WriteString(`SELECT "corps_basic_insert" ('`+item.Full_code+`', '` + item.Short_code+`', '`+item.Full_name_kr+`', '`+item.Short_name_kr+`', '`+item.Full_name_eng+`', '`+item.Listing_date+`', '`+item.Market+`', '`+item.Securities_classification+`', '`+item.Department+`', '`+item.Stock_type+`', '`+item.Face_value+`', '`+item.Listed_stocks+`');`+"\n")
 		if err2 != nil {
 			log.Fatal(err2)
 		}

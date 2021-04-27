@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	download "corplist/download/data_krx"
-	"corplist/parse"
+	parse "corplist/parse/xlsx"
 	"corplist/db"
 	"corplist/model"
 	"corplist/migrations"
@@ -15,46 +15,26 @@ var corp_list []model.Corp
 func main() {
 	fmt.Println("hello world ")
 
-	//run()
-	//mk_seed_file()
-	//exec_sql()
-
-	test()
+	make_corp_list()
 
 }
 
-func test(){
+func make_corp_list(){
 	download.Save()
+	corp_list = parse.Run()
+	mk_seed_file()
+	exec_sql()
 }
 
 func run(){
 	
-	
-	down_parse("stockMkt")
-	down_parse("kosdaqMkt")
-	down_parse("konexMkt")
+	download.Save()
 	
 	mk_seed_file()
 	exec_sql()
 }
 
-func down_parse(market string){
-	//download.Save(market)
-	list := parse.GoGet(market)
-	fmt.Println("목록수=", len(list))
 
-
-	if len(corp_list) == 0 {
-		corp_list = list 
-	}else {
-		temp_list2 := corp_list
-		temp_list := append(temp_list2,list...)
-		corp_list = temp_list
-		fmt.Println("누적=", len(corp_list))
-	}
-
-	fmt.Println("결과=", len(corp_list))
-}
 
 func mk_seed_file(){
 	migrations.Mk_seed_file(corp_list)

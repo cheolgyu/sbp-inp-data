@@ -10,9 +10,11 @@ import (
 )
 // http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201020103
 	
-const getcode_url string = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd"
+const get_code_url string = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd"
+const get_file_url string = "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd"
+
 var (
-	fileName2    string
+	fileName    string = "corps_basic.xlsx"
 )
 
 func Save() {
@@ -23,12 +25,11 @@ func Save() {
 
 func down_file(down_code string ){
 	// 파일명
-	fileName2 = "corps_basic.xlsx"
 	file := createFile()
 
 	
 	reqBody := bytes.NewBufferString("code="+down_code)
-    resp, err := http.Post("http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd", "application/x-www-form-urlencoded", reqBody)
+    resp, err := http.Post(get_file_url, "application/x-www-form-urlencoded", reqBody)
     if err != nil {
         panic(err)
     }
@@ -43,21 +44,17 @@ func down_file(down_code string ){
         panic(err)
     }
 
-
 }
 
 func createFile() *os.File {
-
-
-	file, err := os.Create(fileName2)
-
+	file, err := os.Create(fileName)
 	checkError(err)
 	return file
 }
 
 func down_code( ) string {
 	reqBody := bytes.NewBufferString("mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms%2FMDC%2FSTAT%2Fstandard%2FMDCSTAT01901")
-    resp, err := http.Post(getcode_url, "application/x-www-form-urlencoded", reqBody)
+    resp, err := http.Post(get_code_url, "application/x-www-form-urlencoded", reqBody)
     if err != nil {
         panic(err)
     }
