@@ -28,7 +28,18 @@ func make_corp_list(){
 }
 
 func make_old_stocks_quote(){
-	download_init_quote.Get("1111")
+
+	var test_list []model.Corp 
+
+	test_list = append( test_list,model.Corp {
+		Short_code: "095570",
+	})
+
+	test_list = append( test_list,model.Corp {	
+		Short_code: "009520",
+	})
+
+	download_init_quote.Get(test_list)
 	// 시작시간 history 테이블에 저장
 	// 전체 종목 select
 	// 종목하나 마다 네이버 다운로드

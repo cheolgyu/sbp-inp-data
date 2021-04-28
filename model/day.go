@@ -1,7 +1,7 @@
 package model
 
 type Day struct {
-	Date 			int
+	Date 			string
     OpenPrice     	int
     HighPrice     	int
 	LowPrice 		int
