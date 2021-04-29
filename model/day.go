@@ -7,5 +7,5 @@ type Day struct {
 	LowPrice 		int
 	ClosePrice   	int
     Volume 			int
-	ForeignerBurnoutRate float32
+	ForeignerBurnoutRate float64
 }
