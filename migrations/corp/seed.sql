@@ -175,11 +175,11 @@ SELECT "corps_basic_insert" ('KR7053270005', '053270', '구영테크', '구영�
 SELECT "corps_basic_insert" ('KR7007690001', '007690', '국도화학보통주', '국도화학', 'KukdoChemical', '1989/08/05', 'KOSPI', '주권', '', '보통주', '5000', '5810616');
 SELECT "corps_basic_insert" ('KR7005320007', '005320', '국동보통주', '국동', 'Kukdong', '1996/12/24', 'KOSPI', '주권', '', '보통주', '500', '52415269');
 SELECT "corps_basic_insert" ('KR7066620006', '066620', '국보디자인', '국보디자인', 'KUKBO DESIGN', '2002/09/05', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '7500000');
-SELECT "corps_basic_insert" ('KR7001140003', '001140', '국보보통주', '국보', 'KUKBO', '1989/12/02', 'KOSPI', '주권', '', '보통주', '500', '53213177');
+SELECT "corps_basic_insert" ('KR7001140003', '001140', '국보보통주', '국보', 'KUKBO', '1989/12/02', 'KOSPI', '주권', '', '보통주', '500', '53710964');
 SELECT "corps_basic_insert" ('KR7043650001', '043650', '국순당', '국순당', 'KOOK SOON DANG CO., LTD.', '2000/08/24', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '17858304');
 SELECT "corps_basic_insert" ('KR7006050009', '006050', '국영지앤엠', '국영지앤엠', 'KUK YOUNG G&M', '1994/10/07', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '34895243');
 SELECT "corps_basic_insert" ('KR7060480001', '060480', '국일신동', '국일신동', 'KUKIL METAL CO., LTD', '2014/12/29', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '11090000');
-SELECT "corps_basic_insert" ('KR7078130002', '078130', '국일제지', '국일제지', 'KUK-IL PAPER MFG CO.,LTD', '2004/10/22', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '127121255');
+SELECT "corps_basic_insert" ('KR7078130002', '078130', '국일제지', '국일제지', 'KUK-IL PAPER MFG CO.,LTD', '2004/10/22', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '127187409');
 SELECT "corps_basic_insert" ('KR7307750000', '307750', '국전약품', '국전약품', 'KUKJEON PHARMACEUTICAL Co.,Ltd', '2018/12/19', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '38538019');
 SELECT "corps_basic_insert" ('KR7002720001', '002720', '국제약품보통주', '국제약품', 'Kukje Pharma', '1975/12/27', 'KOSPI', '주권', '', '보통주', '1000', '19276090');
 SELECT "corps_basic_insert" ('KR7243870003', '243870', '굿센', '굿센', 'Goodcen', '2016/10/31', 'KONEX', '주권', '일반기업부', '보통주', '500', '1457951');
@@ -368,7 +368,7 @@ SELECT "corps_basic_insert" ('KR7009320003', '009320', '대우전자부품보통
 SELECT "corps_basic_insert" ('KR7042660001', '042660', '대우조선해양보통주', '대우조선해양', 'DAEWOOSHIPBUILDING&MARINEENGINEERING', '2001/02/02', 'KOSPI', '주권', '', '보통주', '5000', '107290669');
 SELECT "corps_basic_insert" ('KR7003090008', '003090', '대웅보통주', '대웅', 'Daewoong', '1973/06/26', 'KOSPI', '주권', '', '보통주', '500', '58141980');
 SELECT "corps_basic_insert" ('KR7069620003', '069620', '대웅제약보통주', '대웅제약', 'DAEWOONGPHARMACEUTICAL', '2002/11/01', 'KOSPI', '주권', '', '보통주', '2500', '11586575');
-SELECT "corps_basic_insert" ('KR7007680002', '007680', '대원', '대원', 'DAEWON CO., LTD.', '2017/12/01', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '12193100');
+SELECT "corps_basic_insert" ('KR7007680002', '007680', '대원', '대원', 'DAEWON CO., LTD.', '2017/12/01', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '12259501');
 SELECT "corps_basic_insert" ('KR7000430009', '000430', '대원강업보통주', '대원강업', 'DaewonKangup', '1977/06/22', 'KOSPI', '주권', '', '보통주', '500', '62000000');
 SELECT "corps_basic_insert" ('KR7048910004', '048910', '대원미디어', '대원미디어', 'DAEWON MEDIA CO.,LTD.', '2001/07/31', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '12578946');
 SELECT "corps_basic_insert" ('KR7005710009', '005710', '대원산업', '대원산업', 'Daewonsanup', '1993/06/21', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '20037600');
@@ -412,7 +412,7 @@ SELECT "corps_basic_insert" ('KR7067080002', '067080', '대화제약', '대화�
 SELECT "corps_basic_insert" ('KR7161570007', '161570', '더 미동', 'THE MIDONG', 'THE MIDONG Co,. Ltd', '2013/11/13', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '15582830');
 SELECT "corps_basic_insert" ('KR7298540006', '298540', '더네이쳐홀딩스', '더네이쳐홀딩스', 'THE NATURE HOLDINGS CO., LTD', '2020/07/27', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '7272328');
 SELECT "corps_basic_insert" ('KR7192080000', '192080', '더블유게임즈보통주', '더블유게임즈', 'DoubleUGames', '2019/03/12', 'KOSPI', '주권', '', '보통주', '500', '18374502');
-SELECT "corps_basic_insert" ('KR7073570004', '073570', '더블유아이', 'WI', 'WI Co.,Ltd.', '2004/01/06', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '78018420');
+SELECT "corps_basic_insert" ('KR7073570004', '073570', '더블유아이', 'WI', 'WI Co.,Ltd.', '2004/01/06', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '78634616');
 SELECT "corps_basic_insert" ('KR7299170001', '299170', '더블유에스아이', '더블유에스아이', 'WSI Co., Ltd.', '2018/09/21', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '29237963');
 SELECT "corps_basic_insert" ('KR7192410009', '192410', '더에이치큐', 'THQ', 'The HQ', '2014/08/14', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '28832135');
 SELECT "corps_basic_insert" ('KR7089230007', '089230', '더이앤엠', 'THE E&M', 'THE E&M Co., Ltd.', '2006/10/10', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '167851954');
@@ -714,7 +714,7 @@ SELECT "corps_basic_insert" ('KR7053030003', '053030', '바이넥스', '바이�
 SELECT "corps_basic_insert" ('KR7301300000', '301300', '바이브컴퍼니', '바이브컴퍼니', 'VAIV company Inc.', '2020/10/28', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '5394170');
 SELECT "corps_basic_insert" ('KR7064550007', '064550', '바이오니아', '바이오니아', 'BIONEER CORPORATION', '2005/12/29', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '25132038');
 SELECT "corps_basic_insert" ('KR7314930009', '314930', '바이오다인', '바이오다인', 'BIODYNE CO., LTD.', '2021/03/17', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '6168195');
-SELECT "corps_basic_insert" ('KR7208710004', '208710', '바이오로그디바이스', '바이오로그디바이스', 'BIOLOG DEVICE CO., LTD', '2014/12/24', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '29707760');
+SELECT "corps_basic_insert" ('KR7208710004', '208710', '바이오로그디바이스', '바이오로그디바이스', 'BIOLOG DEVICE CO., LTD', '2014/12/24', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '41431412');
 SELECT "corps_basic_insert" ('KR7142760008', '142760', '바이오리더스', '바이오리더스', 'Bioleaders Corporation', '2016/07/07', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '27412216');
 SELECT "corps_basic_insert" ('KR7086820008', '086820', '바이오솔루션', '바이오솔루션', 'Bio Solution Co.,Ltd.', '2018/08/20', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '8091426');
 SELECT "corps_basic_insert" ('KR7038460002', '038460', '바이오스마트', '바이오스마트', 'BioSmart Co., Ltd.', '2000/06/22', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '20087800');
@@ -743,7 +743,7 @@ SELECT "corps_basic_insert" ('KR7250000007', '250000', '보라티알', '보라�
 SELECT "corps_basic_insert" ('KR7002760007', '002760', '보락보통주', '보락', 'Bolak', '1989/11/30', 'KOSPI', '주권', '', '보통주', '200', '59900000');
 SELECT "corps_basic_insert" ('KR7003850005', '003850', '보령제약보통주', '보령제약', 'BoryungPharm', '1988/10/24', 'KOSPI', '주권', '', '보통주', '500', '52120000');
 SELECT "corps_basic_insert" ('KR7006910004', '006910', '보성파워텍', '보성파워텍', 'BOSUNG POWER TECHNOLOGY CO., LTD.', '1994/09/07', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '48256463');
-SELECT "corps_basic_insert" ('KR7000890004', '000890', '보해양조보통주', '보해양조', 'BohaeBrewery', '1988/09/23', 'KOSPI', '주권', '', '보통주', '500', '134574677');
+SELECT "corps_basic_insert" ('KR7000890004', '000890', '보해양조보통주', '보해양조', 'BohaeBrewery', '1988/09/23', 'KOSPI', '주권', '', '보통주', '500', '136785979');
 SELECT "corps_basic_insert" ('KR7226340008', '226340', '본느', '본느', 'Bonne Co., Ltd.', '2015/11/05', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '30699596');
 SELECT "corps_basic_insert" ('KR7206950008', '206950', '볼빅', '볼빅', 'Volvik', '2015/12/30', 'KONEX', '주권', '일반기업부', '보통주', '500', '4183333');
 SELECT "corps_basic_insert" ('KR7008470007', '008470', '부-스타', '부스타', 'BOOSTER CO., LTD', '2011/02/23', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '8404800');
@@ -919,7 +919,7 @@ SELECT "corps_basic_insert" ('KR7123420002', '123420', '선데이토즈', '선�
 SELECT "corps_basic_insert" ('KR7007610009', '007610', '선도전기보통주', '선도전기', 'SeondoElectric', '1989/11/30', 'KOSPI', '주권', '', '보통주', '500', '18000000');
 SELECT "corps_basic_insert" ('KR7067370007', '067370', '선바이오', '선바이오', 'SunBio', '2016/01/22', 'KONEX', '주권', '일반기업부', '보통주', '500', '11547681');
 SELECT "corps_basic_insert" ('KR7002820009', '002820', '선앤엘보통주', 'SUN&L', 'SUN&L', '1976/05/22', 'KOSPI', '주권', '', '보통주', '1000', '12607989');
-SELECT "corps_basic_insert" ('KR7171090004', '171090', '선익시스템', '선익시스템', 'SUNIC SYSTEM Co., Ltd.', '2017/09/20', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '9005399');
+SELECT "corps_basic_insert" ('KR7171090004', '171090', '선익시스템', '선익시스템', 'SUNIC SYSTEM Co., Ltd.', '2017/09/20', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '9029399');
 SELECT "corps_basic_insert" ('KR7136490000', '136490', '선진보통주', '선진', 'SUNJIN Co., Ltd', '2011/02/16', 'KOSPI', '주권', '', '보통주', '500', '23779604');
 SELECT "corps_basic_insert" ('KR7086710001', '086710', '선진뷰티사이언스', '선진뷰티사이언스', 'SUNJIN BEAUTY SCIENCE CO., LTD.', '2021/01/27', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '6115650');
 SELECT "corps_basic_insert" ('KR7014620009', '014620', '성광벤드', '성광벤드', 'SUNG KWANG BEND CO., LTD.', '2001/01/11', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '28600000');
@@ -1038,7 +1038,7 @@ SELECT "corps_basic_insert" ('KR7001000009', '001000', '신라섬유', '신라�
 SELECT "corps_basic_insert" ('KR7025870007', '025870', '신라에스지', '신라에스지', 'SILLA SG CO., LTD.', '1995/07/07', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '4000000');
 SELECT "corps_basic_insert" ('KR7215600008', '215600', '신라젠', '신라젠', 'SillaJen, Inc.', '2016/12/06', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '500', '71617125');
 SELECT "corps_basic_insert" ('KR7065350001', '065350', '신성델타테크', '신성델타테크', 'SHINSUNG DELTA TECH CO., LTD', '2004/08/06', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '27483948');
-SELECT "corps_basic_insert" ('KR7011930005', '011930', '신성이엔지보통주', '신성이엔지', 'SHINSUNG E&G', '1996/07/31', 'KOSPI', '주권', '', '보통주', '500', '202224036');
+SELECT "corps_basic_insert" ('KR7011930005', '011930', '신성이엔지보통주', '신성이엔지', 'SHINSUNG E&G', '1996/07/31', 'KOSPI', '주권', '', '보통주', '500', '202807796');
 SELECT "corps_basic_insert" ('KR7005390000', '005390', '신성통상보통주', '신성통상', 'ShinsungTongsang', '1975/12/22', 'KOSPI', '주권', '', '보통주', '500', '143708390');
 SELECT "corps_basic_insert" ('KR7034300004', '034300', '신세계건설', '신세계건설', 'ShinsegaeEngineering&Construction', '2002/06/17', 'KOSPI', '주권', '', '보통주', '5000', '4000000');
 SELECT "corps_basic_insert" ('KR7004170007', '004170', '신세계보통주', '신세계', 'Shinsegae Co.,Ltd', '1985/08/19', 'KOSPI', '주권', '', '보통주', '5000', '9845181');
@@ -1100,6 +1100,7 @@ SELECT "corps_basic_insert" ('KR7245450002', '245450', '씨앤에스링크', '�
 SELECT "corps_basic_insert" ('KR7023460009', '023460', '씨앤에이치', 'CNH', 'CNH CO., LTD.', '1994/10/07', 'KOSDAQ', '주권', '벤처기업부', '보통주', '2500', '37200000');
 SELECT "corps_basic_insert" ('KR7264660002', '264660', '씨앤지하이테크', '씨앤지하이테크', 'C&G Hi Tech Co., Ltd', '2018/01/25', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '8405480');
 SELECT "corps_basic_insert" ('KR7352700009', '352700', '씨앤투스성진', '씨앤투스성진', 'CNTUS SUNGJIN CO.,Ltd', '2021/01/28', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '9995531');
+SELECT "corps_basic_insert" ('KR7056730005', '056730', '씨앤티85', '씨앤티85', 'CNT85', '2002/01/04', 'KOSDAQ', '주권', '투자주의환기종목(소속부없음)', '보통주', '500', '70703912');
 SELECT "corps_basic_insert" ('KR7065770000', '065770', '씨에스', 'CS', 'CS CORPORATION', '2004/06/04', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '18835150');
 SELECT "corps_basic_insert" ('KR7297090003', '297090', '씨에스베어링', '씨에스베어링', 'CS BEARING Co., Ltd.', '2019/11/21', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '9580400');
 SELECT "corps_basic_insert" ('KR7083660001', '083660', '씨에스에이코스믹', 'CSA 코스믹', 'CSA COSMIC CO., LTD.', '2006/07/25', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '500', '37072045');
@@ -1154,7 +1155,7 @@ SELECT "corps_basic_insert" ('KR7143160000', '143160', '아이디스', '아이�
 SELECT "corps_basic_insert" ('KR7054800008', '054800', '아이디스홀딩스', '아이디스홀딩스', 'IDIS Holdings Co., Ltd.', '2001/09/27', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '10347756');
 SELECT "corps_basic_insert" ('KR7332370006', '332370', '아이디피', '아이디피', 'IDP Corp., Ltd.', '2020/08/24', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '6636863');
 SELECT "corps_basic_insert" ('KR7122900004', '122900', '아이마켓코리아보통주', '아이마켓코리아', 'iMarketKorea Inc.', '2010/07/30', 'KOSPI', '주권', '', '보통주', '500', '33428840');
-SELECT "corps_basic_insert" ('KR7339950008', '339950', '아이비김영', '아이비김영', 'IBKIMYOUNG CO.,LTD.', '2019/12/24', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '42486655');
+SELECT "corps_basic_insert" ('KR7339950008', '339950', '아이비김영', '아이비김영', 'IBKIMYOUNG CO.,LTD.', '2019/12/24', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '44946655');
 SELECT "corps_basic_insert" ('KR7335870002', '335870', '아이비케이에스제12호기업인수목적', 'IBKS제12호스팩', 'IBKS No.12 Special Purpose Acquisition Company', '2019/12/09', 'KOSDAQ', '주권', 'SPAC(소속부없음)', '보통주', '100', '3120000');
 SELECT "corps_basic_insert" ('KR7351340005', '351340', '아이비케이에스제13호기업인수목적', 'IBKS제13호스팩', 'IBKS No.13 Special Purpose Acquisition Company', '2020/07/15', 'KOSDAQ', '주권', 'SPAC(소속부없음)', '보통주', '100', '5170000');
 SELECT "corps_basic_insert" ('KR7351320007', '351320', '아이비케이에스제14호기업인수목적', 'IBKS제14호스팩', 'IBKS No.14 Special Purpose Acquisition Company', '2020/06/22', 'KOSDAQ', '주권', 'SPAC(소속부없음)', '보통주', '100', '4330000');
@@ -1172,7 +1173,6 @@ SELECT "corps_basic_insert" ('KR7038880001', '038880', '아이에이', '아이�
 SELECT "corps_basic_insert" ('KR7307180000', '307180', '아이엘사이언스', '아이엘사이언스', 'IL SCIENCE CO.,LTD.', '2018/12/21', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '21222023');
 SELECT "corps_basic_insert" ('KR7101390003', '101390', '아이엠', '아이엠', 'IM CO., LTD', '2008/07/23', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '42546444');
 SELECT "corps_basic_insert" ('KR7052220001', '052220', '아이엠비씨', 'iMBC', 'iMBC Co., Ltd.', '2005/01/21', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '23000000');
-SELECT "corps_basic_insert" ('KR7090740002', '090740', '아이엠이연이', '아이엠이연이', 'IME YOUNYI Co., Ltd.', '2007/09/19', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '19126082');
 SELECT "corps_basic_insert" ('KR7226350007', '226350', '아이엠텍', '아이엠텍', 'IM Tech Inc.', '2016/02/03', 'KOSDAQ', '주권', '투자주의환기종목(소속부없음)', '보통주', '500', '4831715');
 SELECT "corps_basic_insert" ('KR7078860004', '078860', '아이오케이컴퍼니', '아이오케이', 'IOKCOMPANY Co., Ltd.', '2006/06/27', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '58545827');
 SELECT "corps_basic_insert" ('KR7114810005', '114810', '아이원스', '아이원스', 'IONES Co., Ltd.', '2013/02/07', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '25503174');
@@ -1251,7 +1251,7 @@ SELECT "corps_basic_insert" ('KR7046140000', '046140', '에스비에스콘텐츠
 SELECT "corps_basic_insert" ('KR7042110007', '042110', '에스씨디', '에스씨디', 'SCD CO.,LTD.', '2000/07/13', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '48329564');
 SELECT "corps_basic_insert" ('KR7036120004', '036120', '에스씨아이평가정보', 'SCI평가정보', 'SCI Information Service Inc.', '1999/12/07', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '35500000');
 SELECT "corps_basic_insert" ('KR7298060005', '298060', '에스씨엠생명과학', '에스씨엠생명과학', 'SCM Lifescience Co., Ltd.', '2020/06/17', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '11916042');
-SELECT "corps_basic_insert" ('KR7065420002', '065420', '에스아이리소스', '에스아이리소스', 'SI RESOURCES CO.,LTD.', '2002/08/22', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '100', '66340075');
+SELECT "corps_basic_insert" ('KR7065420002', '065420', '에스아이리소스', '에스아이리소스', 'SI RESOURCES CO.,LTD.', '2002/08/22', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '100', '68076186');
 SELECT "corps_basic_insert" ('KR7270210008', '270210', '에스알바이오텍', '에스알바이오텍', 'SR biotek', '2017/06/15', 'KONEX', '주권', '일반기업부', '보통주', '500', '806808');
 SELECT "corps_basic_insert" ('KR7103230009', '103230', '에스앤더블류', '에스앤더블류', 'S&W Corporation', '2009/08/05', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '500', '7200000');
 SELECT "corps_basic_insert" ('KR7260970009', '260970', '에스앤디', '에스앤디', 'S&D', '2016/12/29', 'KONEX', '주권', '일반기업부', '보통주', '500', '3036420');
@@ -1285,7 +1285,7 @@ SELECT "corps_basic_insert" ('KR7049470008', '049470', '에스지에이', 'SGA',
 SELECT "corps_basic_insert" ('KR7184230001', '184230', '에스지에이 솔루션즈', 'SGA솔루션즈', 'SGA Solutions Co.,Ltd.', '2013/12/20', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '38943605');
 SELECT "corps_basic_insert" ('KR7224880005', '224880', '에스지에이클라우드서비스', 'SGA클라우드서비스', 'SGA CloudService', '2017/05/23', 'KONEX', '주권', '일반기업부', '보통주', '500', '5418165');
 SELECT "corps_basic_insert" ('KR7040610008', '040610', '에스지엔지', 'SG&G', 'SG&G Corporation', '2000/04/27', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '34087196');
-SELECT "corps_basic_insert" ('KR7255220006', '255220', '에스지이', 'SG', 'SG CO., LTD.', '2018/01/26', 'KOSDAQ', '주권', '우량기업부', '보통주', '100', '37575483');
+SELECT "corps_basic_insert" ('KR7255220006', '255220', '에스지이', 'SG', 'SG CO., LTD.', '2018/01/26', 'KOSDAQ', '주권', '우량기업부', '보통주', '100', '38607930');
 SELECT "corps_basic_insert" ('KR7036490001', '036490', '에스케이 머티리얼즈', 'SK머티리얼즈', 'SK Materials Co., Ltd.', '1999/12/14', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '10547673');
 SELECT "corps_basic_insert" ('KR7006121008', '006125', '에스케이디스커버리1우선주', 'SK디스커버리우', 'SK Discovery Co.,Ltd.(1P)', '1989/11/24', 'KOSPI', '주권', '', '구형우선주', '5000', '1358455');
 SELECT "corps_basic_insert" ('KR7006120000', '006120', '에스케이디스커버리보통주', 'SK디스커버리', 'SK Discovery Co.,Ltd.', '1976/06/29', 'KOSPI', '주권', '', '보통주', '5000', '19037855');
@@ -1357,7 +1357,7 @@ SELECT "corps_basic_insert" ('KR7073070005', '073070', '에이팸', '에이팸',
 SELECT "corps_basic_insert" ('KR7207490004', '207490', '에이펙스인텍', '에이펙스인텍', 'APEX INTEC', '2018/11/28', 'KONEX', '주권', '일반기업부', '보통주', '500', '3600000');
 SELECT "corps_basic_insert" ('KR7262260003', '262260', '에이프로', '에이프로', 'A PRO Co., LTD', '2020/07/16', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '6880626');
 SELECT "corps_basic_insert" ('KR7003060001', '003060', '에이프로젠제약보통주', '에이프로젠제약', 'Aprogen pharmaceuticals,Inc.', '1984/10/19', 'KOSPI', '주권', '', '보통주', '500', '398575767');
-SELECT "corps_basic_insert" ('KR7007460009', '007460', '에이프로젠케이아이씨보통주', '에이프로젠 KIC', 'Aprogen KIC', '1995/07/08', 'KOSPI', '주권', '', '보통주', '500', '185959150');
+SELECT "corps_basic_insert" ('KR7007460009', '007460', '에이프로젠케이아이씨보통주', '에이프로젠 KIC', 'Aprogen KIC', '1995/07/08', 'KOSPI', '주권', '', '보통주', '500', '186134077');
 SELECT "corps_basic_insert" ('KR7109960005', '109960', '에이프로젠헬스케어앤게임즈', '에이프로젠 H&G', 'Aprogen Healthcare & Games Inc.', '2009/11/13', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '178695217');
 SELECT "corps_basic_insert" ('KR7244920005', '244920', '에이플러스에셋보통주', '에이플러스에셋', 'A Plus Asset', '2020/11/20', 'KOSPI', '주권', '', '보통주', '500', '22607693');
 SELECT "corps_basic_insert" ('KR7265520007', '265520', '에이피시스템', 'AP시스템', 'Advanced Process Systems Corporation', '2017/04/07', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '14480227');
@@ -1365,7 +1365,7 @@ SELECT "corps_basic_insert" ('KR7054620000', '054620', '에이피에스홀딩스
 SELECT "corps_basic_insert" ('KR7211270004', '211270', '에이피위성', 'AP위성', 'Asia Pacific Satellite Inc.', '2016/03/04', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '15082304');
 SELECT "corps_basic_insert" ('KR7089970008', '089970', '에이피티씨', '에이피티씨', 'APTC', '2018/08/23', 'KOSDAQ', '주권', '우량기업부', '보통주', '100', '23564595');
 SELECT "corps_basic_insert" ('KR7230240004', '230240', '에치에프알', '에치에프알', 'HFR, Inc.', '2015/12/16', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '12882020');
-SELECT "corps_basic_insert" ('KR7064510001', '064510', '에코마이스터', '에코마이스터', 'ECOMAISTER CO.,LTD', '2018/03/15', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '26691608');
+SELECT "corps_basic_insert" ('KR7064510001', '064510', '에코마이스터', '에코마이스터', 'ECOMAISTER CO.,LTD', '2018/03/15', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '40585051');
 SELECT "corps_basic_insert" ('KR7230360000', '230360', '에코마케팅', '에코마케팅', 'ECHOMARKETING Co.,Ltd.', '2016/08/08', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '32597874');
 SELECT "corps_basic_insert" ('KR7038870002', '038870', '에코바이오홀딩스', '에코바이오', 'EcoBio Holdings Co., Ltd.', '2001/05/29', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '11610994');
 SELECT "corps_basic_insert" ('KR7128540002', '128540', '에코캡', '에코캡', 'ECOCAB CO., LTD.', '2018/12/05', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '14558800');
@@ -1387,7 +1387,7 @@ SELECT "corps_basic_insert" ('KR7317870004', '317870', '엔바이오니아', '�
 SELECT "corps_basic_insert" ('KR7067570002', '067570', '엔브이에이치코리아', '엔브이에이치코리아', 'NVH KOREA INC.', '2013/12/03', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '32543588');
 SELECT "corps_basic_insert" ('KR7236810008', '236810', '엔비티', '엔비티', 'NBT INC.', '2021/01/21', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '100', '8487713');
 SELECT "corps_basic_insert" ('KR7140610007', '140610', '엔솔바이오사이언스', '엔솔바이오사이언스', 'Ensol Biosciences', '2018/09/10', 'KONEX', '주권', '일반기업부', '보통주', '500', '9604404');
-SELECT "corps_basic_insert" ('KR7333620003', '333620', '엔시스', '엔시스', 'Nsys Co., Ltd.', '2021/04/01', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '10402631');
+SELECT "corps_basic_insert" ('KR7333620003', '333620', '엔시스', '엔시스', 'Nsys Co., Ltd.', '2021/04/01', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '10556344');
 SELECT "corps_basic_insert" ('KR7101400000', '101400', '엔시트론', '엔시트론', 'N CITRON, INC.', '2009/03/31', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '500', '32295909');
 SELECT "corps_basic_insert" ('KR7036570000', '036570', '엔씨소프트보통주', '엔씨소프트', 'NCsoftCorporation', '2003/05/22', 'KOSPI', '주권', '', '보통주', '500', '21954022');
 SELECT "corps_basic_insert" ('KR7217820000', '217820', '엔에스', '엔에스', 'NS Co., Ltd', '2015/12/07', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '11293534');
@@ -1442,7 +1442,7 @@ SELECT "corps_basic_insert" ('KR7179290002', '179290', '엠아이텍', '엠아�
 SELECT "corps_basic_insert" ('KR7225860006', '225860', '엠앤씨생명과학', '엠앤씨생명과학', 'M&C Life Science', '2017/04/25', 'KONEX', '주권', '일반기업부', '보통주', '100', '11358092');
 SELECT "corps_basic_insert" ('KR7009780008', '009780', '엠에스씨', '엠에스씨', 'MSC', '1993/10/12', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '17600000');
 SELECT "corps_basic_insert" ('KR7123040008', '123040', '엠에스오토텍', '엠에스오토텍', 'MS AUTOTECH COMPANY, LIMITED', '2010/08/06', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '34727204');
-SELECT "corps_basic_insert" ('KR7323230003', '323230', '엠에프엠코리아', '엠에프엠코리아', 'MFM KOREA Co., Ltd.', '2019/06/19', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '18133724');
+SELECT "corps_basic_insert" ('KR7323230003', '323230', '엠에프엠코리아', '엠에프엠코리아', 'MFM KOREA Co., Ltd.', '2019/06/19', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '18981660');
 SELECT "corps_basic_insert" ('KR7032790008', '032790', '엠젠플러스', '엠젠플러스', 'MGENPLUS CO., LTD.', '1997/06/26', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '500', '24238321');
 SELECT "corps_basic_insert" ('KR7033160003', '033160', '엠케이전자', '엠케이전자', 'MKElectron', '1997/11/10', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '21807689');
 SELECT "corps_basic_insert" ('KR7347890006', '347890', '엠투아이코퍼레이션', '엠투아이', 'M2I CORPORATION', '2020/07/29', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '16798204');
@@ -1450,6 +1450,7 @@ SELECT "corps_basic_insert" ('KR7033310004', '033310', '엠투엔', '엠투엔',
 SELECT "corps_basic_insert" ('KR7259630002', '259630', '엠플러스', '엠플러스', 'mPlus Corp', '2017/09/20', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '11402436');
 SELECT "corps_basic_insert" ('KR7065150005', '065150', '엠피그룹', 'MP그룹', 'MP Group Inc.', '2007/07/18', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '100', '125040568');
 SELECT "corps_basic_insert" ('KR7115960007', '115960', '연우', '연우', 'YONWOO CO., LTD', '2015/11/02', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '12398000');
+SELECT "corps_basic_insert" ('KR7090740002', '090740', '연이비앤티', '연이비앤티', 'YOUNYI B&T Inc.', '2007/09/19', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '19126082');
 SELECT "corps_basic_insert" ('KR7060850005', '060850', '영림원소프트랩', '영림원소프트랩', 'YoungLimWon SoftLab. Co., Ltd.', '2020/08/12', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '8131000');
 SELECT "corps_basic_insert" ('KR7014440002', '014440', '영보화학보통주', '영보화학', 'YoungboChemical', '1997/08/27', 'KOSPI', '주권', '', '보통주', '500', '20000000');
 SELECT "corps_basic_insert" ('KR7007530009', '007530', '영신금속공업', '영신금속', 'YoungsinMetalIndustrial', '1994/08/05', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '12832968');
@@ -1532,7 +1533,7 @@ SELECT "corps_basic_insert" ('KR7215360009', '215360', '우리산업', '우리�
 SELECT "corps_basic_insert" ('KR7072470008', '072470', '우리산업홀딩스', '우리산업홀딩스', 'WOORY INDUSTRIAL HOLDINGS CO.,LTD.', '2003/10/28', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '18887341');
 SELECT "corps_basic_insert" ('KR7073560005', '073560', '우리손에프앤지 농업회사법인', '우리손에프앤지', 'Woorison F&G CO., LTD.', '2016/07/27', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '69237643');
 SELECT "corps_basic_insert" ('KR7153490008', '153490', '우리이앤엘', '우리이앤엘', 'WOOREE E&L CO.,Ltd.', '2013/02/05', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '49900000');
-SELECT "corps_basic_insert" ('KR7037400009', '037400', '우리조명', '우리조명', 'WOOREE LIGHTING CO.,LTD', '1999/12/16', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '24923346');
+SELECT "corps_basic_insert" ('KR7037400009', '037400', '우리조명', '우리조명', 'WOOREE LIGHTING CO.,LTD', '1999/12/16', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '25316346');
 SELECT "corps_basic_insert" ('KR7010050003', '010050', '우리종합금융보통주', '우리종금', 'Woori Investment Bank', '1974/09/11', 'KOSPI', '주권', '', '보통주', '500', '874203406');
 SELECT "corps_basic_insert" ('KR7101170009', '101170', '우림기계', '우림기계', 'WOORIM MACHINERY Co., Ltd.', '2009/04/28', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '13500000');
 SELECT "corps_basic_insert" ('KR7006980007', '006980', '우성사료보통주', '우성사료', 'WoosungFeed', '1988/10/10', 'KOSPI', '주권', '', '보통주', '5000', '3090000');
@@ -1548,7 +1549,7 @@ SELECT "corps_basic_insert" ('KR7010400000', '010400', '우진아이엔에스보
 SELECT "corps_basic_insert" ('KR7049800006', '049800', '우진플라임 보통주', '우진플라임', 'WOOJIN PLAIMM CO., LTD', '2006/05/24', 'KOSPI', '주권', '', '보통주', '500', '10000000');
 SELECT "corps_basic_insert" ('KR7016880007', '016880', '웅진보통주', '웅진', 'WOONGJIN', '1994/11/05', 'KOSPI', '주권', '', '보통주', '500', '79378330');
 SELECT "corps_basic_insert" ('KR7095720009', '095720', '웅진씽크빅 보통주', '웅진씽크빅', 'WOONGJIN THINKBIG CO., LTD.', '2007/05/31', 'KOSPI', '주권', '', '보통주', '500', '115505985');
-SELECT "corps_basic_insert" ('KR7005820006', '005820', '원림보통주', '원림', 'Wonlim', '1990/04/20', 'KOSPI', '주권', '', '보통주', '5000', '2200000');
+SELECT "corps_basic_insert" ('KR7005820006', '005820', '원림보통주', '원림', 'Wonlim', '1990/04/20', 'KOSPI', '주권', '', '보통주', '5000', '2297970');
 SELECT "corps_basic_insert" ('KR7307280008', '307280', '원바이오젠', '원바이오젠', 'Wonbiogen', '2018/12/05', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '34737566');
 SELECT "corps_basic_insert" ('KR7053080008', '053080', '원방테크', '원방테크', 'WONBANG TECH CO., LTD.', '2020/09/24', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '4294143');
 SELECT "corps_basic_insert" ('KR7032940009', '032940', '원익', '원익', 'WonIk', '1997/07/18', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '18193230');
@@ -1591,7 +1592,7 @@ SELECT "corps_basic_insert" ('KR7008600009', '008600', '윌비스보통주', '�
 SELECT "corps_basic_insert" ('HK0000449303', '900340', '윙입푸드홀딩스', '윙입푸드', 'WING YIP FOOD (CHINA) HOLDINGS GROUP LIMITED', '2018/11/30', 'KOSDAQ', '외국주권', '외국기업(소속부없음)', '보통주', '무액면', '47973428');
 SELECT "corps_basic_insert" ('KR7014830004', '014830', '유니드 보통주', '유니드', 'UNID', '2004/12/03', 'KOSPI', '주권', '', '보통주', '5000', '8889843');
 SELECT "corps_basic_insert" ('KR7036200004', '036200', '유니셈', '유니셈', 'UNION SEMICONDUCTOR EQUIPMENT&MATERIALS', '1999/12/10', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '30664223');
-SELECT "corps_basic_insert" ('KR7018000000', '018000', '유니슨', '유니슨', 'UNISON CO., LTD.', '1996/01/10', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '121679130');
+SELECT "corps_basic_insert" ('KR7018000000', '018000', '유니슨', '유니슨', 'UNISON CO., LTD.', '1996/01/10', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '121727378');
 SELECT "corps_basic_insert" ('KR7047400007', '047400', '유니온머티리얼보통주', '유니온머티리얼', 'Union Materials Corp.', '2009/09/29', 'KOSPI', '주권', '', '보통주', '500', '42000000');
 SELECT "corps_basic_insert" ('KR7000910000', '000910', '유니온보통주', '유니온', 'Union', '1996/07/03', 'KOSPI', '주권', '', '보통주', '500', '15611619');
 SELECT "corps_basic_insert" ('KR7203450002', '203450', '유니온커뮤니티', '유니온커뮤니티', 'Union community Co., Ltd.', '2016/12/07', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '14679007');
@@ -1705,7 +1706,7 @@ SELECT "corps_basic_insert" ('KR7079190005', '079190', '이엠따블유', 'EMW',
 SELECT "corps_basic_insert" ('KR7278990007', '278990', '이엠비', 'EMB', 'EMB', '2017/10/31', 'KONEX', '주권', '일반기업부', '보통주', '500', '3624222');
 SELECT "corps_basic_insert" ('KR7083470005', '083470', '이엠앤아이', '이엠앤아이', 'EMnI Co., Ltd.', '2008/09/18', 'KOSDAQ', '주권', '관리종목(소속부없음)', '보통주', '500', '22424515');
 SELECT "corps_basic_insert" ('KR7095190005', '095190', '이엠코리아', '이엠코리아', 'EMKOREA Co., LTD.', '2007/10/29', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '42581037');
-SELECT "corps_basic_insert" ('KR7091120006', '091120', '이엠텍', '이엠텍', 'EM-Tech. CO., LTD.', '2007/05/02', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '16060936');
+SELECT "corps_basic_insert" ('KR7091120006', '091120', '이엠텍', '이엠텍', 'EM-Tech. CO., LTD.', '2007/05/02', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '15887936');
 SELECT "corps_basic_insert" ('KR7232530006', '232530', '이엠티', '이엠티', 'Energy Material Tech', '2015/12/30', 'KONEX', '주권', '일반기업부', '보통주', '500', '14969643');
 SELECT "corps_basic_insert" ('KR7102460003', '102460', '이연제약보통주', '이연제약', 'REYON PHARMACEUTICAL', '2010/06/10', 'KOSPI', '주권', '', '보통주', '500', '17908795');
 SELECT "corps_basic_insert" ('KR7039030002', '039030', '이오테크닉스', '이오테크닉스', 'EO Technics Co., Ltd.', '2000/08/24', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '12319550');
@@ -1733,7 +1734,7 @@ SELECT "corps_basic_insert" ('KR7352940001', '352940', '인바이오', '인바�
 SELECT "corps_basic_insert" ('KR7101140002', '101140', '인바이오젠보통주', '인바이오젠', 'INBIOGEN', '2008/04/02', 'KOSPI', '주권', '', '보통주', '500', '51561397');
 SELECT "corps_basic_insert" ('KR7216400002', '216400', '인바이츠바이오코아', '인바이츠바이오코아', 'INVITES BIOCORE', '2015/06/29', 'KONEX', '주권', '일반기업부', '보통주', '500', '7711315');
 SELECT "corps_basic_insert" ('KR7079950002', '079950', '인베니아', '인베니아', 'INVENIA Co.,Ltd.', '2005/02/04', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '23200000');
-SELECT "corps_basic_insert" ('KR7277410007', '277410', '인산가', '인산가', 'INSAN Inc.', '2017/09/29', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '27709842');
+SELECT "corps_basic_insert" ('KR7277410007', '277410', '인산가', '인산가', 'INSAN Inc.', '2017/09/29', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '28175375');
 SELECT "corps_basic_insert" ('KR7060150000', '060150', '인선이엔티', '인선이엔티', 'INSUN ENVIRONMENTAL NEW TECHNOLOGY CO.', '2002/06/14', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '46563612');
 SELECT "corps_basic_insert" ('KR7033230004', '033230', '인성정보', '인성정보', 'INSUNG INFORMATION CO., LTD', '1999/07/30', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '37481284');
 SELECT "corps_basic_insert" ('KR7006490007', '006490', '인스코비보통주', '인스코비', 'Inscobee', '1985/01/17', 'KOSPI', '주권', '', '보통주', '500', '103494282');
@@ -1782,15 +1783,15 @@ SELECT "corps_basic_insert" ('KR7015860000', '015860', '일진홀딩스보통주
 SELECT "corps_basic_insert" ('KR7226320000', '226320', '잇츠한불보통주', '잇츠한불', 'ITSHANBUL', '2015/12/28', 'KOSPI', '주권', '', '보통주', '500', '21929315');
 SELECT "corps_basic_insert" ('KR8840110108', '950140', '잉글우드랩', '잉글우드랩', 'Englewood Lab, Inc.', '2016/10/14', 'KOSDAQ', '주식예탁증권', '외국기업(소속부없음)', '보통주', '0', '19867866');
 SELECT "corps_basic_insert" ('KR7049550007', '049550', '잉크테크', '잉크테크', 'INKTEC CO., LTD.', '2002/02/28', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '18419932');
-SELECT "corps_basic_insert" ('KR7254120009', '254120', '자비스', '자비스', 'XAVIS CO., Ltd.', '2016/12/02', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '100', '20334101');
+SELECT "corps_basic_insert" ('KR7254120009', '254120', '자비스', '자비스', 'XAVIS CO., Ltd.', '2016/12/02', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '100', '21028545');
 SELECT "corps_basic_insert" ('KR7221610009', '221610', '자안바이오', '자안바이오', 'JAANHBIO, INC.', '2016/01/27', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '281278275');
 SELECT "corps_basic_insert" ('KR7219550001', '219550', '자안코스메틱', '자안코스메틱', 'JAANH COSMETICS', '2015/07/22', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '79827864');
-SELECT "corps_basic_insert" ('KR7043910009', '043910', '자연과 환경', '자연과환경', 'Nature and Environment Co., Ltd.', '2005/11/18', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '54949833');
+SELECT "corps_basic_insert" ('KR7043910009', '043910', '자연과 환경', '자연과환경', 'Nature and Environment Co., Ltd.', '2005/11/18', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '55775809');
 SELECT "corps_basic_insert" ('KR7234920007', '234920', '자이글', '자이글', 'Zaigle Co., Ltd.', '2016/09/06', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '13530910');
 SELECT "corps_basic_insert" ('KR7289220006', '289220', '자이언트스텝', '자이언트스텝', 'GIANTSTEP Inc.', '2021/03/24', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '9427965');
 SELECT "corps_basic_insert" ('KR7317400000', '317400', '자이에스앤디보통주', '자이에스앤디', 'XI S&D', '2019/11/06', 'KOSPI', '주권', '', '보통주', '1000', '26782520');
 SELECT "corps_basic_insert" ('KR7033240003', '033240', '자화전자보통주', '자화전자', 'JahwaElectronics', '1999/01/06', 'KOSPI', '주권', '', '보통주', '500', '17900000');
-SELECT "corps_basic_insert" ('KR7174880005', '174880', '장원테크', '장원테크', 'JangWonTech Co., Ltd.', '2016/07/15', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '82305137');
+SELECT "corps_basic_insert" ('KR7174880005', '174880', '장원테크', '장원테크', 'JangWonTech Co., Ltd.', '2016/07/15', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '16461027');
 SELECT "corps_basic_insert" ('KR7049630007', '049630', '재영솔루텍', '재영솔루텍', 'JAEYOUNG SOLUTEC CO.,LTD.', '2003/01/24', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '73549141');
 SELECT "corps_basic_insert" ('KR7000950006', '000950', '전방보통주', '전방', 'Chonbang', '1968/10/21', 'KOSPI', '주권', '', '보통주', '5000', '1680000');
 SELECT "corps_basic_insert" ('KR7120780002', '120780', '전우정밀', '전우정밀', 'JEONWOO', '2016/12/23', 'KONEX', '주권', '일반기업부', '보통주', '500', '3100000');
@@ -1801,12 +1802,12 @@ SELECT "corps_basic_insert" ('KR7040420002', '040420', '정상제이엘에스', 
 SELECT "corps_basic_insert" ('KR7045510005', '045510', '정원엔시스', '정원엔시스', 'ZUNGWON EN-SYS INC.', '2000/09/07', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '32209292');
 SELECT "corps_basic_insert" ('KR7065620007', '065620', '제낙스', '제낙스', 'JENAX Inc.', '2002/06/27', 'KOSDAQ', '주권', '투자주의환기종목(소속부없음)', '보통주', '500', '4951894');
 SELECT "corps_basic_insert" ('KR7217190008', '217190', '제너셈', '제너셈', 'Genesem Inc.', '2015/09/25', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '8769174');
-SELECT "corps_basic_insert" ('KR7095700001', '095700', '제넥신', '제넥신', 'Genexine, Inc.', '2009/09/15', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '24871664');
+SELECT "corps_basic_insert" ('KR7095700001', '095700', '제넥신', '제넥신', 'Genexine, Inc.', '2009/09/15', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '24889331');
 SELECT "corps_basic_insert" ('KR7072520000', '072520', '제넨바이오', '제넨바이오', 'GenNBio Inc.', '2004/10/29', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '171127082');
 SELECT "corps_basic_insert" ('KR7122310006', '122310', '제노레이', '제노레이', 'GENORAY Co., Ltd.', '2018/05/28', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '14553844');
 SELECT "corps_basic_insert" ('KR7361390008', '361390', '제노코', '제노코', 'Genohco, Inc', '2021/03/24', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '2442140');
 SELECT "corps_basic_insert" ('KR7066830001', '066830', '제노텍', '제노텍', 'GENOTECH', '2016/07/18', 'KONEX', '주권', '일반기업부', '보통주', '500', '5667180');
-SELECT "corps_basic_insert" ('KR7225220003', '225220', '제놀루션', '제놀루션', 'GENOLUTION INC.', '2020/07/24', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '4783590');
+SELECT "corps_basic_insert" ('KR7225220003', '225220', '제놀루션', '제놀루션', 'GENOLUTION INC.', '2020/07/24', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '9567180');
 SELECT "corps_basic_insert" ('KR7123330003', '123330', '제닉', '제닉', 'Genic Co., Ltd', '2011/08/03', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '7000000');
 SELECT "corps_basic_insert" ('KR7159580000', '159580', '제로투세븐', '제로투세븐', 'Zero to Seven Inc', '2013/02/19', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '20032636');
 SELECT "corps_basic_insert" ('KR7147830004', '147830', '제룡산업', '제룡산업', 'CHERYONG INDUSTRIAL CO.,LTD.', '2012/02/13', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '10000000');
@@ -2046,7 +2047,7 @@ SELECT "corps_basic_insert" ('KR7192820009', '192820', '코스맥스보통주', 
 SELECT "corps_basic_insert" ('KR7044820009', '044820', '코스맥스비티아이 주식회사 보통주', '코스맥스비티아이', 'COSMAX BTI', '2006/11/13', 'KOSPI', '주권', '', '보통주', '500', '9603921');
 SELECT "corps_basic_insert" ('KR7222040008', '222040', '코스맥스엔비티', '코스맥스엔비티', 'COSMAX NBT, INC.', '2015/12/16', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '20628000');
 SELECT "corps_basic_insert" ('KR7241710003', '241710', '코스메카코리아', '코스메카코리아', 'COSMECCA KOREA CO.,LTD.', '2016/10/28', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '10680000');
-SELECT "corps_basic_insert" ('KR7005070008', '005070', '코스모신소재보통주', '코스모신소재', 'CosmoAM&T', '1987/09/28', 'KOSPI', '주권', '', '보통주', '1000', '29247965');
+SELECT "corps_basic_insert" ('KR7005070008', '005070', '코스모신소재보통주', '코스모신소재', 'CosmoAM&T', '1987/09/28', 'KOSPI', '주권', '', '보통주', '1000', '29835212');
 SELECT "corps_basic_insert" ('KR7005420005', '005420', '코스모화학보통주', '코스모화학', 'COSMOCHEMICALCO', '1987/07/23', 'KOSPI', '주권', '', '보통주', '1000', '27473609');
 SELECT "corps_basic_insert" ('KR7069110005', '069110', '코스온', '코스온', 'COSON Co., Ltd.', '2003/10/14', 'KOSDAQ', '주권', '투자주의환기종목(소속부없음)', '보통주', '500', '23940660');
 SELECT "corps_basic_insert" ('KR7071950000', '071950', '코아스보통주', '코아스', 'KOAS', '2005/08/04', 'KOSPI', '주권', '', '보통주', '500', '30907210');
@@ -2075,6 +2076,7 @@ SELECT "corps_basic_insert" ('KR7322780008', '322780', '코퍼스코리아', '�
 SELECT "corps_basic_insert" ('KR7126600006', '126600', '코프라', '코프라', 'KOPLA Co., LTD.', '2010/11/12', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '21115634');
 SELECT "corps_basic_insert" ('KR7200130003', '200130', '콜마비앤에이치', '콜마비앤에이치', 'KolmarBNH Co., Ltd', '2014/07/23', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '29543558');
 SELECT "corps_basic_insert" ('KR7031820004', '031820', '콤텍시스템보통주', '콤텍시스템', 'ComtecSystems', '1997/02/12', 'KOSPI', '주권', '', '보통주', '500', '67851466');
+SELECT "corps_basic_insert" ('KR7294570007', '294570', '쿠콘', '쿠콘', 'coocon Corporation', '2021/04/28', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '7945838');
 SELECT "corps_basic_insert" ('KR7192400000', '192400', '쿠쿠홀딩스보통주', '쿠쿠홀딩스', 'Cuckoo Holdings Co.,Ltd', '2014/08/06', 'KOSPI', '주권', '', '보통주', '500', '7112437');
 SELECT "corps_basic_insert" ('KR7284740008', '284740', '쿠쿠홈시스보통주', '쿠쿠홈시스', 'CUCKOO HOMESYS', '2018/01/11', 'KOSPI', '주권', '', '보통주', '100', '22437330');
 SELECT "corps_basic_insert" ('KR7317690006', '317690', '퀀타매트릭스', '퀀타매트릭스', 'QuantaMatrix Incorporated', '2020/12/09', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '14792724');
@@ -2082,7 +2084,7 @@ SELECT "corps_basic_insert" ('KR7060280005', '060280', '큐렉소', '큐렉소',
 SELECT "corps_basic_insert" ('KR7015590003', '015590', '큐로보통주', '큐로', 'CURO', '1989/05/27', 'KOSPI', '주권', '', '보통주', '500', '231211638');
 SELECT "corps_basic_insert" ('KR7040350001', '040350', '큐로컴', '큐로컴', 'CUROCOM Co.,Ltd', '2002/01/10', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '119466889');
 SELECT "corps_basic_insert" ('KR7051780005', '051780', '큐로홀딩스', '큐로홀딩스', 'CUROHOLDINGS Co., Ltd.', '2001/06/26', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '120600795');
-SELECT "corps_basic_insert" ('KR7115180002', '115180', '큐리언트', '큐리언트', 'Qurient Co., Ltd.', '2016/02/29', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '8843589');
+SELECT "corps_basic_insert" ('KR7115180002', '115180', '큐리언트', '큐리언트', 'Qurient Co., Ltd.', '2016/02/29', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '8877559');
 SELECT "corps_basic_insert" ('KR7043090000', '043090', '큐브앤컴퍼니', '큐브앤컴퍼니', 'Cube&Company Co., Ltd.', '2001/10/11', 'KOSDAQ', '주권', '투자주의환기종목(소속부없음)', '보통주', '500', '32590313');
 SELECT "corps_basic_insert" ('KR7182360008', '182360', '큐브엔터테인먼트', '큐브엔터', 'CUBE ENTERTAINMENT, INC.', '2013/11/21', 'KOSDAQ', '주권', '중견기업부', '보통주', '100', '34518838');
 SELECT "corps_basic_insert" ('KR7066310004', '066310', '큐에스아이', '큐에스아이', 'Q.S.I Co., Ltd.', '2006/11/24', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '8278230');
@@ -2158,7 +2160,7 @@ SELECT "corps_basic_insert" ('KR7246710008', '246710', '티앤알바이오팹', 
 SELECT "corps_basic_insert" ('KR7340570001', '340570', '티앤엘', '티앤엘', 'T&L Co., LTD.', '2020/11/20', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '4064000');
 SELECT "corps_basic_insert" ('KR7277880001', '277880', '티에스아이', '티에스아이', 'TSI Co., Ltd.', '2020/07/22', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '18534230');
 SELECT "corps_basic_insert" ('KR7131290009', '131290', '티에스이', '티에스이', 'TSE CO.,Ltd', '2011/01/05', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '11061429');
-SELECT "corps_basic_insert" ('KR7246690002', '246690', '티에스인베스트먼트', 'TS인베스트먼트', 'T.S.Investment Corporation', '2016/12/15', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '25708138');
+SELECT "corps_basic_insert" ('KR7246690002', '246690', '티에스인베스트먼트', 'TS인베스트먼트', 'T.S.Investment Corporation', '2016/12/15', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '26226810');
 SELECT "corps_basic_insert" ('KR7317240000', '317240', '티에스트릴리온', 'TS트릴리온', 'TS Trillion Co., Ltd.', '2019/04/29', 'KOSDAQ', '주권', '벤처기업부', '보통주', '100', '90349287');
 SELECT "corps_basic_insert" ('KR7019180009', '019180', '티에이치엔보통주', '티에이치엔', 'THN CORPORATION', '1996/07/31', 'KOSPI', '주권', '', '보통주', '500', '18000000');
 SELECT "corps_basic_insert" ('KR7356860007', '356860', '티엘비', '티엘비', 'TLB Co., Ltd.', '2020/12/14', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '4916315');
@@ -2174,7 +2176,7 @@ SELECT "corps_basic_insert" ('KR7104480009', '104480', '티케이케미칼', '�
 SELECT "corps_basic_insert" ('KR7309900009', '309900', '티티씨디펜스', '티티씨디펜스', 'TTC DEFENCE', '2019/06/27', 'KONEX', '주권', '일반기업부', '보통주', '500', '10000000');
 SELECT "corps_basic_insert" ('KR7081150005', '081150', '티플랙스', '티플랙스', 'Tplex Co., Ltd.', '2009/04/23', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '24268402');
 SELECT "corps_basic_insert" ('KR7130740004', '130740', '티피씨', '티피씨글로벌', 'TPC Co., Ltd.', '2011/02/08', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '11276679');
-SELECT "corps_basic_insert" ('KR7048770002', '048770', '티피씨메카트로닉스', 'TPC', 'TPC Mechatronics Corporation', '2001/01/16', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '14059181');
+SELECT "corps_basic_insert" ('KR7048770002', '048770', '티피씨메카트로닉스', 'TPC', 'TPC Mechatronics Corporation', '2001/01/16', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '14246504');
 SELECT "corps_basic_insert" ('KR7217880004', '217880', '틸론', '틸론', 'TILON', '2015/05/28', 'KONEX', '주권', '일반기업부', '보통주', '500', '3430317');
 SELECT "corps_basic_insert" ('KR7084730001', '084730', '팅크웨어', '팅크웨어', 'Thinkware Systems Corporation', '2006/05/19', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '10425682');
 SELECT "corps_basic_insert" ('KR7046210001', '046210', '파나진', '파나진', 'PANAGENE Inc.', '2000/08/16', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '32136660');
@@ -2185,7 +2187,7 @@ SELECT "corps_basic_insert" ('KR7214450009', '214450', '파마리서치', '파�
 SELECT "corps_basic_insert" ('KR7217950005', '217950', '파마리서치바이오', '파마리서치바이오', 'PHARMA RESEARCH BIO', '2015/11/05', 'KONEX', '주권', '일반기업부', '보통주', '500', '4049391');
 SELECT "corps_basic_insert" ('KR7208340000', '208340', '파멥신', '파멥신', 'PharmAbcine Inc.', '2018/11/21', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '14243029');
 SELECT "corps_basic_insert" ('KR7005690003', '005690', '파미셀보통주', '파미셀', 'Pharmicell', '1988/05/20', 'KOSPI', '주권', '', '보통주', '500', '59958950');
-SELECT "corps_basic_insert" ('KR7177830007', '177830', '파버나인', '파버나인', 'PAVONINE CO., LTD.', '2014/08/04', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '13906045');
+SELECT "corps_basic_insert" ('KR7177830007', '177830', '파버나인', '파버나인', 'PAVONINE CO., LTD.', '2014/08/04', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '14086143');
 SELECT "corps_basic_insert" ('KR7037070000', '037070', '파세코', '파세코', 'PASECO CO.LTD', '2000/01/04', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '14000000');
 SELECT "corps_basic_insert" ('KR7150900009', '150900', '파수', '파수', 'FASOO Co.,Ltd.', '2013/10/18', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '11153093');
 SELECT "corps_basic_insert" ('KR7037030004', '037030', '파워넷', '파워넷', 'POWERNET TECHNOLOGIES CORPORATION', '2018/06/07', 'KOSDAQ', '주권', '중견기업부', '보통주', '1000', '16500694');
@@ -2215,13 +2217,12 @@ SELECT "corps_basic_insert" ('KR7010820009', '010820', '퍼스텍보통주', '�
 SELECT "corps_basic_insert" ('KR7016800005', '016800', '퍼시스보통주', '퍼시스', 'Fursys', '1996/12/24', 'KOSPI', '주권', '', '보통주', '1000', '11500000');
 SELECT "corps_basic_insert" ('KR7263750002', '263750', '펄어비스', '펄어비스', 'PearlAbyss Corp.', '2017/09/14', 'KOSDAQ', '주권', '우량기업부', '보통주', '100', '66178000');
 SELECT "corps_basic_insert" ('KR7251970000', '251970', '펌텍코리아', '펌텍코리아', 'PUM-TECH KOREA CO., LTD.', '2019/07/04', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '12400000');
-SELECT "corps_basic_insert" ('KR7001020007', '001020', '페이퍼코리아보통주', '페이퍼코리아', 'PaperCorea Inc.', '1976/06/26', 'KOSPI', '주권', '', '보통주', '500', '37502728');
+SELECT "corps_basic_insert" ('KR7001020007', '001020', '페이퍼코리아보통주', '페이퍼코리아', 'PaperCorea Inc.', '1976/06/26', 'KOSPI', '주권', '', '보통주', '500', '37762333');
 SELECT "corps_basic_insert" ('KR7327610002', '327610', '펨토바이오메드', '펨토바이오메드', 'Femtobiomed', '2019/07/10', 'KONEX', '주권', '일반기업부', '보통주', '500', '5552045');
 SELECT "corps_basic_insert" ('KR7087010005', '087010', '펩트론', '펩트론', 'Peptron, Inc.', '2015/07/22', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '20626853');
 SELECT "corps_basic_insert" ('KR7090080003', '090080', '평화산업 주식회사 보통주', '평화산업', 'Pyung Hwa Industrial Co., Ltd.', '2006/06/02', 'KOSPI', '주권', '', '보통주', '500', '54902259');
 SELECT "corps_basic_insert" ('KR7010770006', '010770', '평화홀딩스보통주', '평화홀딩스', 'Pyung Hwa Holdings', '1986/03/31', 'KOSPI', '주권', '', '보통주', '500', '14625466');
 SELECT "corps_basic_insert" ('KR7119500007', '119500', '포메탈', '포메탈', 'FORMETAL CO., LTD', '2010/09/17', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '11847232');
-SELECT "corps_basic_insert" ('KR7056730005', '056730', '포스링크', '포스링크', 'Fourth-Link Inc.', '2002/01/04', 'KOSDAQ', '주권', '투자주의환기종목(소속부없음)', '보통주', '500', '70703912');
 SELECT "corps_basic_insert" ('KR7058430000', '058430', '포스코강판보통주', '포스코강판', 'POSCO COATED & COLOR STEEL', '2002/08/16', 'KOSPI', '주권', '', '보통주', '5000', '6000000');
 SELECT "corps_basic_insert" ('KR7005490008', '005490', '포스코보통주', 'POSCO', 'POSCO', '1988/06/10', 'KOSPI', '주권', '', '보통주', '5000', '87186835');
 SELECT "corps_basic_insert" ('KR7022100002', '022100', '포스코아이씨티', '포스코 ICT', 'POSCO ICT COMPANY LTD.', '2000/11/28', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '152034729');
@@ -2263,7 +2264,7 @@ SELECT "corps_basic_insert" ('KR7300080009', '300080', '플리토', '플리토',
 SELECT "corps_basic_insert" ('KR7150440006', '150440', '피노텍', '피노텍', 'Finotek', '2014/12/05', 'KONEX', '주권', '일반기업부', '보통주', '500', '9565412');
 SELECT "corps_basic_insert" ('KR7032580003', '032580', '피델릭스', '피델릭스', 'Fidelix Co., Ltd.', '1997/04/22', 'KOSDAQ', '주권', '벤처기업부', '보통주', '500', '33132064');
 SELECT "corps_basic_insert" ('KR7051380004', '051380', '피씨디렉트', '피씨디렉트', 'PC Direct, Inc.', '2002/02/15', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '7668536');
-SELECT "corps_basic_insert" ('KR7241820000', '241820', '피씨엘', '피씨엘', 'PCL. Inc', '2017/02/23', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '10078897');
+SELECT "corps_basic_insert" ('KR7241820000', '241820', '피씨엘', '피씨엘', 'PCL. Inc', '2017/02/23', 'KOSDAQ', '주권', '기술성장기업부', '보통주', '500', '10089397');
 SELECT "corps_basic_insert" ('KR7178920005', '178920', '피아이첨단소재', 'PI첨단소재', 'PI Advanced Materials Co., Ltd.', '2014/12/08', 'KOSDAQ', '주권', '우량기업부', '보통주', '500', '29366322');
 SELECT "corps_basic_insert" ('KR7237750005', '237750', '피앤씨테크', '피앤씨테크', 'PNC Technologies Co., Ltd.', '2016/07/04', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '6496600');
 SELECT "corps_basic_insert" ('KR7024850000', '024850', '피에스엠씨', '피에스엠씨', 'PSMC Co., Ltd', '2001/01/18', 'KOSDAQ', '주권', '중견기업부', '보통주', '500', '40016523');
