@@ -1,7 +1,7 @@
 
 -- name: create-quote-table-seed
 DROP TABLE IF EXISTS "quote_tb_238490";
-CREATE TABLE "public"."quote_tb_238490" (
+CREATE TABLE "quote"."quote_tb_238490" (
 	"Date" integer,
 	"OpenPrice" integer,
 	"HighPrice" integer,

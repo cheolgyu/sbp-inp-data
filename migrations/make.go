@@ -56,7 +56,7 @@ func Make_file_quote(short_code string , list []model.Day){
 	var str = `
 -- name: create-quote-table-seed
 DROP TABLE IF EXISTS "quote_tb_`+short_code+`";
-CREATE TABLE "public"."quote_tb_`+short_code+`" (
+CREATE TABLE "quote"."quote_tb_`+short_code+`" (
 	"Date" integer,
 	"OpenPrice" integer,
 	"HighPrice" integer,
