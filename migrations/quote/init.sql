@@ -69,12 +69,12 @@ $$ LANGUAGE plpgsql
 DROP TABLE IF EXISTS "high_point";
 CREATE TABLE "public"."high_point" (
     "short_code" text  NOT NULL UNIQUE,
-    "high_date" integer NOT NULL,
-    "high_price" integer NOT NULL,
+    "high_date" integer  NULL,
+    "high_price" integer  NULL,
     "last_date" integer NOT NULL,
     "last_close_price" integer NOT NULL,
-    "contrast_price" integer NOT NULL,
-    "fluctuation_rate" numeric NOT NULL,
+    "contrast_price" integer  NULL,
+    "fluctuation_rate" numeric  NULL,
     "created_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updated_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 ) WITH (oids = false);
@@ -97,23 +97,27 @@ DECLARE
     cur_last_close_price INTEGER;
     fr_contrast_price INTEGER;
     fr_fluctuation_rate numeric;
+
+    loop_cnt INTEGER;
 BEGIN
     i := 0;
-    EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "quote".quote_tb_%s order by "Date" desc limit 1 ', inp_short_code) INTO cur_last_date, cur_last_close_price ;  
+
+    EXECUTE format(' SELECT count("Date")  FROM "quote"."quote_tb_%s"', inp_short_code) INTO loop_cnt ;  
+    EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "quote"."quote_tb_%s" order by "Date" desc limit 1 ', inp_short_code) INTO cur_last_date, cur_last_close_price ;  
 
     LOOP
-        EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "quote".quote_tb_%s order by "Date" desc limit 1 offset %s', inp_short_code, i) INTO i_date ,i_price ;        
-        EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "quote".quote_tb_%s order by "Date" desc limit 1 offset %s', inp_short_code, i+1) INTO j_date ,j_price ;        
+        EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "quote"."quote_tb_%s" order by "Date" desc limit 1 offset %s', inp_short_code, i) INTO i_date ,i_price ;        
+        EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "quote"."quote_tb_%s" order by "Date" desc limit 1 offset %s', inp_short_code, i+1) INTO j_date ,j_price ;        
         
-        EXIT WHEN j_price <  i_price ;
+        EXIT WHEN j_price <  i_price or i > loop_cnt ;
         
         SELECT i+1 INTO i;
     END LOOP;
 
-    select  * into  fr_contrast_price, fr_fluctuation_rate  from fluctuation_rate(j_price, cur_last_close_price);
+    select  * into  fr_contrast_price, fr_fluctuation_rate  from public.fluctuation_rate(j_price, cur_last_close_price);
 
-    IF EXISTS ( SELECT * FROM  "high_point" tb_hp  WHERE tb_hp."short_code" = inp_short_code ) THEN
-        UPDATE "high_point"
+    IF EXISTS ( SELECT * FROM  "public"."high_point" tb_hp  WHERE tb_hp."short_code" = inp_short_code ) THEN
+        UPDATE "public"."high_point"
         SET "short_code" = inp_short_code,
             "high_date" = j_date,
             "high_price" = j_price,
@@ -126,7 +130,7 @@ BEGIN
            
         ;
     ELSE
-        INSERT INTO "high_point" ("short_code", "high_date", "high_price", "last_date", "last_close_price", "contrast_price", "fluctuation_rate")
+        INSERT INTO "public"."high_point" ("short_code", "high_date", "high_price", "last_date", "last_close_price", "contrast_price", "fluctuation_rate")
         VALUES (inp_short_code, j_date, j_price, cur_last_date, cur_last_close_price, fr_contrast_price, fr_fluctuation_rate   )
         ;
 
@@ -136,3 +140,57 @@ END;
 $$ LANGUAGE plpgsql
 ;
 
+
+
+-- loop  quote 스키마의 table to high_point
+DROP FUNCTION IF EXISTS "loop_quote_tb_to_high_point";
+CREATE OR REPLACE FUNCTION loop_quote_tb_to_high_point()
+RETURNS void  AS $$
+DECLARE
+    i integer ;
+    tb_cnt integer ; 
+    v_row record;
+BEGIN
+    i := 0;
+    select count(table_name) into tb_cnt from information_schema.tables where table_schema = 'quote';
+
+
+    FOR v_row IN (select replace(table_name,'quote_tb_','') as short_code from information_schema.tables where table_schema = 'quote' ) 
+        LOOP
+            PERFORM  insert_last_high_date(v_row.short_code);
+            RAISE NOTICE 'loading ...(%/%)', i, tb_cnt ;
+            SELECT i+1 INTO i;
+	    END LOOP;
+
+END;
+$$ LANGUAGE plpgsql
+;
+
+
+
+CREATE VIEW view_quote AS 
+SELECT 
+    cb.full_code,
+    cb.short_code,
+    cb.full_name_kr,
+    cb.short_name_kr,
+    cb.full_name_eng,
+    cb.listing_date,
+    cb.market,
+    cb.securities_classification,
+    cb.department,
+    cb.stock_type,
+    cb.face_value,
+    cb.listed_stocks,
+    cb.updated_date as corps_basic_updated_date,
+    hp.high_date,
+    hp.high_price,
+    hp.last_date,
+    hp.last_close_price,
+    hp.contrast_price,
+    hp.fluctuation_rate,
+    hp.updated_date as high_point_updated_date  
+
+from high_point hp  left join corps_basic cb on hp.short_code= cb.short_code 
+
+;
