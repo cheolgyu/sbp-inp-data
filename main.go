@@ -28,10 +28,11 @@ func make_init_corps(){
 }
 
 func make_init_old_stocks_quote(){
+	var schema_type = "day"
 
 	for index , item := range corp_list {
 		var qoute_list = download_init_quote.Get(item)
-		migrations.Make_file_quote(item.Short_code, qoute_list)
+		migrations.Make_file_quote(schema_type, item.Short_code, qoute_list)
 		sql.Create_Quote_Table()
 		
 		var str = fmt.Sprintf("make_init_old_stocks_quote (%v / %v) ",index ,len(corp_list))

@@ -40,7 +40,7 @@ func Make_file_corps_basic(seed []model.Corp){
 
 }
 
-func Make_file_quote(short_code string , list []model.Day){
+func Make_file_quote(schema_type string, short_code string , list []model.Day){
 	
     f, err := os.Create("migrations/quote/seed.sql")
 
@@ -55,8 +55,8 @@ func Make_file_quote(short_code string , list []model.Day){
 
 	var str = `
 -- name: create-quote-table-seed
-DROP TABLE IF EXISTS "quote_tb_`+short_code+`";
-CREATE TABLE "quote"."quote_tb_`+short_code+`" (
+DROP TABLE IF EXISTS "quote_`+schema_type+`"."tb_`+short_code+`";
+CREATE TABLE "quote_`+schema_type+`"."tb_`+short_code+`" (
 	"Date" integer,
 	"OpenPrice" integer,
 	"HighPrice" integer,
@@ -66,7 +66,7 @@ CREATE TABLE "quote"."quote_tb_`+short_code+`" (
 	"ForeignerBurnoutRate" double precision
 );
 
-INSERT INTO "quote_tb_`+short_code+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
+INSERT INTO "quote_`+schema_type+`"."tb_`+short_code+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
 VALUES 
 
 	`
