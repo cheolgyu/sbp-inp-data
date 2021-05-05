@@ -15,7 +15,18 @@ var corp_list []model.Corp
 
 func main() {
 	fmt.Println("hello world ")
+	test()
+	
+}
 
+func test(){
+	//var log  model.Log
+	var id  = sql.Create_log_uuid("aaa", "bbbb")
+
+	fmt.Println("hello world ",id)
+}
+
+func make_init(){
 	make_init_corps()
 	make_init_old_stocks_quote()
 }
