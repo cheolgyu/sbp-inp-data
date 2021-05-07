@@ -37,7 +37,7 @@ func Select_All() []model.Company{
 
 	defer rows.Close()
 
-	var corp_list []model.Company
+	var company_list []model.Company
 
 	for rows.Next() {
 		var corp model.Company
@@ -50,9 +50,9 @@ func Select_All() []model.Company{
 		if err != nil {
 			panic(err)
 		}
-		corp_list = append(corp_list,corp)
+		company_list = append(company_list,corp)
 
 	}
-	return corp_list
+	return company_list
 }
 

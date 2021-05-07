@@ -10,7 +10,7 @@ import (
 
 
 func Run() []model.Company {
-	var corp_list []model.Company
+	var company_list []model.Company
     fmt.Println("== xlsx package tutorial ==")
 
 	excelFileName := "listed_company.xlsx"
@@ -37,12 +37,12 @@ func Run() []model.Company {
 				item.Stock_type = txt_replace.Replace(row.Cells[9].String()) 
 				item.Face_value = txt_replace.Replace(row.Cells[10].String()) 
 				item.Listed_stocks = txt_replace.Replace(row.Cells[11].String()) 
-				corp_list = append(corp_list, item)
+				company_list = append(company_list, item)
 			}
 		} 
         
 		
     }
 	
-	return corp_list
+	return company_list
 }

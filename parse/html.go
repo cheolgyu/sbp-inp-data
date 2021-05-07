@@ -25,7 +25,7 @@ func GoGet(market_type string) []model.Company {
 }
 
 func html_query() []model.Company { 
-	var corp_list []model.Company
+	var company_list []model.Company
 
 	content, err := ioutil.ReadFile(marketType+".txt")
     if err != nil {
@@ -71,14 +71,14 @@ func html_query() []model.Company {
 				}
 			})
 			if t.Name != ""{
-				corp_list = append(corp_list, t)
+				company_list = append(company_list, t)
 			}
 			
 		})
 	})
-	fmt.Println("####### 마켓 = ",marketType,",len=", len(corp_list))
+	fmt.Println("####### 마켓 = ",marketType,",len=", len(company_list))
 
-	return corp_list
+	return company_list
 }
 
 func decodeToEUCKR(s string) (string, error) {
