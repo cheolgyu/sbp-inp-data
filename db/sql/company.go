@@ -9,11 +9,11 @@ import (
 )
 
 
-func Create_corp_seed(){
+func Create_company_seed(){
 	var db = conn.Conn()
 	defer db.Close()
 
-	dot,err := dotsql.LoadFromFile("migrations/corp/seed.sql")
+	dot,err := dotsql.LoadFromFile("migrations/company/seed.sql")
 
 	if err != nil {
 		panic(err)
@@ -40,17 +40,17 @@ func Select_All() []model.Company{
 	var company_list []model.Company
 
 	for rows.Next() {
-		var corp model.Company
+		var company model.Company
 
 		err = rows.Scan(
-			&corp.Id, &corp.Full_code, &corp.Short_code, &corp.Full_name_kr, &corp.Short_name_kr,
-			&corp.Full_name_eng, &corp.Listing_date, &corp.Market, &corp.Securities_classification, &corp.Department,
-			&corp.Stock_type, &corp.Face_value, &corp.Listed_stocks, &corp.Created_date, &corp.Updated_date)
+			&company.Id, &company.Full_code, &company.Short_code, &company.Full_name_kr, &company.Short_name_kr,
+			&company.Full_name_eng, &company.Listing_date, &company.Market, &company.Securities_classification, &company.Department,
+			&company.Stock_type, &company.Face_value, &company.Listed_stocks, &company.Created_date, &company.Updated_date)
 
 		if err != nil {
 			panic(err)
 		}
-		company_list = append(company_list,corp)
+		company_list = append(company_list, company)
 
 	}
 	return company_list

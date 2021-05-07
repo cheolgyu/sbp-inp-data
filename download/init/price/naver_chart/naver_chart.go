@@ -16,8 +16,8 @@ var (
 	short_code string
 )
 	
-func Get( corp model.Company)  []model.Day {
-	short_code = corp.Short_code
+func Get( company model.Company)  []model.Day {
+	short_code = company.Short_code
 	var t = time.Now()
 	endTime = fmt.Sprintf("%d%02d%02d",t.Year(), t.Month(), t.Day())
 	

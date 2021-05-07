@@ -10,7 +10,7 @@ import (
 
 func Make_file_listed_company(seed []model.Company){
 	
-    f, err := os.Create("migrations/corp/seed.sql")
+    f, err := os.Create("migrations/company/seed.sql")
 
     if err != nil {
         log.Fatal(err)

@@ -57,7 +57,7 @@ func make_init_company(){
 	download_init_company.Save()
 	company_list = parse.Run()
 	migrations.Make_file_listed_company(company_list)
-	sql.Create_corp_seed()
+	sql.Create_company_seed()
 }
 
 func make_init_old_stocks_price(){
