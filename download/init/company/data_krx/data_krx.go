@@ -14,7 +14,7 @@ const get_code_url string = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/gener
 const get_file_url string = "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd"
 
 var (
-	fileName    string = "corps_basic.xlsx"
+	fileName    string = "listed_company.xlsx"
 )
 
 func Save() {

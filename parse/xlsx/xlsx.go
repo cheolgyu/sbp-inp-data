@@ -9,11 +9,11 @@ import (
 )
 
 
-func Run() []model.Corp {
-	var corp_list []model.Corp
+func Run() []model.Company {
+	var corp_list []model.Company
     fmt.Println("== xlsx package tutorial ==")
 
-	excelFileName := "corps_basic.xlsx"
+	excelFileName := "listed_company.xlsx"
     xlFile, err := xlsx.OpenFile(excelFileName)
     if err != nil {
 		panic(err)
@@ -22,7 +22,7 @@ func Run() []model.Corp {
 		
 		for index, row := range sheet.Rows {
 			if index != 0 {
-				var item  model.Corp
+				var item  model.Company
 				txt_replace := strings.NewReplacer("'", " ")
 
 				item.Full_code = txt_replace.Replace(row.Cells[0].String()) 

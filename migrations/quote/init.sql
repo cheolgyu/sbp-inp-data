@@ -283,7 +283,7 @@ SELECT
     cb.stock_type,
     cb.face_value,
     cb.listed_stocks,
-    cb.updated_date as corps_basic_updated_date,
+    cb.updated_date as listed_company_updated_date,
     hp.high_date,
     hp.high_price,
     hp.last_date,
@@ -292,7 +292,7 @@ SELECT
     hp.fluctuation_rate,
     hp.updated_date as high_point_updated_date  
 
-from high_point_day hp  left join corps_basic cb on hp.short_code= cb.short_code 
+from high_point_day hp  left join listed_company cb on hp.short_code= cb.short_code 
 ;
 -- 사용자용 시세뷰 (일/주/월 )
 CREATE VIEW view_quote_week AS 
@@ -309,7 +309,7 @@ SELECT
     cb.stock_type,
     cb.face_value,
     cb.listed_stocks,
-    cb.updated_date as corps_basic_updated_date,
+    cb.updated_date as listed_company_updated_date,
     hp.high_date,
     hp.high_price,
     hp.last_date,
@@ -318,7 +318,7 @@ SELECT
     hp.fluctuation_rate,
     hp.updated_date as high_point_updated_date  
 
-from high_point_week hp  left join corps_basic cb on hp.short_code= cb.short_code 
+from high_point_week hp  left join listed_company cb on hp.short_code= cb.short_code 
 ;
 -- 사용자용 시세뷰 (일/주/월 )
 CREATE VIEW view_quote_month AS 
@@ -335,7 +335,7 @@ SELECT
     cb.stock_type,
     cb.face_value,
     cb.listed_stocks,
-    cb.updated_date as corps_basic_updated_date,
+    cb.updated_date as listed_company_updated_date,
     hp.high_date,
     hp.high_price,
     hp.last_date,
@@ -344,5 +344,5 @@ SELECT
     hp.fluctuation_rate,
     hp.updated_date as high_point_updated_date  
 
-from high_point_month hp  left join corps_basic cb on hp.short_code= cb.short_code 
+from high_point_month hp  left join listed_company cb on hp.short_code= cb.short_code 
 ;

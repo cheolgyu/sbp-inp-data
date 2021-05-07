@@ -49,7 +49,7 @@ func init() {
 			"high_point_day":{
 				"begin": "update-high_point_day-begin",
 			},
-		}
+		},
 
 	} 
 

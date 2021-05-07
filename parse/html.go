@@ -19,13 +19,13 @@ var (
 	marketType    string
 )
 
-func GoGet(market_type string) []model.Corp {
+func GoGet(market_type string) []model.Company {
 	marketType = market_type
 	return html_query()
 }
 
-func html_query() []model.Corp { 
-	var corp_list []model.Corp
+func html_query() []model.Company { 
+	var corp_list []model.Company
 
 	content, err := ioutil.ReadFile(marketType+".txt")
     if err != nil {
@@ -45,7 +45,7 @@ func html_query() []model.Corp {
 	// Find each table
 	doc.Find("table").Each(func(index int, tablehtml *goquery.Selection) {
 		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
-			var t model.Corp
+			var t model.Company
 			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
 				td_txt :=  r.Replace(tablecell.Text()) 
 				td_txt2 :=  r_br.Replace(td_txt) 

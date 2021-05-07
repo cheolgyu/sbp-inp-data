@@ -13,11 +13,11 @@ CREATE TABLE "public"."info" (
 
 -- 예상 
     -- INSERT INTO "info" ("name", "value", "updated_date")
-    -- VALUES ('init_corps', NULL, now())
+    -- VALUES ('init_company', NULL, now())
     -- ,('init_quotes_day', NULL, now()) 
     -- ,('init_quotes_week', NULL, now())
     -- ,('init_quotes_month', NULL, now())
-    -- ,('updated_corps', NULL, now())
+    -- ,('updated_company', NULL, now())
     -- ,('updated_quotes_day', NULL, now())
     -- ,('updated_quotes_week', NULL, now())
     -- ,('updated_quotes_month', NULL, now())

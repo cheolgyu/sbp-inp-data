@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	download_init_corps "corplist/download/init/corps/data_krx"
+	download_init_company "corplist/download/init/company/data_krx"
 	download_init_quote "corplist/download/init/quote/naver_chart"
 	parse "corplist/parse/xlsx"
 	"corplist/db/sql"
@@ -11,7 +11,7 @@ import (
 )
 
 
-var corp_list []model.Corp
+var corp_list []model.Company
 
 func main() {
 	fmt.Println("hello world ")
@@ -49,14 +49,14 @@ func test(){
 }
 
 func make_init(){
-	make_init_corps()
+	make_init_company()
 	make_init_old_stocks_quote()
 }
 
-func make_init_corps(){
-	download_init_corps.Save()
+func make_init_company(){
+	download_init_company.Save()
 	corp_list = parse.Run()
-	migrations.Make_file_corps_basic(corp_list)
+	migrations.Make_file_listed_company(corp_list)
 	sql.Create_corp_seed()
 }
 

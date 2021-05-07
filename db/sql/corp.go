@@ -19,17 +19,17 @@ func Create_corp_seed(){
 		panic(err)
 	}
 	// Run queries
-	_, err = dot.Exec(db, "create-corps-table-seed")
+	_, err = dot.Exec(db, "create-company-table-seed")
 	if err != nil {
 		panic(err)
 	}
 }
 
-func Select_All() []model.Corp{
+func Select_All() []model.Company{
 	var db = conn.Conn()
 	defer db.Close()
 
-	rows, err := db.Query(`SELECT * FROM  corps_basic` )
+	rows, err := db.Query(`SELECT * FROM  listed_company` )
 	
 	if err != nil {
 		panic(err)
@@ -37,10 +37,10 @@ func Select_All() []model.Corp{
 
 	defer rows.Close()
 
-	var corp_list []model.Corp
+	var corp_list []model.Company
 
 	for rows.Next() {
-		var corp model.Corp
+		var corp model.Company
 
 		err = rows.Scan(
 			&corp.Id, &corp.Full_code, &corp.Short_code, &corp.Full_name_kr, &corp.Short_name_kr,

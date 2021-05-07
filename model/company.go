@@ -1,6 +1,6 @@
 package model
 
-type Corp struct {
+type Company struct {
     Id     int
     Full_code   string
     Short_code     string

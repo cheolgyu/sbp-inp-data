@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func Make_file_corps_basic(seed []model.Corp){
+func Make_file_listed_company(seed []model.Company){
 	
     f, err := os.Create("migrations/corp/seed.sql")
 
@@ -19,14 +19,14 @@ func Make_file_corps_basic(seed []model.Corp){
     defer f.Close()
 
     
-	_, err2 := f.WriteString("-- name: create-corps-table-seed"+"\n")
+	_, err2 := f.WriteString("-- name: create-company-table-seed"+"\n")
 	
 	if err2 != nil {
 		log.Fatal(err2)
 	}
 
 	for _, item := range seed {
-		_, err2 := f.WriteString(`SELECT "corps_basic_insert" ('`+item.Full_code+`', '` + item.Short_code+`', '`+item.Full_name_kr+`', '`+item.Short_name_kr+`', '`+item.Full_name_eng+`', '`+item.Listing_date+`', '`+item.Market+`', '`+item.Securities_classification+`', '`+item.Department+`', '`+item.Stock_type+`', '`+item.Face_value+`', '`+item.Listed_stocks+`');`+"\n")
+		_, err2 := f.WriteString(`SELECT "insert_listed_company" ('`+item.Full_code+`', '` + item.Short_code+`', '`+item.Full_name_kr+`', '`+item.Short_name_kr+`', '`+item.Full_name_eng+`', '`+item.Listing_date+`', '`+item.Market+`', '`+item.Securities_classification+`', '`+item.Department+`', '`+item.Stock_type+`', '`+item.Face_value+`', '`+item.Listed_stocks+`');`+"\n")
 		if err2 != nil {
 			log.Fatal(err2)
 		}
