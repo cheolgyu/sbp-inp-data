@@ -7,7 +7,7 @@ import (
 )
 
 
-func Create_log_uuid(title string ,content string ) string {
+func Create_Log(title string ,content string ) string {
 	var id  string 
 	var db = conn.Conn()
 	defer db.Close()
@@ -19,20 +19,30 @@ func Create_log_uuid(title string ,content string ) string {
 	}
 	defer stmt.Close()
 
-
 	 err = stmt.QueryRow( title, content).Scan(&id)
 	
 	if err != nil {
 		panic(err)
 	}
-
-	// n, err := result.RowsAffected()
-	// if n !=1 {
-	// 	panic(err)
-	// }
-
-	
 	return id
+}
 
+func Create_Log_With_Up_id(up_id string, title string ,content string ) string {
+	var id  string 
+	var db = conn.Conn()
+	defer db.Close()
+
+	query := ` INSERT INTO "log" ("id", "up_id", "title", "content", "created_date") VALUES (uuid_generate_v4(), $1, $2, $3, now()) RETURNING id; ` 
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		panic(err)
+	}
+	defer stmt.Close()
+
+	 err = stmt.QueryRow( up_id, title, content).Scan(&id)
 	
+	if err != nil {
+		panic(err)
+	}
+	return id
 }
