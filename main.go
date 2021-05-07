@@ -20,10 +20,32 @@ func main() {
 }
 
 func test(){
-	//var log  model.Log
-	var id  = sql.Create_log_uuid("aaa", "bbbb")
+	
+	var id  = sql.Create_Log("init-기업목록", "시작")
+	// var id  = sql.Create_Log("init-기업목록", "다운로드")
+	// var id  = sql.Create_Log("init-기업목록", "다운로드 후 파싱")
+	// var id  = sql.Create_Log("init-기업목록", "다운로드 후 파싱 후 시드파일 생성")
+	// var id  = sql.Create_Log("init-기업목록", "다운로드 후 파싱 후 시드파일 생성 후 디비저장")
+	// var id  = sql.Create_Log("init-기업목록", "종료")
 
-	fmt.Println("hello world ",id)
+	// var id  = sql.Create_Log("init-시세", "시작")
+	// var id  = sql.Create_Log("init-시세", "다운로드")
+	// var id  = sql.Create_Log("init-시세", "다운로드 후 파싱")
+	// var id  = sql.Create_Log("init-시세", "다운로드 후 파싱 후 시드파일 생성")
+	// var id  = sql.Create_Log("init-시세", "다운로드 후 파싱 후 시드파일 생성 후 디비저장")
+	// var id  = sql.Create_Log("init-시세", "종료")
+
+	var id2 = sql.Create_Log_With_Up_id(id,"aaa", "bbbb")
+	var log = model.Log{}
+	log.Id = id
+
+	fmt.Println("hello world ", log)
+	fmt.Println("hello world ", id)
+	fmt.Println("hello world ", id2)
+
+
+
+
 }
 
 func make_init(){
