@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	download_init_company "corplist/download/init/company/data_krx"
-	download_init_quote "corplist/download/init/quote/naver_chart"
+	download_init_price "corplist/download/init/price/naver_chart"
 	parse "corplist/parse/xlsx"
 	"corplist/db/sql"
 	"corplist/model"
@@ -50,7 +50,7 @@ func test(){
 
 func make_init(){
 	make_init_company()
-	make_init_old_stocks_quote()
+	make_init_old_stocks_price()
 }
 
 func make_init_company(){
@@ -60,15 +60,15 @@ func make_init_company(){
 	sql.Create_corp_seed()
 }
 
-func make_init_old_stocks_quote(){
+func make_init_old_stocks_price(){
 	var schema_type = "day"
 
 	for index , item := range corp_list {
-		var qoute_list = download_init_quote.Get(item)
-		migrations.Make_file_quote(schema_type, item.Short_code, qoute_list)
-		sql.Create_Quote_Table()
+		var price_list = download_init_price.Get(item)
+		migrations.Make_file_price(schema_type, item.Short_code, price_list)
+		sql.Create_price_Table()
 		
-		var str = fmt.Sprintf("make_init_old_stocks_quote (%v / %v) ",index ,len(corp_list))
+		var str = fmt.Sprintf("make_init_old_stocks_price (%v / %v) ",index ,len(corp_list))
 		fmt.Println(str)	
 	}
 

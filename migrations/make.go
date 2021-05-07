@@ -40,9 +40,9 @@ func Make_file_listed_company(seed []model.Company){
 
 }
 
-func Make_file_quote(schema_type string, short_code string , list []model.Day){
+func Make_file_price(schema_type string, short_code string , list []model.Day){
 	
-    f, err := os.Create("migrations/quote/seed.sql")
+    f, err := os.Create("migrations/price/seed.sql")
 
     if err != nil {
         log.Fatal(err)
@@ -54,9 +54,9 @@ func Make_file_quote(schema_type string, short_code string , list []model.Day){
 	
 
 	var str = `
--- name: create-quote-table-seed
-DROP TABLE IF EXISTS "quote_`+schema_type+`"."tb_`+short_code+`";
-CREATE TABLE "quote_`+schema_type+`"."tb_`+short_code+`" (
+-- name: create-price-table-seed
+DROP TABLE IF EXISTS "price_`+schema_type+`"."tb_`+short_code+`";
+CREATE TABLE "price_`+schema_type+`"."tb_`+short_code+`" (
 	"Date" integer,
 	"OpenPrice" integer,
 	"HighPrice" integer,
@@ -66,7 +66,7 @@ CREATE TABLE "quote_`+schema_type+`"."tb_`+short_code+`" (
 	"ForeignerBurnoutRate" double precision
 );
 
-INSERT INTO "quote_`+schema_type+`"."tb_`+short_code+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
+INSERT INTO "price_`+schema_type+`"."tb_`+short_code+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
 VALUES 
 
 	`
@@ -88,6 +88,6 @@ VALUES
 		log.Fatal(err2)
 	}
 
-    //fmt.Println("done Make_file_quote "+short_code)
+    //fmt.Println("done Make_file_price "+short_code)
 
 }

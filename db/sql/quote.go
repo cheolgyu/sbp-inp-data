@@ -8,17 +8,17 @@ import (
 )
 
 
-func Create_Quote_Table(){
+func Create_price_Table(){
 	var db = conn.Conn()
 	defer db.Close()
 
-	dot,err := dotsql.LoadFromFile("migrations/quote/seed.sql")
+	dot,err := dotsql.LoadFromFile("migrations/price/seed.sql")
 
 	if err != nil {
 		panic(err)
 	}
 	// Run queries
-	_, err = dot.Exec(db, "create-quote-table-seed")
+	_, err = dot.Exec(db, "create-price-table-seed")
 	if err != nil {
 		panic(err)
 	}

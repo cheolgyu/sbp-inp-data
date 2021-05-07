@@ -25,26 +25,26 @@ func init() {
 				"insert": "init-corp-insert",
 				"end": "init-corp-end",
 			},
-			"quote_day": {
-				"start": "init-quote_day-begin",
-				"download": "init-quote_day-download",
-				"parse": "init-quote_day-parse",
-				"seed": "init-quote_day-seed",
-				"insert": "init-quote_day-insert",
-				"end": "init-quote_day-end",
+			"price_day": {
+				"start": "init-price_day-begin",
+				"download": "init-price_day-download",
+				"parse": "init-price_day-parse",
+				"seed": "init-price_day-seed",
+				"insert": "init-price_day-insert",
+				"end": "init-price_day-end",
 			},
 		},
 		"update":{
 			"corp":{
 				"begin": "Start the corp_basic update process",
 			},
-			"quote_day":{
-				"start": "Start the quote_day update process",
-				"download": "update-quote_day-download",
-				"parse": "update-quote_day-parse",
-				"seed": "update-quote_day-seed",
-				"insert": "update-quote_day-insert",
-				"end": "update-quote_day-end",
+			"price_day":{
+				"start": "Start the price_day update process",
+				"download": "update-price_day-download",
+				"parse": "update-price_day-parse",
+				"seed": "update-price_day-seed",
+				"insert": "update-price_day-insert",
+				"end": "update-price_day-end",
 			},
 			"high_point_day":{
 				"begin": "update-high_point_day-begin",

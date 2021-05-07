@@ -1,7 +1,7 @@
 
-CREATE SCHEMA "quote_day";
-CREATE SCHEMA "quote_week";
-CREATE SCHEMA "quote_month";
+CREATE SCHEMA "price_day";
+CREATE SCHEMA "price_week";
+CREATE SCHEMA "price_month";
 
 -- 기준일 기준 대비,등락률 구하기
 DROP FUNCTION IF EXISTS "fluctuation_rate";
@@ -55,11 +55,11 @@ DECLARE
     last_close_price INTEGER;
 BEGIN
     i := 0;
-    EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "quote".tb_%s order by "Date" desc limit 1 ', short_code) INTO last_date, last_close_price ;  
+    EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "price".tb_%s order by "Date" desc limit 1 ', short_code) INTO last_date, last_close_price ;  
 
     LOOP
-        EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "quote".tb_%s order by "Date" desc limit 1 offset %s', short_code, i) INTO i_date ,i_price ;        
-        EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "quote".tb_%s order by "Date" desc limit 1 offset %s', short_code, i+1) INTO j_date ,j_price ;        
+        EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "price".tb_%s order by "Date" desc limit 1 offset %s', short_code, i) INTO i_date ,i_price ;        
+        EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "price".tb_%s order by "Date" desc limit 1 offset %s', short_code, i+1) INTO j_date ,j_price ;        
         
         EXIT WHEN j_price <  i_price ;
         
@@ -134,12 +134,12 @@ DECLARE
 BEGIN
     i := 0;
 
-    EXECUTE format(' SELECT count("Date")  FROM "quote_%s"."tb_%s"', schema_type, inp_short_code) INTO loop_cnt ;  
-    EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "quote_%s"."tb_%s" order by "Date" desc limit 1 ', schema_type, inp_short_code) INTO cur_last_date, cur_last_close_price ;  
+    EXECUTE format(' SELECT count("Date")  FROM "price_%s"."tb_%s"', schema_type, inp_short_code) INTO loop_cnt ;  
+    EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "price_%s"."tb_%s" order by "Date" desc limit 1 ', schema_type, inp_short_code) INTO cur_last_date, cur_last_close_price ;  
 
     LOOP
-        EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "quote_%s"."tb_%s" order by "Date" desc limit 1 offset %s', schema_type, inp_short_code, i) INTO i_date ,i_price ;        
-        EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "quote_%s"."tb_%s" order by "Date" desc limit 1 offset %s', schema_type, inp_short_code, i+1) INTO j_date ,j_price ;        
+        EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "price_%s"."tb_%s" order by "Date" desc limit 1 offset %s', schema_type, inp_short_code, i) INTO i_date ,i_price ;        
+        EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "price_%s"."tb_%s" order by "Date" desc limit 1 offset %s', schema_type, inp_short_code, i+1) INTO j_date ,j_price ;        
         
         EXIT WHEN j_price <  i_price or i > loop_cnt ;
         
@@ -212,19 +212,19 @@ DECLARE
     v_row record;
     chk  integer ; 
 BEGIN
-    tb_schema := 'quote_' || schema_type;
+    tb_schema := 'price_' || schema_type;
     i := 0;
     select count(table_name) into tb_cnt from information_schema.tables where table_schema = tb_schema;
 
 
     FOR v_row IN (
         select 
-            table_name, replace(table_name,'quote_','') as short_code
+            table_name, replace(table_name,'price_','') as short_code
         from information_schema.tables where table_schema = tb_schema 
         ) 
         
         LOOP
-         SELECT POSITION('quote_' IN v_row.table_name ) INTO chk;
+         SELECT POSITION('price_' IN v_row.table_name ) INTO chk;
 
             IF chk  = 1 THEN 
                 EXECUTE format(' ALTER TABLE "%s" RENAME TO "%s" ;  ', v_row.table_name, v_row.short_code) ;  
@@ -240,8 +240,8 @@ $$ LANGUAGE plpgsql
 
 
 -- loop  특정(일/주/월) 스키마의 시세테이블에서 최고 찾기.
-DROP FUNCTION IF EXISTS "loop_quote_to_high_point"(text);
-CREATE OR REPLACE FUNCTION loop_quote_to_high_point(schema_type text)
+DROP FUNCTION IF EXISTS "loop_price_to_high_point"(text);
+CREATE OR REPLACE FUNCTION loop_price_to_high_point(schema_type text)
 RETURNS void  AS $$
 DECLARE
     tb_schema text;
@@ -249,7 +249,7 @@ DECLARE
     tb_cnt integer ; 
     v_row record;
 BEGIN
-    tb_schema :=      'quote_' || schema_type;
+    tb_schema :=      'price_' || schema_type;
     i := 0;
 
     FOR v_row IN (
@@ -269,7 +269,7 @@ $$ LANGUAGE plpgsql
 
 
 -- 사용자용 시세뷰 (일/주/월 )
-CREATE VIEW view_quote_day AS 
+CREATE VIEW view_price_day AS 
 SELECT 
     cb.full_code,
     cb.short_code,
@@ -295,7 +295,7 @@ SELECT
 from high_point_day hp  left join listed_company cb on hp.short_code= cb.short_code 
 ;
 -- 사용자용 시세뷰 (일/주/월 )
-CREATE VIEW view_quote_week AS 
+CREATE VIEW view_price_week AS 
 SELECT 
     cb.full_code,
     cb.short_code,
@@ -321,7 +321,7 @@ SELECT
 from high_point_week hp  left join listed_company cb on hp.short_code= cb.short_code 
 ;
 -- 사용자용 시세뷰 (일/주/월 )
-CREATE VIEW view_quote_month AS 
+CREATE VIEW view_price_month AS 
 SELECT 
     cb.full_code,
     cb.short_code,
