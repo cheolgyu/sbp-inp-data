@@ -12,6 +12,7 @@ import (
 
 
 var company_list []model.Company
+var Log_Up_id string
 
 func main() {
 	fmt.Println("hello world ")
@@ -20,32 +21,7 @@ func main() {
 }
 
 func test(){
-	
-	var id  = sql.Create_Log("init-기업목록", "시작")
-	// var id  = sql.Create_Log("init-기업목록", "다운로드")
-	// var id  = sql.Create_Log("init-기업목록", "다운로드 후 파싱")
-	// var id  = sql.Create_Log("init-기업목록", "다운로드 후 파싱 후 시드파일 생성")
-	// var id  = sql.Create_Log("init-기업목록", "다운로드 후 파싱 후 시드파일 생성 후 디비저장")
-	// var id  = sql.Create_Log("init-기업목록", "종료")
-
-	// var id  = sql.Create_Log("init-시세", "시작")
-	// var id  = sql.Create_Log("init-시세", "다운로드")
-	// var id  = sql.Create_Log("init-시세", "다운로드 후 파싱")
-	// var id  = sql.Create_Log("init-시세", "다운로드 후 파싱 후 시드파일 생성")
-	// var id  = sql.Create_Log("init-시세", "다운로드 후 파싱 후 시드파일 생성 후 디비저장")
-	// var id  = sql.Create_Log("init-시세", "종료")
-
-	var id2 = sql.Create_Log_With_Up_id(id,"aaa", "bbbb")
-	var log = model.Log{}
-	log.Id = id
-
-	fmt.Println("hello world ", log)
-	fmt.Println("hello world ", id)
-	fmt.Println("hello world ", id2)
-
-
-
-
+	fmt.Println("hello world ", model.LogTitls)
 }
 
 func make_init(){
@@ -54,11 +30,27 @@ func make_init(){
 }
 
 func make_init_company(){
+	Log_Up_id  = sql.Create_Log(model.LogTitls["init"]["listed_company"]["start"], "start")
+	
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["download"], "start")
 	download_init_company.Save()
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["download"], "end")
+
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["parse"], "start")
 	company_list = parse.Run()
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["parse"], "end")
+	
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["seed"], "start")
 	migrations.Make_file_listed_company(company_list)
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["seed"], "end")
+
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["insert"], "start")
 	sql.Create_company_seed()
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["insert"], "end")
+
+	sql.Create_Log_With_Up_id(Log_Up_id, model.LogTitls["init"]["listed_company"]["end"], "end")
 }
+
 
 func make_init_old_stocks_price(){
 	var schema_type = "day"

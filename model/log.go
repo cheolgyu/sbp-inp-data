@@ -13,11 +13,10 @@ type Log struct {
 var LogTitls map[string]map[string]map[string] string
 
 func init() {
-
 	
-	LogTitls := map[string]map[string]map[string] string {
+	LogTitls = map[string]map[string]map[string] string {
 		"init" : {	
-			"corp": {
+			"listed_company": {
 				"start": "Start the listed_company initialization process",
 				"download": "Start downloading the listed_company",
 				"parse": "Start parsing the listed_company.",
@@ -35,7 +34,7 @@ func init() {
 			},
 		},
 		"update":{
-			"corp":{
+			"listed_company":{
 				"start": "Start the listed_company update process",
 			},
 			"price_day":{
