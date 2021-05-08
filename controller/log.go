@@ -1,15 +1,38 @@
-package model
+package controller
+
 
 import (
+	"log"
+	"corplist/testmodel"
 )
 
-type Log struct {
-	Id string
-	Up_id string
-	Title string
+
+var LogTitls map[string]map[string]map[string] string
+var LogTitleP1 string
+var LogTitleP2 string
+var LogTitleP3 string
+
+
+
+type LogController struct{
+  
+    LogTitleP1 string
+	LogTitleP2 string
+	LogTitleP3 string
+
 	Content string
 }
-var LogTitls map[string]map[string]map[string] string
+
+func (controller LogController) Log(content string)  {
+	controller.Content = content
+	log.Println("LogController===========",controller)
+	
+	var m = testmodel.ListedCompany{}
+	m.Exec()
+
+	
+}
+  
 
 func init() {
 	
@@ -54,3 +77,8 @@ func init() {
 }
 
 
+func My_Contorller() string{
+
+
+	return "AAAAAAAAAAAAA"
+}

@@ -8,6 +8,8 @@ import (
 	"corplist/db/sql"
 	"corplist/model"
 	"corplist/migrations"
+
+	"corplist/controller/listed_company"
 )
 
 
@@ -21,7 +23,12 @@ func main() {
 }
 
 func test(){
-	fmt.Println("hello world ", model.LogTitls)
+	//fmt.Println("hello world ", model.LogTitls)
+	//fmt.Println("hello world listed_company=",listed_company)
+
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	listed_company.Exec_InitListedComapnyController()
+
 }
 
 func make_init(){
