@@ -39,6 +39,14 @@ func New_Controller() InitListedComapnyController {
 
 func (obj InitListedComapnyController )Exec(){
 
+	obj.run()
+	// update info 테이블 
+	// 
+	
+}
+
+func (obj InitListedComapnyController )run(){
+
 	obj.Download()
 	obj.Parse()
 	obj.ReadySql()

@@ -39,7 +39,9 @@ func New_Controller() InitPriceController {
 func (obj InitPriceController )Exec(){
 
 	obj.run()
-	obj.log.Log_With_Up_id(obj.up_id,"end")
+	
+	// update info 테이블 
+	// 
 
 }
 
@@ -57,5 +59,6 @@ func (obj InitPriceController )run(){
 		fmt.Println(str)	
 
 	}
+	obj.log.Log_With_Up_id(obj.up_id,"end")
 
 }
