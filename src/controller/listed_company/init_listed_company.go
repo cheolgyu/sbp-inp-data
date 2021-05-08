@@ -2,94 +2,88 @@ package listed_company
 
 import (
 
-	"corplist/controller"
-
+	"corplist/src/controller"
+	"corplist/src/model"
+	"corplist/src/service/download/company/data_krx"
+	"corplist/src/service/parse/xlsx"
+	"corplist/src/service/file"
+	"corplist/src/dao"
+	
 )
 
 
 type InitListedComapnyController struct{
-	controller.LogController
+	log controller.LogController
+	up_id string
 }
 
 
-var T1 InitListedComapnyController
+var Obj InitListedComapnyController
+var company_list []model.Company
 
-func init(){
-	T1 = InitListedComapnyController{
-		controller.LogController{
-			LogTitleP1: "init",
-			LogTitleP2: "listed_company",
-			LogTitleP3: "start",
-		},
+func init(){}
+
+func New_Controller() InitListedComapnyController {
+	var log = controller.LogController{
+		LogTitleP1: "init",
+		LogTitleP2: "listed_company",
+		LogTitleP3: "start",
+	}
+
+	return InitListedComapnyController{
+		log: log,
+		up_id: log.Log("start"),
 	}
 
 }
 
-func Exec_InitListedComapnyController(){
-	T1.LogController.Log("start")
-	T1.Download()
-	T1.Parse()
-	T1.ReadySql()
-	T1.ExecSql()
-	T1.LogController.LogTitleP3 = "end"
-	T1.LogController.Log("end")
+func (obj InitListedComapnyController )Exec(){
+
+	obj.Download()
+	obj.Parse()
+	obj.ReadySql()
+	obj.ExecSql()
+	obj.log.LogTitleP3 = "end"
+	obj.log.Log_With_Up_id(obj.up_id,"end")
 }
 
 func (c InitListedComapnyController) Download() {
-	c.LogController.LogTitleP3 = "download"
-	c.LogController.Log("start")
+	
+	c.log.LogTitleP3 = "download"
+	c.log.Log_With_Up_id(c.up_id,"start")
 
+	data_krx.Save()
 
-
-
-
-
-
-	c.LogController.Log("end")
+	c.log.Log_With_Up_id(c.up_id,"end")
 }
 
 func (c InitListedComapnyController) Parse() {
-	c.LogController.LogTitleP3 = "parse"
-	c.LogController.Log("start")
 
+	c.log.LogTitleP3 = "parse"
+	c.log.Log_With_Up_id(c.up_id,"start")
 
+	company_list = xlsx.Run()
 
-
-
-
-
-
-
-	c.LogController.Log("end")
+	c.log.Log_With_Up_id(c.up_id,"end")
 }
 
 func (c InitListedComapnyController) ReadySql() {
-	c.LogController.LogTitleP3 = "seed"
-	c.LogController.Log("start")
 
+	c.log.LogTitleP3 = "seed"
+	c.log.Log_With_Up_id(c.up_id,"start")
 
+	file.Make_file_listed_company(company_list)
 
-
-
-
-
-
-
-	c.LogController.Log("end")
+	c.log.Log_With_Up_id(c.up_id,"end")
 }
 
 func (c InitListedComapnyController) ExecSql() {
-	c.LogController.LogTitleP3 = "insert"
-	c.LogController.Log("start")
+
+	c.log.LogTitleP3 = "insert"
+	c.log.Log_With_Up_id(c.up_id,"start")
 
 
+	dao.SqlCompany.Create_company_seed()
 
-
-
-
-
-
-
-
-	c.LogController.Log("end")
+	c.log.Log_With_Up_id(c.up_id,"end")
 }

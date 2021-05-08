@@ -4,7 +4,7 @@ import (
     "fmt"
 
     "github.com/tealeg/xlsx"
-	"corplist/model"
+	"corplist/src/model"
 	"strings"
 )
 

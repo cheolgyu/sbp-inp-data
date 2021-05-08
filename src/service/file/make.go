@@ -1,10 +1,10 @@
-package migrations
+package file
 
 import (
 	"fmt"
 	"log"
 
-	"corplist/model"
+	"corplist/src/model"
 	"os"
 )
 

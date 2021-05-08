@@ -2,8 +2,7 @@ package controller
 
 
 import (
-	"log"
-	"corplist/testmodel"
+	"corplist/src/dao"
 )
 
 
@@ -15,6 +14,8 @@ var LogTitleP3 string
 
 
 type LogController struct{
+
+	Up_id string
   
     LogTitleP1 string
 	LogTitleP2 string
@@ -23,14 +24,20 @@ type LogController struct{
 	Content string
 }
 
-func (controller LogController) Log(content string)  {
-	controller.Content = content
-	log.Println("LogController===========",controller)
+func (c LogController) Log(content string) string {
 	
-	var m = testmodel.ListedCompany{}
-	m.Exec()
+	c.Content = content
+	var title = LogTitls[c.LogTitleP1][c.LogTitleP2][c.LogTitleP3]
+	var up_id = dao.SqlLog.Create_Log(title,content)
+	
+	return up_id
+}
 
-	
+func (c LogController) Log_With_Up_id(up_id string, content string)  {
+	c.Content = content
+	var title = LogTitls[c.LogTitleP1][c.LogTitleP2][c.LogTitleP3]
+
+	dao.SqlLog.Create_Log_With_Up_id(up_id,title,content)
 }
   
 
