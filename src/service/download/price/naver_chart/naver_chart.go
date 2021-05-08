@@ -2,13 +2,14 @@ package naver_chart
 
 import (
 	"fmt"
-   "net/http"
+    "net/http"
 	"time"
 	"log"
-	"corplist/model"
 	"strings"
 	"strconv"
 	"io/ioutil"
+
+	"corplist/src/model"
 )
 
 var (
