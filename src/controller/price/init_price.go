@@ -38,7 +38,7 @@ func New_Controller() InitPriceController {
 
 func (obj InitPriceController )Exec(){
 
-	//obj.run()
+	obj.run()
 	info.Update_Info("init_price_day")
 
 }

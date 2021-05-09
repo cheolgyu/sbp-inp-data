@@ -40,7 +40,7 @@ func New_Controller() InitListedComapnyController {
 
 func (obj InitListedComapnyController )Exec(){
 
-	//obj.run()
+	obj.run()
 	info.Update_Info("init_company")
 	
 }
