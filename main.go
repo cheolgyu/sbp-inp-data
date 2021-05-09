@@ -14,16 +14,19 @@ func main() {
 }
 
 func test(){
-
+	daily_project()
+	init_project()
 }
 
-// func everyday_project(){
-// 	update_price()
-// }
+func daily_project(){
+	daily_price()
+}
 
-// func update_price(){
-	
-// }
+func daily_price(){
+	var project = &price.DailyPriceController{}
+	var p = project.New()
+	p.Exec()
+}
 
 func init_project(){
 	init_price()
@@ -31,14 +34,17 @@ func init_project(){
 }
 
 func init_price(){
-	var project1 = price.New_Controller()
-	project1.Exec()
+
+	var project = &price.InitPriceController{}
+	var p = project.New()
+	p.Exec()	
 
 }
 
 func init_listed_company(){
-	var project1 = listed_company.New_Controller()
-	project1.Exec()
+	var project = &listed_company.InitListedComapnyController{}
+	var p = project.New()
+	p.Exec()
 
 }
 

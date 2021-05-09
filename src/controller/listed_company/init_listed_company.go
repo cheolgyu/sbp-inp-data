@@ -18,23 +18,19 @@ type InitListedComapnyController struct{
 	up_id string
 }
 
-
-var Obj InitListedComapnyController
 var company_list []model.Company
 
-func init(){}
-
-func New_Controller() InitListedComapnyController {
+func (obj InitListedComapnyController) New() controller.DefaultController {
 	var log = controller.LogController{
 		LogTitleP1: "init",
 		LogTitleP2: "listed_company",
 		LogTitleP3: "start",
 	}
 
-	return InitListedComapnyController{
-		log: log,
-		up_id: log.Log("start"),
-	}
+	obj.log = log
+	obj.up_id = log.Log("start")
+
+	return obj
 
 }
 
@@ -44,6 +40,10 @@ func (obj InitListedComapnyController )Exec(){
 	info.Update_Info("init_company")
 	
 }
+
+//////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////
 
 func (obj InitListedComapnyController )run(){
 

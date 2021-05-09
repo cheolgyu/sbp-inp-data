@@ -17,23 +17,17 @@ type InitPriceController struct{
 	up_id string
 }
 
-
-var Obj InitPriceController
-
-func init(){}
-
-func New_Controller() InitPriceController {
+func (obj InitPriceController) New() controller.DefaultController {
+	
 	var log = controller.LogController{
 		LogTitleP1: "init",
 		LogTitleP2: "price_day",
 		LogTitleP3: "start",
 	}
+	obj.log = log
+	obj.up_id = log.Log("start")
 
-	return InitPriceController{
-		log: log,
-		up_id: log.Log("start"),
-	}
-
+	return obj
 }
 
 func (obj InitPriceController )Exec(){
@@ -42,6 +36,9 @@ func (obj InitPriceController )Exec(){
 	info.Update_Info("init_price_day")
 
 }
+//////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////
 
 func (obj InitPriceController )run(){
 
