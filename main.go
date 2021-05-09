@@ -10,21 +10,23 @@ import (
 
 func main() {
 	fmt.Println("hello world ")
-	test()
-	
+	init_price()
+	init_listed_company()
 }
 
 func test(){
 
-	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+}
+
+func init_price(){
+
 	var project1 = price.New_Controller()
 	project1.Exec()
 
 }
 
-func test_init_listed_company(){
+func init_listed_company(){
 
-	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	var project1 = listed_company.New_Controller()
 	project1.Exec()
 

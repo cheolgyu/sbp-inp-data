@@ -8,7 +8,7 @@ import (
 	"corplist/src/service/download/price/naver_chart"
 	"corplist/src/service/file"
 	"corplist/src/dao"
-	
+	"corplist/src/service/info"
 )
 
 
@@ -38,10 +38,8 @@ func New_Controller() InitPriceController {
 
 func (obj InitPriceController )Exec(){
 
-	obj.run()
-	
-	// update info 테이블 
-	// 
+	//obj.run()
+	info.Update_Info("init_price_day")
 
 }
 

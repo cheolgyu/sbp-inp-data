@@ -7,6 +7,7 @@ import (
 	"corplist/src/service/download/company/data_krx"
 	"corplist/src/service/parse/xlsx"
 	"corplist/src/service/file"
+	"corplist/src/service/info"
 	"corplist/src/dao"
 	
 )
@@ -39,9 +40,8 @@ func New_Controller() InitListedComapnyController {
 
 func (obj InitListedComapnyController )Exec(){
 
-	obj.run()
-	// update info 테이블 
-	// 
+	//obj.run()
+	info.Update_Info("init_company")
 	
 }
 

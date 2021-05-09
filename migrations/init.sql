@@ -4,10 +4,9 @@ DROP TABLE IF EXISTS "meta";
 
 DROP TABLE IF EXISTS "info";
 CREATE TABLE "public"."info" (
-    "id" serial NOT NULL,
-    PRIMARY KEY ("id"),
-    "name" text NOT NULL,
+    "name" text NOT NULL UNIQUE,
     "value" text  NULL,
+    "created_date" timestamp NOT NULL DEFAULT current_timestamp,
     "updated_date" timestamp NOT NULL DEFAULT current_timestamp
 );
 
