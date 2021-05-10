@@ -80,7 +80,7 @@ func (c InitListedComapnyController) ReadySql() {
 	c.log.LogTitleP3 = "seed"
 	c.log.Log_With_Up_id(c.up_id,"start")
 
-	file.Make_file_listed_company(company_list)
+	file.Init_file_listed_company(company_list)
 
 	c.log.Log_With_Up_id(c.up_id,"end")
 }

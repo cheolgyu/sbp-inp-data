@@ -2,6 +2,7 @@ package price
 
 import (
 	"fmt"
+	"time"
 
 	"corplist/src/controller"
 	"corplist/src/model"
@@ -44,16 +45,22 @@ func (obj InitPriceController )run(){
 
 	var company_list []model.Company = dao.SqlCompany.Select_All()
 	var schema_type = "day"
+	var naver_chart_list []model.NaverChart
+
+	var t = time.Now()
+	var startDate, endDate = "19900101", fmt.Sprintf("%d%02d%02d",t.Year(), t.Month(), t.Day())
 
 	for index , item := range company_list {
-		var price_list = naver_chart.Get(item)
-		file.Make_file_price(schema_type, item.Short_code, price_list)
-		dao.SqlPrice.Create_price_Table()
+
+		naver_chart_list = append(naver_chart_list,  naver_chart.Get(item.Short_code ,startDate, endDate)) 
 		
-		var str = fmt.Sprintf("make_init_old_stocks_price (%v / %v) ",index ,len(company_list))
+		var str = fmt.Sprintf("make_init_old_stocks_price (%v / %v) ",index+1 ,len(company_list))
 		fmt.Println(str)	
 
 	}
+	file.Init_file_price(schema_type, naver_chart_list)
+	dao.SqlPrice.Create_price_Table()
+
 	obj.log.Log_With_Up_id(obj.up_id,"end")
 
 }

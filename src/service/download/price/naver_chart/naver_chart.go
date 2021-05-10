@@ -3,7 +3,7 @@ package naver_chart
 import (
 	"fmt"
     "net/http"
-	"time"
+	
 	"log"
 	"strings"
 	"strconv"
@@ -12,22 +12,20 @@ import (
 	"corplist/src/model"
 )
 
-var (
-	endTime string 
-	short_code string
-)
+
+func Get( short_code string , startDate string, endDate string)  model.NaverChart {
+	var down_url string = "https://api.finance.naver.com/siseJson.naver?symbol="+short_code+"&requestType=1&startTime="+startDate+"&endTime="+endDate+"&timeframe=day"
+	var str = download(down_url)
 	
-func Get( company model.Company)  []model.Day {
-	short_code = company.Short_code
-	var t = time.Now()
-	endTime = fmt.Sprintf("%d%02d%02d",t.Year(), t.Month(), t.Day())
-	
-	return parse()
+	return model.NaverChart{
+		Short_code: short_code,
+		DayList: parse(str),
+	}
 }
 
 
-func parse() []model.Day {
-	str := download()
+func parse(str string) []model.Day {
+	
 
 	var day_list []model.Day 
 	var re_str = strings.Replace(str, "[", "", -1)
@@ -62,9 +60,7 @@ func parse() []model.Day {
 
 }
 
-func download() string{
-	var down_url string = "https://api.finance.naver.com/siseJson.naver?symbol="+short_code+"&requestType=1&startTime=19900101&endTime="+endTime+"&timeframe=day"
-
+func download(down_url string) string{
 	 req, err := http.NewRequest("GET", down_url, nil)
 	if err != nil {
 		log.Fatalln(err)

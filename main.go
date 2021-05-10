@@ -15,7 +15,6 @@ func main() {
 
 func test(){
 	daily_project()
-	init_project()
 }
 
 func daily_project(){

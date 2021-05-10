@@ -221,18 +221,40 @@ BEGIN
         select 
             table_name, replace(table_name,'price_','') as short_code
         from information_schema.tables where table_schema = tb_schema 
-        ) 
-        
-        LOOP
-         SELECT POSITION('price_' IN v_row.table_name ) INTO chk;
+    )LOOP
+        SELECT POSITION('price_' IN v_row.table_name ) INTO chk;
 
-            IF chk  = 1 THEN 
-                EXECUTE format(' ALTER TABLE "%s" RENAME TO "%s" ;  ', v_row.table_name, v_row.short_code) ;  
-                EXECUTE format(' COMMENT ON TABLE "%s"  IS null ;', v_row.short_code) ;  
-            END IF;
-            
-            SELECT i+1 INTO i;
-	    END LOOP;
+        IF chk  = 1 THEN 
+            EXECUTE format(' ALTER TABLE "%s" RENAME TO "%s" ;  ', v_row.table_name, v_row.short_code) ;  
+            EXECUTE format(' COMMENT ON TABLE "%s"  IS null ;', v_row.short_code) ;  
+        END IF;
+        
+        SELECT i+1 INTO i;
+    END LOOP;
+
+END;
+$$ LANGUAGE plpgsql
+;
+
+
+--  price_day 유니크 칼럼으로 바꾸기
+-- select my_fun1('day')
+DROP FUNCTION IF EXISTS "my_fun1"(text);
+CREATE OR REPLACE FUNCTION my_fun1(schema_type text)
+RETURNS void  AS $$
+DECLARE
+    tb_schema text;
+    v_row record;
+BEGIN
+    tb_schema := 'price_' || schema_type;
+
+    FOR v_row IN (  
+        select table_name  from information_schema.tables where table_schema = tb_schema
+    )LOOP
+
+        EXECUTE format(' ALTER TABLE "%s"."%s" ADD UNIQUE ("Date") ;', tb_schema, v_row.table_name) ;  
+
+    END LOOP;
 
 END;
 $$ LANGUAGE plpgsql

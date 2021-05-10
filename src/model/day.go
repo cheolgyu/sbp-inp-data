@@ -9,3 +9,8 @@ type Day struct {
     Volume 			int
 	ForeignerBurnoutRate float64
 }
+
+type NaverChart struct {
+	Short_code 			string
+    DayList				[]Day
+}

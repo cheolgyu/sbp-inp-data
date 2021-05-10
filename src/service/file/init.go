@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func Make_file_listed_company(seed []model.Company){
+func Init_file_listed_company(seed []model.Company){
 	
     f, err := os.Create("migrations/company/seed.sql")
 
@@ -40,7 +40,7 @@ func Make_file_listed_company(seed []model.Company){
 
 }
 
-func Make_file_price(schema_type string, short_code string , list []model.Day){
+func Init_file_price(schema_type string, arr []model.NaverChart){
 	
     f, err := os.Create("migrations/price/seed.sql")
 
@@ -55,31 +55,37 @@ func Make_file_price(schema_type string, short_code string , list []model.Day){
 
 	var str = `
 -- name: create-price-table-seed
-DROP TABLE IF EXISTS "price_`+schema_type+`"."tb_`+short_code+`";
-CREATE TABLE "price_`+schema_type+`"."tb_`+short_code+`" (
-	"Date" integer,
-	"OpenPrice" integer,
-	"HighPrice" integer,
-	"LowPrice" integer,
-	"ClosePrice" integer,
-	"Volume" integer,
-	"ForeignerBurnoutRate" double precision
-);
 
-INSERT INTO "price_`+schema_type+`"."tb_`+short_code+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
-VALUES 
-
-	`
+`
 
 
 
-	for index, item := range list {
-		str +=  fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ",item.Date, item.OpenPrice, item.HighPrice, item.LowPrice, item.ClosePrice, item.Volume, item.ForeignerBurnoutRate)
-		if index+1 == len(list){
-			str += "; \n"
-		}else{
-			str += ", \n"
+	for _, item := range arr {
+
+		str +=  `
+		DROP TABLE IF EXISTS "price_`+schema_type+`"."tb_`+item.Short_code+`";
+		CREATE TABLE "price_`+schema_type+`"."tb_`+item.Short_code+`" (
+			"Date" integer NOT NULL UNIQUE ,
+			"OpenPrice" integer,
+			"HighPrice" integer,
+			"LowPrice" integer,
+			"ClosePrice" integer,
+			"Volume" integer,
+			"ForeignerBurnoutRate" double precision
+		);
+		INSERT INTO "price_`+schema_type+`"."tb_`+item.Short_code+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
+		VALUES 
+		`
+		
+		for j_index, j := range item.DayList {
+			str +=  fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ",j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate)
+			if j_index+1 == len(item.DayList){
+				str += " ; \n"
+			}else{
+				str += ", \n"
+			}
 		}
+	
 	}	
 	
 	_, err2 := f.WriteString(str)
