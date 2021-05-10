@@ -16,4 +16,5 @@
 # vendor/
 
 migrations/*/seed.sql
+migrations/*/daily.sql
 *.xlsx

@@ -16,13 +16,14 @@ import (
 type InitPriceController struct{
 	log controller.LogController
 	up_id string
+	schema_type string
 }
 
-func (c InitPriceController) New() controller.DefaultController {
+func (c InitPriceController) New(schema_type string) controller.TimeFrameController {
 	
 	var log = controller.LogController{
 		LogTitleP1: "init",
-		LogTitleP2: "price_day",
+		LogTitleP2: "price_"+schema_type,
 		LogTitleP3: "start",
 	}
 	c.log = log
@@ -35,7 +36,7 @@ func (c InitPriceController )Exec(){
 
 	c.run()
 	c.log.Exec_Upid(c.up_id,"end","end")
-	info.Update_Info("init_price_day")
+	info.Update_Info("init_price_"+c.schema_type)
 
 }
 //////////////////////////////////////////////////////
@@ -45,7 +46,6 @@ func (c InitPriceController )Exec(){
 func (c InitPriceController )run(){
 
 	var company_list []model.Company = dao.SqlCompany.Select_All()
-	var schema_type = "day"
 	var naver_chart_list []model.NaverChart
 
 	var t = time.Now()
@@ -59,7 +59,7 @@ func (c InitPriceController )run(){
 		fmt.Println(str)	
 
 	}
-	file.Init_file_price(schema_type, naver_chart_list)
+	file.Init_file_price(c.schema_type, naver_chart_list)
 	dao.SqlPrice.Create_price_Table()
 
 }

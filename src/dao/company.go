@@ -43,7 +43,7 @@ func (obj Company)  Select_All() []model.Company{
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	rows, err := db.Query(`SELECT * FROM  listed_company` )
+	rows, err := db.Query(`SELECT * FROM  listed_company limit` )
 	
 	if err != nil {
 		panic(err)

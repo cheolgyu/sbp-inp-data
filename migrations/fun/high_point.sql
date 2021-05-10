@@ -94,7 +94,7 @@ BEGIN
     FOR v_row IN (
         select 
             replace(table_name,'tb_','') as short_code 
-        from information_schema.tables where table_schema = tb_schema limit 3 ) 
+        from information_schema.tables where table_schema = tb_schema  ) 
         
         LOOP
            PERFORM  insert_last_high_date(schema_type, v_row.short_code);

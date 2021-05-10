@@ -15,18 +15,20 @@ import (
 type DailyPriceController struct{
 	log controller.LogController
 	up_id string
+	schema_type string
 }
 
 
-func (c DailyPriceController) New() controller.DefaultController {
+func (c DailyPriceController) New(schema_type string) controller.TimeFrameController {
 	
 	var log = controller.LogController{
 		LogTitleP1: "update",
-		LogTitleP2: "price_day",
+		LogTitleP2: "price_"+schema_type,
 		LogTitleP3: "start",
 	}
 	c.log = log
 	c.up_id = log.Exec("start")
+	c.schema_type = schema_type
 
 	return c
 
@@ -36,7 +38,7 @@ func (c DailyPriceController )Exec(){
 
 	c.run()
 	c.log.Exec_Upid(c.up_id,"end","end")
-	info.Update_Info("updated_price_day")
+	info.Update_Info("updated_price_"+c.schema_type)
 
 }
 
@@ -53,10 +55,9 @@ func (c DailyPriceController )run(){
 func (c DailyPriceController )update(){
 
 	
-	var _, startDate, endDate, _, _ = dao.SqlInfo.Select_Info("updated_price_day")
+	var _, startDate, endDate, _, _ = dao.SqlInfo.Select_Info("updated_price_"+c.schema_type)
 
 	var company_list []model.Company = dao.SqlCompany.Select_All()
-	var schema_type = "day"
 	var naver_chart_list []model.NaverChart
 
 	for index , item := range company_list {
@@ -66,7 +67,7 @@ func (c DailyPriceController )update(){
 		fmt.Println(str)	
 	}
 
-	file.Daily_file_price(schema_type, naver_chart_list )
+	file.Daily_file_price(c.schema_type, naver_chart_list )
 	dao.SqlPrice.Daily_price_Table()
 
 
