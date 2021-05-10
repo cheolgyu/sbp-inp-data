@@ -1,5 +1,8 @@
-
--- 최고가 저장 테이블 일/주/월
+---------------------------------
+--
+-- 테이블 생성: 최고가 저장용 일/주/월 
+--
+---------------------------------
 DROP TABLE IF EXISTS "high_point_day";
 CREATE TABLE "public"."high_point_day" (
     "short_code" text  NOT NULL UNIQUE,
@@ -41,8 +44,11 @@ CREATE TABLE "public"."high_point_month" (
 
 
 
-
+---------------------------------
+--
 -- 기준일 기준 대비,등락률 구하기
+--
+---------------------------------
 DROP FUNCTION IF EXISTS "fluctuation_rate";
 CREATE FUNCTION fluctuation_rate(
     -- 기준가격
@@ -68,8 +74,11 @@ END;
 $BODY$
 LANGUAGE PLPGSQL;
 
-
--- loop  특정(일/주/월) 스키마의 시세테이블에서 최고 찾기.
+---------------------------------
+--
+-- step1. loop  특정(일/주/월) 스키마의 시세테이블에서 최고 찾기.
+--
+---------------------------------
 DROP FUNCTION IF EXISTS "loop_price_to_high_point"(text);
 CREATE OR REPLACE FUNCTION loop_price_to_high_point(schema_type text)
 RETURNS void  AS $$
@@ -97,7 +106,11 @@ END;
 $$ LANGUAGE plpgsql
 ;
 
--- 최고가 찾은 후에 저장하기.
+---------------------------------
+--
+-- step2. 최고가 찾은 후에 저장하기.
+--
+---------------------------------
 DROP FUNCTION IF EXISTS "insert_last_high_date"(text,text);
 CREATE OR REPLACE FUNCTION insert_last_high_date(schema_type text, inp_short_code text)
 RETURNS void  AS $$

@@ -1,5 +1,8 @@
-
+---------------------------------
+--
 -- 문법 테스트
+--
+---------------------------------
 DROP FUNCTION IF EXISTS "test"();
 CREATE OR REPLACE FUNCTION test()
 RETURNS INTEGER  AS $$
@@ -23,7 +26,12 @@ END;
 $$ LANGUAGE plpgsql
 ;
 
+
+---------------------------------
+--
 -- 스키마내에 테이블이름 변경
+--
+---------------------------------
 DROP FUNCTION IF EXISTS "rename_table"(text);
 CREATE OR REPLACE FUNCTION rename_table(schema_type text)
 RETURNS void  AS $$
@@ -57,10 +65,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql
 ;
-
-
+---------------------------------
+--
 --  price_day 유니크 칼럼으로 바꾸기
--- select my_fun1('day')
+--  select my_fun1('day')
+--
+---------------------------------
 DROP FUNCTION IF EXISTS "my_fun1"(text);
 CREATE OR REPLACE FUNCTION my_fun1(schema_type text)
 RETURNS void  AS $$
@@ -83,8 +93,11 @@ $$ LANGUAGE plpgsql
 ;
 
 
-
--- 최고가 찾기
+---------------------------------
+--
+-- 연습용: 최고가 찾기 
+--
+---------------------------------
 DROP FUNCTION IF EXISTS "get_last_high_date";
 CREATE OR REPLACE FUNCTION get_last_high_date(short_code text)
 RETURNS table(
