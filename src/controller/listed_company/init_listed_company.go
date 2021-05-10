@@ -28,15 +28,17 @@ func (obj InitListedComapnyController) New() controller.DefaultController {
 	}
 
 	obj.log = log
-	obj.up_id = log.Log("start")
+	obj.up_id = log.Exec("start")
 
 	return obj
 
 }
 
-func (obj InitListedComapnyController )Exec(){
+func (c InitListedComapnyController )Exec(){
 
-	obj.run()
+	c.run()
+
+	c.log.Exec_Upid(c.up_id,"end", "end")
 	info.Update_Info("init_company")
 	
 }
@@ -45,53 +47,46 @@ func (obj InitListedComapnyController )Exec(){
 //
 //////////////////////////////////////////////////////
 
-func (obj InitListedComapnyController )run(){
+func (c InitListedComapnyController )run(){
 
-	obj.Download()
-	obj.Parse()
-	obj.ReadySql()
-	obj.ExecSql()
-	obj.log.LogTitleP3 = "end"
-	obj.log.Log_With_Up_id(obj.up_id,"end")
+	c.Download()
+	c.Parse()
+	c.ReadySql()
+	c.ExecSql()
 }
 
 func (c InitListedComapnyController) Download() {
 	
-	c.log.LogTitleP3 = "download"
-	c.log.Log_With_Up_id(c.up_id,"start")
+	c.log.Exec_Upid(c.up_id,"download", "start")
 
 	data_krx.Save()
 
-	c.log.Log_With_Up_id(c.up_id,"end")
+	c.log.Exec_Upid(c.up_id,"download", "end")
 }
 
 func (c InitListedComapnyController) Parse() {
 
-	c.log.LogTitleP3 = "parse"
-	c.log.Log_With_Up_id(c.up_id,"start")
+	c.log.Exec_Upid(c.up_id, "parse", "start")
 
 	company_list = xlsx.Run()
 
-	c.log.Log_With_Up_id(c.up_id,"end")
+	c.log.Exec_Upid(c.up_id, "parse", "end")
 }
 
 func (c InitListedComapnyController) ReadySql() {
 
-	c.log.LogTitleP3 = "seed"
-	c.log.Log_With_Up_id(c.up_id,"start")
+	c.log.Exec_Upid(c.up_id, "seed", "start")
 
 	file.Init_file_listed_company(company_list)
 
-	c.log.Log_With_Up_id(c.up_id,"end")
+	c.log.Exec_Upid(c.up_id, "seed", "end")
 }
 
 func (c InitListedComapnyController) ExecSql() {
 
-	c.log.LogTitleP3 = "insert"
-	c.log.Log_With_Up_id(c.up_id,"start")
-
+	c.log.Exec_Upid(c.up_id, "insert", "start")
 
 	dao.SqlCompany.Create_company_seed()
 
-	c.log.Log_With_Up_id(c.up_id,"end")
+	c.log.Exec_Upid(c.up_id, "insert", "end")
 }

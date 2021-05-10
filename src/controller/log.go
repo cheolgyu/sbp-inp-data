@@ -24,20 +24,21 @@ type LogController struct{
 	Content string
 }
 
-func (c LogController) Log(content string) string {
+func (c LogController) Exec(content string) string {
 	
 	c.Content = content
 	var title = LogTitls[c.LogTitleP1][c.LogTitleP2][c.LogTitleP3]
-	var up_id = dao.SqlLog.Create_Log(title,content)
+	var up_id = dao.SqlLog.Insert_Log(title,content)
 	
 	return up_id
 }
 
-func (c LogController) Log_With_Up_id(up_id string, content string)  {
+func (c LogController) Exec_Upid(up_id string, logTitleP3 string, content string)  {
 	c.Content = content
+	c.LogTitleP3 = logTitleP3
 	var title = LogTitls[c.LogTitleP1][c.LogTitleP2][c.LogTitleP3]
 
-	dao.SqlLog.Create_Log_With_Up_id(up_id,title,content)
+	dao.SqlLog.Insert_Log_With_Up_id(up_id,title,content)
 }
   
 
@@ -76,6 +77,7 @@ func init() {
 			},
 			"high_point_day":{
 				"start": "Start the high_point_day update process",
+				"end": "Start the high_point_day update process",
 			},
 		},
 

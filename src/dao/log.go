@@ -18,7 +18,7 @@ func init()  {
 	}
 }
 
-func (obj Log) Create_Log(title string ,content string ) string {
+func (obj Log) Insert_Log(title string ,content string ) string {
 	var id  string 
 	var db = obj.DB.Conn()
 	defer db.Close()
@@ -38,7 +38,7 @@ func (obj Log) Create_Log(title string ,content string ) string {
 	return id
 }
 
-func (obj Log) Create_Log_With_Up_id(up_id string, title string ,content string ) string {
+func (obj Log) Insert_Log_With_Up_id(up_id string, title string ,content string ) string {
 	var id  string 
 	var db = obj.DB.Conn()
 	defer db.Close()

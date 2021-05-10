@@ -18,23 +18,24 @@ type DailyPriceController struct{
 }
 
 
-func (obj DailyPriceController) New() controller.DefaultController {
+func (c DailyPriceController) New() controller.DefaultController {
 	
 	var log = controller.LogController{
 		LogTitleP1: "update",
 		LogTitleP2: "price_day",
 		LogTitleP3: "start",
 	}
-	obj.log = log
-	obj.up_id = log.Log("start")
+	c.log = log
+	c.up_id = log.Exec("start")
 
-	return obj
+	return c
 
 }
 
-func (obj DailyPriceController )Exec(){
+func (c DailyPriceController )Exec(){
 
-	obj.run()
+	c.run()
+	c.log.Exec_Upid(c.up_id,"end","end")
 	info.Update_Info("updated_price_day")
 
 }
@@ -43,13 +44,13 @@ func (obj DailyPriceController )Exec(){
 //
 //////////////////////////////////////////////////////
 
-func (obj DailyPriceController )run(){
+func (c DailyPriceController )run(){
 
-	obj.update()
+	c.update()
 
 }
 
-func (obj DailyPriceController )update(){
+func (c DailyPriceController )update(){
 
 	
 	var _, startDate, endDate, _, _ = dao.SqlInfo.Select_Info("updated_price_day")
@@ -68,7 +69,6 @@ func (obj DailyPriceController )update(){
 	file.Daily_file_price(schema_type, naver_chart_list )
 	dao.SqlPrice.Daily_price_Table()
 
-	obj.log.Log_With_Up_id(obj.up_id,"end")
 
 
 }

@@ -18,22 +18,23 @@ type InitPriceController struct{
 	up_id string
 }
 
-func (obj InitPriceController) New() controller.DefaultController {
+func (c InitPriceController) New() controller.DefaultController {
 	
 	var log = controller.LogController{
 		LogTitleP1: "init",
 		LogTitleP2: "price_day",
 		LogTitleP3: "start",
 	}
-	obj.log = log
-	obj.up_id = log.Log("start")
+	c.log = log
+	c.up_id = log.Exec("start")
 
-	return obj
+	return c
 }
 
-func (obj InitPriceController )Exec(){
+func (c InitPriceController )Exec(){
 
-	obj.run()
+	c.run()
+	c.log.Exec_Upid(c.up_id,"end","end")
 	info.Update_Info("init_price_day")
 
 }
@@ -41,7 +42,7 @@ func (obj InitPriceController )Exec(){
 //
 //////////////////////////////////////////////////////
 
-func (obj InitPriceController )run(){
+func (c InitPriceController )run(){
 
 	var company_list []model.Company = dao.SqlCompany.Select_All()
 	var schema_type = "day"
@@ -60,7 +61,5 @@ func (obj InitPriceController )run(){
 	}
 	file.Init_file_price(schema_type, naver_chart_list)
 	dao.SqlPrice.Create_price_Table()
-
-	obj.log.Log_With_Up_id(obj.up_id,"end")
 
 }
