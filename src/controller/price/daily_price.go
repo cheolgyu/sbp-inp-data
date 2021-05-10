@@ -56,19 +56,23 @@ func (c DailyPriceController )update(){
 
 	
 	var _, startDate, endDate, _, _ = dao.SqlInfo.Select_Info("updated_price_"+c.schema_type)
-
-	var company_list []model.Company = dao.SqlCompany.Select_All()
-	var naver_chart_list []model.NaverChart
-
-	for index , item := range company_list {
-		naver_chart_list = append(naver_chart_list,  naver_chart.Get(item.Short_code ,startDate, endDate)) 
-		
-		var str = fmt.Sprintf("downloading.. (%v / %v) ",index+1 ,len(company_list))
-		fmt.Println(str)	
+	
+	//하루 두번할 경우 발생하는 오류방지 
+	if startDate < endDate {
+		var company_list []model.Company = dao.SqlCompany.Select_All()
+		var naver_chart_list []model.NaverChart
+	
+		for index , item := range company_list {
+			naver_chart_list = append(naver_chart_list,  naver_chart.Get(item.Short_code ,startDate, endDate)) 
+			
+			var str = fmt.Sprintf("downloading.. (%v / %v) ",index+1 ,len(company_list))
+			fmt.Println(str)	
+		}
+	
+		file.Daily_file_price(c.schema_type, naver_chart_list )
+		dao.SqlPrice.Daily_price_Table()
 	}
 
-	file.Daily_file_price(c.schema_type, naver_chart_list )
-	dao.SqlPrice.Daily_price_Table()
 
 
 
