@@ -10,20 +10,20 @@ CREATE TABLE "public"."info" (
     "updated_date" timestamp NOT NULL DEFAULT current_timestamp
 );
 
--- 예상 
-    -- INSERT INTO "info" ("name", "value", "updated_date")
-    -- VALUES ('init_company', NULL, now())
-    -- ,('init_price_day', NULL, now()) 
-    -- ,('init_price_week', NULL, now())
-    -- ,('init_price_month', NULL, now())
-    -- ,('updated_company', NULL, now())
-    -- ,('updated_price_day', NULL, now())
-    -- ,('updated_price_week', NULL, now())
-    -- ,('updated_price_month', NULL, now())
-    -- ,('updated_high_point_day', NULL, now())
-    -- ,('updated_high_point_week', NULL, now())
-    -- ,('updated_high_point_month', NULL, now())
-    -- ;
+-- 기본값 
+    INSERT INTO "info" ("name", "value", "updated_date")
+    VALUES ('init_company', NULL, now())
+    ,('init_price_day', NULL, now()) 
+    ,('init_price_week', NULL, now())
+    ,('init_price_month', NULL, now())
+    ,('updated_company', NULL, now())
+    ,('updated_price_day', NULL, now())
+    ,('updated_price_week', NULL, now())
+    ,('updated_price_month', NULL, now())
+    ,('updated_high_point_day', NULL, now())
+    ,('updated_high_point_week', NULL, now())
+    ,('updated_high_point_month', NULL, now())
+    ;
 
 -- 로그 테이블
 -- uuid 생성
