@@ -17,5 +17,6 @@
 
 migrations/*/seed.sql
 migrations/*/daily.sql
+migrations/price/daily.sql
 migrations/price/seed/*.sql
 *.xlsx
