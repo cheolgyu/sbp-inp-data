@@ -3,6 +3,7 @@ CREATE SCHEMA "price_day";
 CREATE SCHEMA "price_week";
 CREATE SCHEMA "price_month";
 
+-- SELECT array_to_json(array_agg(t)) FROM view_price_day t;
 
 -- 사용자용 시세뷰 (일/주/월 )
 DROP VIEW IF EXISTS "view_price_day";
@@ -27,7 +28,9 @@ SELECT
     hp.last_close_price,
     hp.contrast_price,
     hp.fluctuation_rate,
-    hp.updated_date as high_point_updated_date  
+    hp.updated_date as high_point_updated_date,
+    concat('https://finance.naver.com/item/main.nhn?code=',cb.short_code) as naver_link
+
 
 from high_point_day hp  left join listed_company cb on hp.short_code= cb.short_code  order by hp.fluctuation_rate ASC
 ;
@@ -54,7 +57,8 @@ SELECT
     hp.last_close_price,
     hp.contrast_price,
     hp.fluctuation_rate,
-    hp.updated_date as high_point_updated_date  
+    hp.updated_date as high_point_updated_date,
+    concat('https://finance.naver.com/item/main.nhn?code=',cb.short_code) as naver_link 
 
 from high_point_week hp  left join listed_company cb on hp.short_code= cb.short_code  order by hp.fluctuation_rate ASC
 ;
@@ -81,7 +85,8 @@ SELECT
     hp.last_close_price,
     hp.contrast_price,
     hp.fluctuation_rate,
-    hp.updated_date as high_point_updated_date  
+    hp.updated_date as high_point_updated_date,
+    concat('https://finance.naver.com/item/main.nhn?code=',cb.short_code) as naver_link  
 
 from high_point_month hp  left join listed_company cb on hp.short_code= cb.short_code  order by hp.fluctuation_rate ASC
 ;
