@@ -8,18 +8,18 @@ import (
 )
 
 
-type HighPointController struct{
+type HighPointMarketController struct{
 	log controller.LogController
 	up_id string
 	schema_type string
 }
 
 
-func (c HighPointController) New(schema_type string) controller.TimeFrameController {
+func (c HighPointMarketController) New(schema_type string) controller.TimeFrameController {
 	
 	var log = controller.LogController{
 		LogTitleP1: "update",
-		LogTitleP2: "high_point_"+schema_type,
+		LogTitleP2: "high_point_market_"+schema_type,
 		LogTitleP3: "start",
 	}
 	c.log = log
@@ -30,11 +30,11 @@ func (c HighPointController) New(schema_type string) controller.TimeFrameControl
 
 }
 
-func (c HighPointController )Exec(){
+func (c HighPointMarketController )Exec(){
 
 	c.run()
 	c.log.Exec_Upid(c.up_id,"end","end")
-	info.Update_Info("updated_high_point_"+c.schema_type)
+	info.Update_Info("updated_high_point_market_"+c.schema_type)
 
 }
 
@@ -42,7 +42,7 @@ func (c HighPointController )Exec(){
 //
 //////////////////////////////////////////////////////
 
-func (c HighPointController )run(){
-	high_point.Update_HighPoint(c.schema_type)
+func (c HighPointMarketController )run(){
+	high_point.Update_HighPoint_Market(c.schema_type)
 
 }

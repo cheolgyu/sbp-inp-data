@@ -62,6 +62,14 @@ func init() {
 				"insert": "Start inserting the price_day.",
 				"end": "End the price_day initialization process",
 			},
+			"market_day": {
+				"start": "Start the market_day initialization process",
+				"download": "Start downloading the market_day",
+				"parse": "Start parsing the market_day.",
+				"seed": "Start seeding the market_day.",
+				"insert": "Start inserting the market_day.",
+				"end": "End the market_day initialization process",
+			},
 		},
 		"update":{
 			"listed_company":{
@@ -78,6 +86,18 @@ func init() {
 			"high_point_day":{
 				"start": "Start the high_point_day update process",
 				"end": "Start the high_point_day update process",
+			},
+			"high_point_market_day":{
+				"start": "Start the high_point_market_day update process",
+				"end": "Start the high_point_market_day update process",
+			},
+			"market_day": {
+				"start": "Start the market_day update process",
+				"download": "Start downloading the market_day",
+				"parse": "Start parsing the market_day.",
+				"seed": "Start seeding the market_day.",
+				"insert": "Start inserting the market_day.",
+				"end": "End the market_day update process",
 			},
 		},
 

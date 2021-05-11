@@ -93,8 +93,65 @@ func Init_file_price(schema_type string, arr []model.NaverChart){
 	
 	}	
 	
+}
+
+func Init_file_market(schema_type string, arr []model.NaverChartMarket){
+
+
+	var err = os.MkdirAll(arr[0].GetTemFilePath(),0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, item := range arr {
+		var schema_nm =  item.GetSchemaName(schema_type)
+		var tb_nm = item.GetTableName()
+
+		f, err := os.Create(item.GetSeedFilePath())
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	
+		defer f.Close()
+	
+		
+		
+	
+		var str = `
+		-- name: create-market-table-seed
+		`
 
-    //fmt.Println("done Make_file_price "+short_code)
+		str +=  `
+		DROP TABLE IF EXISTS "`+schema_nm+`"."`+tb_nm+`";
+		CREATE TABLE "`+schema_nm+`"."`+tb_nm+`" (
+			"Date" integer NOT NULL UNIQUE ,
+			"OpenPrice" double precision,
+			"HighPrice" double precision,
+			"LowPrice" double precision,
+			"ClosePrice" double precision,
+			"Volume" integer,
+			"ForeignerBurnoutRate" double precision
+		);
+		INSERT INTO "`+schema_nm+`"."`+tb_nm+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
+		VALUES 
+		`
+		
+		for j_index, j := range item.List {
+			str +=  fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ",j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate)
+			if j_index+1 == len(item.List){
+				str += " ; \n"
+			}else{
+				str += ", \n"
+			}
+		}
 
+		_, err2 := f.WriteString(str)
+
+		if err2 != nil {
+			log.Fatal(err2)
+		}
+	
+	}	
+	
 }

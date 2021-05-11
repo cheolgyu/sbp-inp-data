@@ -26,3 +26,34 @@ func (o NaverChart)GetTableName() string  {
 func (o NaverChart)GetSchemaName(schema_type string) string  {
 	return "price_"+schema_type
 }
+
+type MarketDay struct {
+	Date 			string
+    OpenPrice     	float64
+    HighPrice     	float64
+	LowPrice 		float64
+	ClosePrice   	float64
+    Volume 			int
+	ForeignerBurnoutRate float64
+}
+
+type NaverChartMarket struct {
+	Code 					string
+    List				[]MarketDay
+}
+
+func (o NaverChartMarket)GetTableName() string  {
+	return "tb_"+o.Code
+}
+
+func (o NaverChartMarket)GetSchemaName(schema_type string) string  {
+	return "market_"+schema_type
+}
+
+func (o NaverChartMarket)GetTemFilePath() string  {
+	return "migrations/market/seed"
+}
+
+func (o NaverChartMarket)GetSeedFilePath() string  {
+	return "migrations/market/seed/"+o.GetTableName()+".sql"
+}

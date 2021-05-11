@@ -7,6 +7,7 @@ import (
 	"corplist/src/controller/listed_company"
 	"corplist/src/controller/price"
 	"corplist/src/controller/high_point"
+	"corplist/src/controller/market"
 )
 
 
@@ -23,20 +24,52 @@ func main() {
 		project_daily()
 	default:
 		fmt.Printf("init or daily   go run . init or go run . daily")
+		test()
 	}
 }
 
 func test(){
 	fmt.Println("test ")
+
+	//update_high_point_market()
+}	
+
+////////////////////////
+
+/// func
+
+////////////////////////
+
+func update_high_point(){
+	var project = &high_point.HighPointController{}
+	var p = project.New("day")
+	p.Exec()
 }
+
+func update_high_point_market(){
+	var project = &high_point.HighPointMarketController{}
+	var p = project.New("day")
+	p.Exec()
+}
+
+////////////////////////
+
+/// daily
+
+////////////////////////
+
+
 
 func project_daily(){
 	daily_price()
+	daily_market()
 	update_high_point()
+	update_high_point_market()
 }
 
-func update_high_point(){
-	var project = &high_point.HighPointontroller{}
+
+func daily_market(){
+	var project = &market.DailyMarketController{}
 	var p = project.New("day")
 	p.Exec()
 }
@@ -47,11 +80,29 @@ func daily_price(){
 	p.Exec()
 }
 
+
+
+
+////////////////////////
+
+/// init
+
+////////////////////////
+
+
 func project_init(){
 	
 	init_listed_company()
 	init_price()
+	init_market()
 	update_high_point()
+	update_high_point_market()
+}
+
+func init_market(){
+	var project = &market.InitMarketController{}
+	var p = project.New("day")
+	p.Exec()
 }
 
 func init_price(){

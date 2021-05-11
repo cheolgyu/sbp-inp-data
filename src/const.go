@@ -3,6 +3,8 @@ package src
 import (
 	"fmt"
 	"time"
+
+	"corplist/src/model"
 )
 
 func GetStartDate(str string) string{
@@ -24,4 +26,18 @@ func GetStartDate(str string) string{
 	}
 
 	return res
+}
+
+func GetMarketList() []model.Company {
+
+	var company_list = []model.Company{
+		model.Company{
+			Short_code: "KOSPI",
+		}, model.Company{
+			Short_code: "KOSDAQ",
+		}, model.Company{
+			Short_code: "KPI200",
+		},
+	}
+	return company_list
 }
