@@ -28,6 +28,7 @@ func (c InitPriceController) New(schema_type string) controller.TimeFrameControl
 	}
 	c.log = log
 	c.up_id = log.Exec("start")
+	c.schema_type = schema_type
 
 	return c
 }
@@ -55,11 +56,24 @@ func (c InitPriceController )run(){
 
 		naver_chart_list = append(naver_chart_list,  naver_chart.Get(item.Short_code ,startDate, endDate)) 
 		
-		var str = fmt.Sprintf("make_init_old_stocks_price (%v / %v) ",index+1 ,len(company_list))
-		fmt.Println(str)	
+		if (index+1) % 10 == 0  {
+			var str = fmt.Sprintf("make_init_old_stocks_price (%v / %v) ",index+1 ,len(company_list))
+			fmt.Println(str)
+		}
+	
 
 	}
+
+	fmt.Println("sql 쿼리 작성 시작")	
+	c.log.Exec_Upid(c.up_id,"seed","start")
 	file.Init_file_price(c.schema_type, naver_chart_list)
-	dao.SqlPrice.Create_price_Table()
+	c.log.Exec_Upid(c.up_id,"seed","end")
+	fmt.Println("sql 쿼리 작성 끝")	
+
+	fmt.Println("sql insert 시작")
+	c.log.Exec_Upid(c.up_id,"insert","start")
+	dao.SqlPrice.Create_price_Table(naver_chart_list)
+	c.log.Exec_Upid(c.up_id,"insert","end")
+	fmt.Println("sql insert 끝")	
 
 }

@@ -42,29 +42,28 @@ func Init_file_listed_company(seed []model.Company){
 
 func Init_file_price(schema_type string, arr []model.NaverChart){
 	
-    f, err := os.Create("migrations/price/seed.sql")
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    defer f.Close()
-
-    
-	
-
-	var str = `
--- name: create-price-table-seed
-
-`
-
-
-
 	for _, item := range arr {
+		var schema_nm =  item.GetSchemaName(schema_type)
+		var tb_nm = item.GetTableName()
+
+		f, err := os.Create(item.GetSeedFilePath())
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	
+		defer f.Close()
+	
+		
+		
+	
+		var str = `
+		-- name: create-price-table-seed
+		`
 
 		str +=  `
-		DROP TABLE IF EXISTS "price_`+schema_type+`"."tb_`+item.Short_code+`";
-		CREATE TABLE "price_`+schema_type+`"."tb_`+item.Short_code+`" (
+		DROP TABLE IF EXISTS "`+schema_nm+`"."`+tb_nm+`";
+		CREATE TABLE "`+schema_nm+`"."`+tb_nm+`" (
 			"Date" integer NOT NULL UNIQUE ,
 			"OpenPrice" integer,
 			"HighPrice" integer,
@@ -73,7 +72,7 @@ func Init_file_price(schema_type string, arr []model.NaverChart){
 			"Volume" integer,
 			"ForeignerBurnoutRate" double precision
 		);
-		INSERT INTO "price_`+schema_type+`"."tb_`+item.Short_code+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
+		INSERT INTO "`+schema_nm+`"."`+tb_nm+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
 		VALUES 
 		`
 		
@@ -85,14 +84,16 @@ func Init_file_price(schema_type string, arr []model.NaverChart){
 				str += ", \n"
 			}
 		}
+
+		_, err2 := f.WriteString(str)
+
+		if err2 != nil {
+			log.Fatal(err2)
+		}
 	
 	}	
 	
-	_, err2 := f.WriteString(str)
-
-	if err2 != nil {
-		log.Fatal(err2)
-	}
+	
 
     //fmt.Println("done Make_file_price "+short_code)
 

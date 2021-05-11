@@ -2,6 +2,24 @@
 이 프로젝트는 주식 데이터베이스를 업데이트 하고 필요한 지표를 계산하고 데이터베이스에 저장하는 용도로 사용한다.    
 보여주는건 별도의 web 프로젝트를 생성하여 진행한다.   
 
+## 실행방법
+
+```
+docker-compose up 시키고 
+수동으로 실행시키기
+
+migrations\company\init.sql
+migrations\fun\high_point.sql
+migrations\price\init.sql
+migrations\init.sql
+
+mian.go 의 
+함수 init_project()  실행시켜 기본데이터 세팅
+함수 daily_project() 평일 3시 이후에 실행시켜 그날 데이터 가져오기
+
+```
+
+
 ## 다음 할것
 + 나스닥 변동률에 따른 변화량  구하기
 + 스케줄러 평일 특정시간 매일함수 실행시키기 ==> aws 에서 설정하기( https://aws.amazon.com/ko/solutions/implementations/instance-scheduler/resources/ )
