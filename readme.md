@@ -31,8 +31,8 @@ src\const.go - 3개월 로 수정
 
 
 ## 다음 할것
-2. init 시세데이터 시작일 변경. 및 데이터 초기화
-3. init 나스닥,코스닥,코스피 + high_point_통합지수
+
+3. init_market 나스닥,코스닥,코스피 + high_point_market
 4. ...?
 5. 종목별 안정성 공식 넣어보기
 
@@ -62,6 +62,7 @@ src\const.go - 3개월 로 수정
 + 스케줄러 평일 특정시간 매일함수 실행시키기 ==> aws 에서 설정하기( https://aws.amazon.com/ko/solutions/implementations/instance-scheduler/resources/ )
 
 ## 작업한 기능
+2. init 시세데이터 시작일 변경. 및 데이터 초기화
 1. go run . 파라미터<init,daily> 로 작업 시작게 바꾸기
 + 종목의 전일대비 퍼센트가 아닌 (일별 데이터에서 )마지막 상승에 따른 하락 퍼센트를 보여준다   
 (주별, 월별 시세 데이터 작업도 해놓으면 유용할듯 하다. )
