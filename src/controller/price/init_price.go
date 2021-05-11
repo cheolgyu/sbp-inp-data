@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"corplist/src"
 	"corplist/src/controller"
 	"corplist/src/model"
 	"corplist/src/service/download/price/naver_chart"
@@ -50,7 +51,7 @@ func (c InitPriceController )run(){
 	var naver_chart_list []model.NaverChart
 
 	var t = time.Now()
-	var startDate, endDate = "19900101", fmt.Sprintf("%d%02d%02d",t.Year(), t.Month(), t.Day())
+	var startDate, endDate = src.GetStartDate("init-price"), fmt.Sprintf("%d%02d%02d",t.Year(), t.Month(), t.Day())
 
 	for index , item := range company_list {
 

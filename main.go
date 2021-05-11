@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"fmt"
 
 	"corplist/src/controller/listed_company"
@@ -12,14 +13,24 @@ import (
 
 func main() {
 	fmt.Println("hello world ")
-	daily_project()
+
+	switch arg := os.Args[1]; arg {
+	case "init":
+		fmt.Println("init")
+		project_init()
+	case "daily":
+		fmt.Println("daily")
+		project_daily()
+	default:
+		fmt.Printf("init or daily   go run . init or go run . daily")
+	}
 }
 
 func test(){
-	daily_project()
+	fmt.Println("test ")
 }
 
-func daily_project(){
+func project_daily(){
 	daily_price()
 	update_high_point()
 }
@@ -36,7 +47,7 @@ func daily_price(){
 	p.Exec()
 }
 
-func init_project(){
+func project_init(){
 	
 	init_listed_company()
 	init_price()
