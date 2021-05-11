@@ -32,7 +32,10 @@ src\const.go - 3개월 로 수정
 
 ## 다음 할것
 
-3. init_market 나스닥,코스닥,코스피 + high_point_market
+1. LOG 테이블 변경.. 한눈에 파악하기 힘듬.
+2. 홈페이지에서 쓸 DATA.JSON 파일 만들기 대상테이블은 VIEW_ .... 로시작되는것 그다음 WEB에서 HTML파일만들떄 가치 포함시켜서 통신 비용 낮추고 특정 사람만 IP주소 허용해줘서 보기.
+
+
 4. ...?
 5. 종목별 안정성 공식 넣어보기
 
@@ -62,6 +65,7 @@ src\const.go - 3개월 로 수정
 + 스케줄러 평일 특정시간 매일함수 실행시키기 ==> aws 에서 설정하기( https://aws.amazon.com/ko/solutions/implementations/instance-scheduler/resources/ )
 
 ## 작업한 기능
+3. init_market 나스닥,코스닥,코스피 + high_point_market ===> 코스닥,코스피, src\const.go....GetMarketList() 참조
 2. init 시세데이터 시작일 변경. 및 데이터 초기화
 1. go run . 파라미터<init,daily> 로 작업 시작게 바꾸기
 + 종목의 전일대비 퍼센트가 아닌 (일별 데이터에서 )마지막 상승에 따른 하락 퍼센트를 보여준다   
