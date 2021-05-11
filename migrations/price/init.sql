@@ -5,6 +5,7 @@ CREATE SCHEMA "price_month";
 
 
 -- 사용자용 시세뷰 (일/주/월 )
+DROP VIEW IF EXISTS "view_price_day";
 CREATE VIEW view_price_day AS 
 SELECT 
     cb.full_code,
@@ -28,9 +29,10 @@ SELECT
     hp.fluctuation_rate,
     hp.updated_date as high_point_updated_date  
 
-from high_point_day hp  left join listed_company cb on hp.short_code= cb.short_code 
+from high_point_day hp  left join listed_company cb on hp.short_code= cb.short_code  order by hp.fluctuation_rate ASC
 ;
 -- 사용자용 시세뷰 (일/주/월 )
+DROP VIEW IF EXISTS "view_price_week";
 CREATE VIEW view_price_week AS 
 SELECT 
     cb.full_code,
@@ -54,9 +56,10 @@ SELECT
     hp.fluctuation_rate,
     hp.updated_date as high_point_updated_date  
 
-from high_point_week hp  left join listed_company cb on hp.short_code= cb.short_code 
+from high_point_week hp  left join listed_company cb on hp.short_code= cb.short_code  order by hp.fluctuation_rate ASC
 ;
 -- 사용자용 시세뷰 (일/주/월 )
+DROP VIEW IF EXISTS "view_price_month";
 CREATE VIEW view_price_month AS 
 SELECT 
     cb.full_code,
@@ -80,5 +83,5 @@ SELECT
     hp.fluctuation_rate,
     hp.updated_date as high_point_updated_date  
 
-from high_point_month hp  left join listed_company cb on hp.short_code= cb.short_code 
+from high_point_month hp  left join listed_company cb on hp.short_code= cb.short_code  order by hp.fluctuation_rate ASC
 ;
