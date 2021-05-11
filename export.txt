@@ -1,0 +1,11 @@
+
+# 하  TO STDOUT 에서 한글깨짐. 컨테이서한글 설정하다가 컨테이너 고장나서 테이블 벡업후 껏다 키고 데이터 다시 넣고 작업해야됌 
+docker exec -u postgres corplist_db_1 psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t ) TO STDOUT CSV HEADER ENCODING 'UTF8' " 
+
+# 임시방편 사용법
+
+#컨테이너 터미널 알아서 열기
+su - postgres
+psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t ) TO  '/var/lib/postgresql/export2.json' ENCODING 'UTF8' " 
+# 윈도우 터미널에서 실행
+docker cp corplist_db_1:/var/lib/postgresql/export2.json ./exp3.json
