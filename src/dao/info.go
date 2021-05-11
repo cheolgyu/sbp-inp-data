@@ -38,17 +38,20 @@
  }
 
  func (obj Info) Select_Info(name string  ) (string, string, string, string, string)  {
-	var updated_date, startDate, endDate, short_format,full_format  string 
+	var updated_date, yyyymmdd, now_yyyymmdd, next_yyyymmdd, full  string 
 
 	var db = obj.DB.Conn()
 	defer db.Close()
 
 	query := ` 
-	SELECT updated_date,
-		TO_CHAR(updated_date+ interval '1' day,'YYYYMMDD') AS startDate,
-        TO_CHAR(now(),'YYYYMMDD') AS endDate,
-        TO_CHAR(updated_date,'YYYYMMDD') AS short_format,
-		TO_CHAR(updated_date,'YYYY-MM-DD HH:MI:SS') AS full_format
+	SELECT 
+	
+	updated_date,
+	TO_CHAR(updated_date,'YYYYMMDD') AS yyyymmdd,
+	TO_CHAR(now(),'YYYYMMDD') AS now_yyyymmdd,	
+	TO_CHAR(updated_date+ interval '1' day,'YYYYMMDD') AS next_yyyymmdd,
+	TO_CHAR(updated_date,'YYYY-MM-DD HH:MI:SS') AS full
+
 	FROM "info"
 	WHERE "name" = $1
 	;
@@ -62,12 +65,12 @@
 	defer stmt.Close()
 
 	 
-	err = db.QueryRow(query, name ).Scan(&updated_date, &startDate, &endDate, &short_format, &full_format)
+	err = db.QueryRow(query, name ).Scan(&updated_date, &yyyymmdd, &now_yyyymmdd, &next_yyyymmdd, &full)
 	if err != nil {
 		panic(err)
 	}
 
-	return updated_date, startDate, endDate, short_format,full_format
+	return updated_date, yyyymmdd, now_yyyymmdd, next_yyyymmdd, full
 	
 }
  

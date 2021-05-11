@@ -12,7 +12,7 @@ import (
 
 func main() {
 	fmt.Println("hello world ")
-	init_project()
+	daily_project()
 }
 
 func test(){

@@ -44,9 +44,26 @@ func Daily_file_price(schema_type string, arr []model.NaverChart){
 				}
 			}
 
-			str +=  ` ON CONFLICT ("Date") `
-			str +=  ` DO NOTHING ; `
-			str += " \n\n"
+			
+			// 1개일 경우....  최신데이터로 
+			if len(item.DayList)  ==  1{
+				str += `
+				ON CONFLICT ("Date")
+				DO 
+				UPDATE SET
+				"OpenPrice" = '` + fmt.Sprintf("%v",  item.DayList[0].OpenPrice   )+`',
+				"HighPrice" = '` + fmt.Sprintf("%v",  item.DayList[0].HighPrice   )+`',
+				"LowPrice" = '` + fmt.Sprintf("%v",  item.DayList[0].LowPrice   )+`',
+				"ClosePrice" = '` + fmt.Sprintf("%v",  item.DayList[0].ClosePrice   )+`',
+				"Volume" = '` + fmt.Sprintf("%v",  item.DayList[0].Volume   )+`',
+				"ForeignerBurnoutRate" = '` + fmt.Sprintf("%v",  item.DayList[0].ForeignerBurnoutRate   )+`'
+				`
+			
+			}else {
+				str +=  `ON CONFLICT ("Date")  DO NOTHING  `
+			}
+			
+			str += "; \n\n"
 		}
 	
 	}	
