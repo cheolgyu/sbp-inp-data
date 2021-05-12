@@ -98,41 +98,69 @@ $$ LANGUAGE plpgsql
 -- 연습용: 최고가 찾기 
 --
 ---------------------------------
-DROP FUNCTION IF EXISTS "get_last_high_date";
-CREATE OR REPLACE FUNCTION get_last_high_date(short_code text)
-RETURNS table(
-    high_date INTEGER,
-    high_price INTEGER,
-    last_date INTEGER,
-    last_close_price INTEGER,
-    -- 대비
-    contrast_price integer,
-    -- 등락률
-    fluctuation_rate numeric
-    ) AS $$
-DECLARE
- 
-    i INTEGER;
-    i_date INTEGER;
-    i_price INTEGER;
-    j_date INTEGER;
-    j_price INTEGER;
+    DROP FUNCTION IF EXISTS "get_last_high_date";
+    CREATE OR REPLACE FUNCTION get_last_high_date(short_code text)
+    RETURNS table(
+        high_date INTEGER,
+        high_price INTEGER,
+        last_date INTEGER,
+        last_close_price INTEGER,
+        -- 대비
+        contrast_price integer,
+        -- 등락률
+        fluctuation_rate numeric
+        ) AS $$
+    DECLARE
+    
+        i INTEGER;
+        i_date INTEGER;
+        i_price INTEGER;
+        j_date INTEGER;
+        j_price INTEGER;
 
-    last_close_price INTEGER;
-BEGIN
-    i := 0;
-    EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "price".tb_%s order by "Date" desc limit 1 ', short_code) INTO last_date, last_close_price ;  
+        
+        g_way  text;
+        g_way_price  INTEGER;
+        point_price  INTEGER;
+        point_date  INTEGER;
 
-    LOOP
-        EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "price".tb_%s order by "Date" desc limit 1 offset %s', short_code, i) INTO i_date ,i_price ;        
-        EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "price".tb_%s order by "Date" desc limit 1 offset %s', short_code, i+1) INTO j_date ,j_price ;        
+        sel_point_date INTEGER;
+        sel_point_price INTEGER;
+
+        last_close_price INTEGER;
+    BEGIN
+        i := 0;
+        EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "price_day".tb_%s order by "Date" desc limit 1 ', short_code) INTO last_date, last_close_price ;  
+        EXECUTE format(' SELECT   "ClosePrice"   FROM "price_day".tb_%s order by "Date" desc limit 1 offset 1 ', short_code) INTO g_way_price ;  
         
-        EXIT WHEN j_price <  i_price ;
+        IF  last_close_price  >   g_way_price   THEN
+            g_way := 'up' ;
+        END IF;
+
+        IF  last_close_price  <   g_way_price   THEN
+            g_way := 'down' ;
+        END IF;
+
+        IF  last_close_price  =   g_way_price   THEN
+            g_way := 'eq' ;
+        END IF;
+
+        LOOP
+            EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "price_day".tb_%s order by "Date" desc limit 1 offset %s', short_code, i) INTO i_date ,i_price ;        
+            EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "price_day".tb_%s order by "Date" desc limit 1 offset %s', short_code, i+1) INTO j_date ,j_price ;   
+
         
-        SELECT i+1 INTO i;
-    END LOOP;
-    RETURN query select j_date, j_price, last_date, last_close_price, * from fluctuation_rate(last_close_price, j_price);
-END;
-$$ LANGUAGE plpgsql
-;
+            
+            EXIT WHEN (g_way = 'down' and  j_price <  i_price ) or   (g_way = 'up' and  j_price >  i_price) ;
+            
+            SELECT i+1 INTO i;
+        END LOOP;
+
+        sel_point_date = i_date;
+        sel_point_price = i_price;
+
+        RETURN query select sel_point_date, sel_point_price, last_date, last_close_price, * from get_fluctuation_rate(last_close_price, sel_point_price);
+    END;
+    $$ LANGUAGE plpgsql
+    ;
 

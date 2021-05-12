@@ -24,12 +24,10 @@ CREATE TABLE "public"."high_point_market_day" (
 -- 기준일 기준 대비,등락률 구하기
 --
 ---------------------------------
-DROP FUNCTION IF EXISTS "fluctuation_rate_numeric";
-CREATE FUNCTION fluctuation_rate_numeric(
-    -- 기준가격
-    base_price numeric ,
-    -- 비교가격
-    comparison_price  numeric
+DROP FUNCTION IF EXISTS "get_fluctuation_rate_numeric";
+CREATE FUNCTION get_fluctuation_rate_numeric(
+    now_price numeric ,
+    old_price  numeric
     )
 RETURNS TABLE (
     -- 대비
@@ -43,8 +41,8 @@ DECLARE
 BEGIN
     
     RETURN QUERY select  
-        (comparison_price - base_price ) as  contrast_price  , 
-        round((comparison_price - base_price )/ CAST ( base_price AS numeric ) * 100, 2 ) as fluctuation_rate ;
+        (now_price - old_price ) as  contrast_price  , 
+        round((now_price - old_price )/ CAST ( old_price AS numeric ) * 100, 2 ) as fluctuation_rate ;
 END;
 $BODY$
 LANGUAGE PLPGSQL;
@@ -91,35 +89,27 @@ CREATE OR REPLACE FUNCTION insert_last_high_date_market(schema_type text, inp_sh
 RETURNS void  AS $$
 DECLARE
  
-    i INTEGER;
-    i_date INTEGER;
-    i_price numeric;
-    j_date INTEGER;
-    j_price numeric;
+
+    point_date INTEGER;
+    point_price numeric;
 
     cur_last_date INTEGER;
     cur_last_close_price numeric;
     fr_contrast_price numeric;
     fr_fluctuation_rate numeric;
 
-    loop_cnt INTEGER;
     is_exist INTEGER;
+    schema_nm TEXT;
+    tb_nm TEXT;
+
 BEGIN
-    i := 0;
 
-    EXECUTE format(' SELECT count("Date")  FROM "market_%s"."tb_%s"', schema_type, inp_short_code) INTO loop_cnt ;  
-    EXECUTE format(' SELECT  "Date", "ClosePrice"   FROM "market_%s"."tb_%s" order by "Date" desc limit 1 ', schema_type, inp_short_code) INTO cur_last_date, cur_last_close_price ;  
+    schema_nm := 'market_'|| schema_type;
+    tb_nm := 'tb_'|| inp_short_code;
 
-    LOOP
-        EXECUTE format(' SELECT "Date", "ClosePrice"   FROM "market_%s"."tb_%s" order by "Date" desc limit 1 offset %s', schema_type, inp_short_code, i) INTO i_date ,i_price ;        
-        EXECUTE format(' SELECT "Date", "ClosePrice"  FROM "market_%s"."tb_%s" order by "Date" desc limit 1 offset %s', schema_type, inp_short_code, i+1) INTO j_date ,j_price ;        
-        
-        EXIT WHEN j_price <  i_price or i > loop_cnt ;
-        
-        SELECT i+1 INTO i;
-    END LOOP;
 
-    select  * into  fr_contrast_price, fr_fluctuation_rate  from public.fluctuation_rate_numeric(j_price, cur_last_close_price);
+    select  * into point_date, point_price, cur_last_date , cur_last_close_price , fr_contrast_price, fr_fluctuation_rate  
+    from public.comm_high_point(schema_nm, tb_nm);
 
     EXECUTE format(' SELECT count(*) FROM  "public".high_point_market_%I tb_hp  WHERE tb_hp."short_code" = %L ', schema_type, inp_short_code ) INTO is_exist;
 
@@ -127,8 +117,8 @@ BEGIN
 
         EXECUTE format('UPDATE "public".high_point_market_%I ', schema_type)
             || format('SET "short_code" = %L, ', inp_short_code)
-            || format('"high_date" = %L,' ,   j_date)
-            || format('"high_price" = %L, ', j_price)
+            || format('"high_date" = %L,' ,   point_date)
+            || format('"high_price" = %L, ', point_price)
             || format('"last_date" = %L, ', cur_last_date)
             || format('"last_close_price" = %L, ', cur_last_close_price)
             || format('"contrast_price" = %L, ', fr_contrast_price)
@@ -139,7 +129,7 @@ BEGIN
     ELSE
         EXECUTE format('INSERT INTO "public".high_point_market_%I ', schema_type) 
             || format(' ("short_code", "high_date", "high_price", "last_date", "last_close_price", "contrast_price", "fluctuation_rate") ' )
-            || format('VALUES (%L, %L, %L, %L, %L, %L, %L  )  ',inp_short_code, j_date, j_price, cur_last_date, cur_last_close_price, fr_contrast_price, fr_fluctuation_rate )
+            || format('VALUES (%L, %L, %L, %L, %L, %L, %L  )  ',inp_short_code, point_date, point_price, cur_last_date, cur_last_close_price, fr_contrast_price, fr_fluctuation_rate )
         ;
 
     END IF;
