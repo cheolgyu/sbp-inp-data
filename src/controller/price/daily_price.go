@@ -55,32 +55,21 @@ func (c DailyPriceController )run(){
 func (c DailyPriceController )update(){
 
 	
-	var _, last, now, next, _ = dao.SqlInfo.Select_Info("updated_price_"+c.schema_type)
+	var _, last, now, _, _ = dao.SqlInfo.Select_Info("updated_price_"+c.schema_type)
 	
-	var startDate = ""
 
-	if now > next {
-		startDate = next
-	}else if now  == last {
-		startDate = last
-	}
-	//하루 두번할 경우 발생하는 오류방지 
-	if now > next  || now  == last{
-		var company_list []model.Company = dao.SqlCompany.Select_All()
-		var naver_chart_list []model.NaverChart
-	
-		for index , item := range company_list {
-			naver_chart_list = append(naver_chart_list,  naver_chart.Get(item.Short_code ,startDate, now)) 
-			
-			var str = fmt.Sprintf("downloading.. (%v / %v) ",index+1 ,len(company_list))
-			fmt.Println(str)	
-		}
-	
-		file.Daily_file_price(c.schema_type, naver_chart_list )
-		dao.SqlPrice.Daily_price_Table()
+	var company_list []model.Company = dao.SqlCompany.Select_All()
+	var naver_chart_list []model.NaverChart
+
+	for index , item := range company_list {
+		naver_chart_list = append(naver_chart_list,  naver_chart.Get(item.Short_code ,last, now)) 
+		
+		var str = fmt.Sprintf("downloading.. (%v / %v) ",index+1 ,len(company_list))
+		fmt.Println(str)	
 	}
 
-
+	file.Daily_file_price(c.schema_type, naver_chart_list )
+	dao.SqlPrice.Daily_price_Table()
 
 
 }
