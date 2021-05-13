@@ -20,5 +20,6 @@ migrations/*/daily.sql
 migrations/price/daily.sql
 migrations/price/seed/*.sql
 migrations/market/seed/*.sql
+migrations/company/seed_state.sql
 *.xlsx
 price.json
