@@ -10,16 +10,15 @@ import (
 	"corplist/src/service/parse/xlsx"
 )
 
-type InitListedComapnyStateController struct {
+type DailyListedComapnyStateController struct {
 	log   controller.LogController
 	up_id string
+	list  []model.CompanyState
 }
 
-var list []model.CompanyState
-
-func (obj InitListedComapnyStateController) New() controller.DefaultController {
+func (obj DailyListedComapnyStateController) New() controller.DefaultController {
 	var log = controller.LogController{
-		LogTitleP1: "init",
+		LogTitleP1: "daily",
 		LogTitleP2: "listed_company_state",
 		LogTitleP3: "start",
 	}
@@ -31,12 +30,12 @@ func (obj InitListedComapnyStateController) New() controller.DefaultController {
 
 }
 
-func (c InitListedComapnyStateController) Exec() {
+func (c DailyListedComapnyStateController) Exec() {
 
 	c.run()
 
 	c.log.Exec_Upid(c.up_id, "end", "end")
-	info.Update_Info("init_company_state")
+	info.Update_Info("updated_company_state")
 
 }
 
@@ -44,7 +43,7 @@ func (c InitListedComapnyStateController) Exec() {
 //
 //////////////////////////////////////////////////////
 
-func (c InitListedComapnyStateController) run() {
+func (c DailyListedComapnyStateController) run() {
 
 	c.Download()
 	c.Parse()
@@ -52,7 +51,7 @@ func (c InitListedComapnyStateController) run() {
 	c.ExecSql()
 }
 
-func (c InitListedComapnyStateController) Download() {
+func (c *DailyListedComapnyStateController) Download() {
 
 	c.log.Exec_Upid(c.up_id, "download", "start")
 
@@ -61,25 +60,25 @@ func (c InitListedComapnyStateController) Download() {
 	c.log.Exec_Upid(c.up_id, "download", "end")
 }
 
-func (c InitListedComapnyStateController) Parse() {
+func (c *DailyListedComapnyStateController) Parse() {
 
 	c.log.Exec_Upid(c.up_id, "parse", "start")
 
-	list = xlsx.RunCompanyState()
+	c.list = xlsx.RunCompanyState()
 
 	c.log.Exec_Upid(c.up_id, "parse", "end")
 }
 
-func (c InitListedComapnyStateController) ReadySql() {
+func (c *DailyListedComapnyStateController) ReadySql() {
 
 	c.log.Exec_Upid(c.up_id, "seed", "start")
 
-	file.Init_file_listed_company_state(list)
+	file.Init_file_listed_company_state(c.list)
 
 	c.log.Exec_Upid(c.up_id, "seed", "end")
 }
 
-func (c InitListedComapnyStateController) ExecSql() {
+func (c *DailyListedComapnyStateController) ExecSql() {
 
 	c.log.Exec_Upid(c.up_id, "insert", "start")
 

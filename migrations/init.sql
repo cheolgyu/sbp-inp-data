@@ -12,12 +12,15 @@ CREATE TABLE "public"."info" (
 
 -- 기본값 
     INSERT INTO "info" ("name", "value", "updated_date")
-    VALUES ('init_company', NULL, now())
+    VALUES 
+    ('init_company', NULL, now())
+    ,('init_company_state', NULL, now()) 
     ,('init_price_day', NULL, now()) 
     ,('init_price_week', NULL, now())
     ,('init_price_month', NULL, now())
     ,('init_market_day', NULL, now()) 
     ,('updated_company', NULL, now())
+    ,('updated_company_state', NULL, now())
     ,('updated_market_day', NULL, now())
     ,('updated_price_day', NULL, now())
     ,('updated_price_week', NULL, now())

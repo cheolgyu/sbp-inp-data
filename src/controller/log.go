@@ -47,7 +47,8 @@ func init() {
 				"seed":     "Start seeding the listed_company.",
 				"insert":   "Start inserting the listed_company.",
 				"end":      "End the listed_company initialization process",
-			}, "listed_company_state": {
+			},
+			"listed_company_state": {
 				"start":    "Start the listed_company initialization process",
 				"download": "Start downloading the listed_company",
 				"parse":    "Start parsing the listed_company.",
@@ -75,6 +76,14 @@ func init() {
 		"update": {
 			"listed_company": {
 				"start": "Start the listed_company update process",
+			},
+			"listed_company_state": {
+				"start":    "Start the listed_company update process",
+				"download": "Start downloading the listed_company",
+				"parse":    "Start parsing the listed_company.",
+				"seed":     "Start seeding the listed_company.",
+				"insert":   "Start inserting the listed_company.",
+				"end":      "End the listed_company update process",
 			},
 			"price_day": {
 				"start":    "Start the price_day update process",

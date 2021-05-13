@@ -53,25 +53,42 @@ func Init_file_listed_company_state(seed []model.CompanyState) {
 	var str = `
 		-- name: ` + src.Info["seed-nm-init-compnay_state"] + "\n"
 
-	str += `
-	INSERT INTO "listed_company_state" 
-		("code", "name", "stop", "clear", "managed", 
-		"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
-		"caution", "warning", "risk", "created_date", "updated_date")
-	VALUES 
-`
-	for index, item := range seed {
-		str += fmt.Sprintf("(		'%v',  '%v',  %v,  %v,  %v,    %v,  %v,  %v, 	 %v,  %v,   %v,  %v,  %v,	 now(),  now() ) ",
+	for _, item := range seed {
+		str += `
+		INSERT INTO "listed_company_state" 
+			("code", "name", "stop", "clear", "managed", 
+			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
+			"caution", "warning", "risk", "created_date", "updated_date")
+		VALUES 
+		`
+		str += fmt.Sprintf("(		'%v',  '%v',  %v,  %v,  %v,    %v,  %v,  %v, %v,  %v,       %v,  %v,  %v,now(),  now() ) ",
 			item.Code, item.Name, item.Stop, item.Clear, item.Managed,
 			item.Ventilation, item.Unfaithful, item.Low_liquidity, item.Lack_listed, item.Overheated,
 			item.Caution, item.Warning, item.Risk,
 		)
-		if index+1 == len(seed) {
-			str += " ; \n"
-		} else {
-			str += ", \n"
-		}
+		str += `
+				ON CONFLICT ("code")
+				DO 
+				UPDATE SET
+				"stop" = '` + fmt.Sprintf("%v", item.Stop) + `',
+				"clear" = '` + fmt.Sprintf("%v", item.Clear) + `',
+				"managed" = '` + fmt.Sprintf("%v", item.Managed) + `',
+				
+				"ventilation" = '` + fmt.Sprintf("%v", item.Ventilation) + `',
+				"unfaithful" = '` + fmt.Sprintf("%v", item.Unfaithful) + `',
+				"low_liquidity" = '` + fmt.Sprintf("%v", item.Low_liquidity) + `',
+				"lack_listed" = '` + fmt.Sprintf("%v", item.Lack_listed) + `',
+				"overheated" = '` + fmt.Sprintf("%v", item.Overheated) + `',
+
+				"caution" = '` + fmt.Sprintf("%v", item.Caution) + `',
+				"warning" = '` + fmt.Sprintf("%v", item.Warning) + `',
+				"risk" = '` + fmt.Sprintf("%v", item.Risk) + `',
+				"updated_date" = now()
+				
+				`
+		str += "; \n\n"
 	}
+
 	_, err2 := f.WriteString(str)
 
 	if err2 != nil {

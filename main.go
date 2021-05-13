@@ -29,8 +29,8 @@ func main() {
 func test() {
 	fmt.Println("test ")
 
-	init_listed_company_state()
-	//update_high_point_market()
+	//init_listed_company_state()
+
 }
 
 ////////////////////////
@@ -58,6 +58,7 @@ func update_high_point_market() {
 ////////////////////////
 
 func project_daily() {
+	daily_listed_company_state()
 	daily_price()
 	daily_market()
 	update_high_point()
@@ -85,6 +86,7 @@ func daily_price() {
 func project_init() {
 
 	init_listed_company()
+	init_listed_company_state()
 	init_price()
 	init_market()
 	update_high_point()
@@ -114,6 +116,13 @@ func init_listed_company() {
 
 func init_listed_company_state() {
 	var project = &listed_company.InitListedComapnyStateController{}
+	var p = project.New()
+	p.Exec()
+
+}
+
+func daily_listed_company_state() {
+	var project = &listed_company.DailyListedComapnyStateController{}
 	var p = project.New()
 	p.Exec()
 
