@@ -31,7 +31,7 @@ SELECT
     fmt_yyyymmdd(hp.last_date) as last_date,
     fmt_comma(hp.last_close_price) as last_close_price,
     fmt_comma(hp.contrast_price) as contrast_price,
-    fmt_per(hp.fluctuation_rate) as fluctuation_rate,
+    hp.fluctuation_rate as fluctuation_rate,
     fmt_timestamp(hp.updated_date) as high_point_updated_date,
     fmt_naver_link(cb.short_code) as naver_link
 from
