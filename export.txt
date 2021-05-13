@@ -6,11 +6,24 @@ docker exec -u postgres corplist_db_1 psql -d dev -c "COPY (SELECT array_to_json
 
 #컨테이너 터미널 알아서 열기
 su - postgres
-psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t ) TO  '/var/lib/postgresql/export_price.json' ENCODING 'UTF8' " 
+psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t where stop is false   ) TO  '/var/lib/postgresql/export_price_not_stop.json' ENCODING 'UTF8' " 
+psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t where stop is true   ) TO  '/var/lib/postgresql/export_price_is_stop.json' ENCODING 'UTF8' " 
+
 psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_market_day t ) TO  '/var/lib/postgresql/export_market.json' ENCODING 'UTF8' " 
-psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM info t ) TO  '/var/lib/postgresql/export_info.json' ENCODING 'UTF8' " 
+psql -d dev -c "COPY ( 
+   SELECT json_object( 
+    array_agg(
+        name
+        
+    ),
+    array_agg(
+        fmt_timestamp(updated_date)::text
+    )
+)  FROM "info"
+ ) TO  '/var/lib/postgresql/export_info.json' ENCODING 'UTF8' " 
 # 윈도우 터미널에서 실행
-docker cp corplist_db_1:/var/lib/postgresql/export_price.json C://Users//cheolgyu//workspace//stock-app//static//data//price.json
+docker cp corplist_db_1:/var/lib/postgresql/export_price_not_stop.json C://Users//cheolgyu//workspace//stock-app//static//data//price.json
+docker cp corplist_db_1:/var/lib/postgresql/export_price_is_stop.json C://Users//cheolgyu//workspace//stock-app//static//data//price_is_stop.json
 docker cp corplist_db_1:/var/lib/postgresql/export_market.json C://Users//cheolgyu//workspace//stock-app//static//data//market.json
 docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu//workspace//stock-app//static//data//info.json
 
