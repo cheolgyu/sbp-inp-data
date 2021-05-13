@@ -33,7 +33,33 @@ src\const.go - 3개월 로 수정
 ## 다음 할것
 + 퍼센트가 높으면 수직 상증 중인 종목인것이니깐 몇일간 몇 퍼센트 연속 상승중인  뱃지를 달아놓고 몇일간 지속되는 순으로 정렬해서 보여주자. 그럼 제일 지속적인것에 투자하면 ?? ㅋㅋㅋ
 
-+ 기업상태 업데이트 : 관리종목, 거래정지된애 표시해야됌. 그러므로 기업정보도 데일리 해야하지만 지금은 기업 기본정보고 기업상태정보 테이블에다가 업데이트하면되겠다.
+> 기업상태 업데이트 : 관리종목, 거래정지된애 표시해야됌. 그러므로 기업정보도 데일리 해야하지만 지금은 기업 기본정보고 기업상태정보 테이블에다가 업데이트하면되겠다.
+>>  [전종목 지정내역](http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201020201)       
+>>> 초기화   
+테이블 생성 -> 엑셀다운 -> 파싱 -> 디비저장 -> info 업데이트   
+>>> 매일   
+   엑셀다운 -> 파싱 -> 디비업데이트 -> info 업데이트   
+>>> view 테이블 변경   
+현재 상태 칼럼 추가  배열로 넣고  지정내역의 로우 넣고 웹에서는 배열 ox 값으로 배지 출력.
+
+  
+> 로그테이블 변경
+id, up_id, process ,  main_action, main_action_type, sub_action, sub_action_type , etc... 
+a, ab,  company_listed init start ...
+a, ab,  company_listed init start  download start
+a, ab,  company_listed init start  download end
+a, ab,  company_listed init start  parse start
+a, ab,  company_listed init start  parse end
+a, ab,  company_listed init start  insert start
+a, ab,  company_listed init start  insert end
+a, ab,  company_listed init end  insert end
+
+a, ab,  company_state init start ...
+a, ab,  prcie_day init start ...
+
+
+
+
 
 0. CONST 에 LOG 및 INFO 값 넣기고 기타 등등(파일경로 등 여러곳에 정의한것 다 뺴기) 정리하기
 1. LOG 테이블 변경.. 한눈에 파악하기 힘듬.
