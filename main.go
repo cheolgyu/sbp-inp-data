@@ -29,6 +29,7 @@ func main() {
 func test() {
 	fmt.Println("test ")
 
+	init_listed_company_state()
 	//update_high_point_market()
 }
 
@@ -106,6 +107,13 @@ func init_price() {
 
 func init_listed_company() {
 	var project = &listed_company.InitListedComapnyController{}
+	var p = project.New()
+	p.Exec()
+
+}
+
+func init_listed_company_state() {
+	var project = &listed_company.InitListedComapnyStateController{}
 	var p = project.New()
 	p.Exec()
 

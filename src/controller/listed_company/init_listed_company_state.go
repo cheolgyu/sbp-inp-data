@@ -10,17 +10,17 @@ import (
 	"corplist/src/service/parse/xlsx"
 )
 
-type InitListedComapnyController struct {
+type InitListedComapnyStateController struct {
 	log   controller.LogController
 	up_id string
 }
 
-var company_list []model.Company
+var list []model.CompanyState
 
-func (obj InitListedComapnyController) New() controller.DefaultController {
+func (obj InitListedComapnyStateController) New() controller.DefaultController {
 	var log = controller.LogController{
 		LogTitleP1: "init",
-		LogTitleP2: "listed_company",
+		LogTitleP2: "listed_company_state",
 		LogTitleP3: "start",
 	}
 
@@ -31,7 +31,7 @@ func (obj InitListedComapnyController) New() controller.DefaultController {
 
 }
 
-func (c InitListedComapnyController) Exec() {
+func (c InitListedComapnyStateController) Exec() {
 
 	c.run()
 
@@ -44,46 +44,46 @@ func (c InitListedComapnyController) Exec() {
 //
 //////////////////////////////////////////////////////
 
-func (c InitListedComapnyController) run() {
+func (c InitListedComapnyStateController) run() {
 
-	c.Download()
+	//c.Download()
 	c.Parse()
 	c.ReadySql()
 	c.ExecSql()
 }
 
-func (c InitListedComapnyController) Download() {
+func (c InitListedComapnyStateController) Download() {
 
 	c.log.Exec_Upid(c.up_id, "download", "start")
 
-	data_krx.ListedCompanyBaisc{}.Save()
+	data_krx.ListedCompanyState{}.Save()
 
 	c.log.Exec_Upid(c.up_id, "download", "end")
 }
 
-func (c InitListedComapnyController) Parse() {
+func (c InitListedComapnyStateController) Parse() {
 
 	c.log.Exec_Upid(c.up_id, "parse", "start")
 
-	company_list = xlsx.Run()
+	list = xlsx.RunCompanyState()
 
 	c.log.Exec_Upid(c.up_id, "parse", "end")
 }
 
-func (c InitListedComapnyController) ReadySql() {
+func (c InitListedComapnyStateController) ReadySql() {
 
 	c.log.Exec_Upid(c.up_id, "seed", "start")
 
-	file.Init_file_listed_company(company_list)
+	file.Init_file_listed_company_state(list)
 
 	c.log.Exec_Upid(c.up_id, "seed", "end")
 }
 
-func (c InitListedComapnyController) ExecSql() {
+func (c InitListedComapnyStateController) ExecSql() {
 
 	c.log.Exec_Upid(c.up_id, "insert", "start")
 
-	dao.SqlCompany.Create_company_seed()
+	dao.SqlCompany.Create_company_state_seed()
 
 	c.log.Exec_Upid(c.up_id, "insert", "end")
 }

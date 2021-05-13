@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"log"
 
+	"corplist/src"
 	"corplist/src/model"
 	"os"
 )
 
 func Init_file_listed_company(seed []model.Company) {
 
-	f, err := os.Create("migrations/company/seed.sql")
+	f, err := os.Create(src.Info["seed-fnm-init-compnay"])
 
 	if err != nil {
 		log.Fatal(err)
@@ -18,7 +19,7 @@ func Init_file_listed_company(seed []model.Company) {
 
 	defer f.Close()
 
-	_, err2 := f.WriteString("-- name: create-company-table-seed" + "\n")
+	_, err2 := f.WriteString("-- name: " + src.Info["seed-nm-init-compnay"] + "\n")
 
 	if err2 != nil {
 		log.Fatal(err2)
@@ -30,6 +31,48 @@ func Init_file_listed_company(seed []model.Company) {
 			log.Fatal(err2)
 		}
 	}
+
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+
+	fmt.Println("done")
+
+}
+
+func Init_file_listed_company_state(seed []model.CompanyState) {
+
+	f, err := os.Create(src.Info["seed-fnm-init-compnay_state"])
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+
+	var str = `
+		-- name: ` + src.Info["seed-nm-init-compnay_state"] + "\n"
+
+	str += `
+	INSERT INTO "listed_company_state" 
+		("code", "name", "stop", "clear", "managed", 
+		"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
+		"caution", "warning", "risk", "created_date", "updated_date")
+	VALUES 
+`
+	for index, item := range seed {
+		str += fmt.Sprintf("(		'%v',  '%v',  %v,  %v,  %v,    %v,  %v,  %v, 	 %v,  %v,   %v,  %v,  %v,	 now(),  now() ) ",
+			item.Code, item.Name, item.Stop, item.Clear, item.Managed,
+			item.Ventilation, item.Unfaithful, item.Low_liquidity, item.Lack_listed, item.Overheated,
+			item.Caution, item.Warning, item.Risk,
+		)
+		if index+1 == len(seed) {
+			str += " ; \n"
+		} else {
+			str += ", \n"
+		}
+	}
+	_, err2 := f.WriteString(str)
 
 	if err2 != nil {
 		log.Fatal(err2)
@@ -54,7 +97,7 @@ func Init_file_price(schema_type string, arr []model.NaverChart) {
 		defer f.Close()
 
 		var str = `
-		-- name: create-price-table-seed
+		-- name: ` + src.Info["seed-nm-init-price"] + `
 		`
 
 		str += `
@@ -111,8 +154,7 @@ func Init_file_market(schema_type string, arr []model.NaverChartMarket) {
 		defer f.Close()
 
 		var str = `
-		-- name: create-market-table-seed
-		`
+		-- name: ` + src.Info["seed-nm-init-market"]
 
 		str += `
 		DROP TABLE IF EXISTS "` + schema_nm + `"."` + tb_nm + `";

@@ -57,8 +57,8 @@ LANGUAGE PLPGSQL;
 
 
 
-DROP TABLE IF EXISTS "company_state";
-CREATE TABLE "public"."company_state" (
+DROP TABLE IF EXISTS "listed_company_state";
+CREATE TABLE "public"."listed_company_state" (
     "code" text NOT NULL UNIQUE,
     "name" text,
     "stop" boolean,
@@ -76,18 +76,18 @@ CREATE TABLE "public"."company_state" (
     "updated_date" timestamp
 ) WITH (oids = false);
 
-COMMENT ON TABLE "company_state" IS '종목지정내역';
-COMMENT ON COLUMN "company_state"."code" IS '종목코드';
-COMMENT ON COLUMN "company_state"."name" IS '종목명';
-COMMENT ON COLUMN "company_state"."stop" IS '매매거래정지';
-COMMENT ON COLUMN "company_state"."clear" IS '정리매매 종목';
-COMMENT ON COLUMN "company_state"."managed" IS '관리종목';
-COMMENT ON COLUMN "company_state"."ventilation" IS '투자주의환기종목';
-COMMENT ON COLUMN "company_state"."unfaithful" IS '불성실공시';
-COMMENT ON COLUMN "company_state"."low_liquidity" IS '단일가매매대상 초저유동성종목';
-COMMENT ON COLUMN "company_state"."lack_listed" IS '상장주식수 부족 우선주';
-COMMENT ON COLUMN "company_state"."overheated" IS '단기과열종목';
-COMMENT ON COLUMN "company_state"."caution" IS '투자주의종목';
-COMMENT ON COLUMN "company_state"."warning" IS '투자경고종목';
-COMMENT ON COLUMN "company_state"."risk" IS '투자위험종목';
+COMMENT ON TABLE "listed_company_state" IS '종목지정내역';
+COMMENT ON COLUMN "listed_company_state"."code" IS '종목코드';
+COMMENT ON COLUMN "listed_company_state"."name" IS '종목명';
+COMMENT ON COLUMN "listed_company_state"."stop" IS '매매거래정지';
+COMMENT ON COLUMN "listed_company_state"."clear" IS '정리매매 종목';
+COMMENT ON COLUMN "listed_company_state"."managed" IS '관리종목';
+COMMENT ON COLUMN "listed_company_state"."ventilation" IS '투자주의환기종목';
+COMMENT ON COLUMN "listed_company_state"."unfaithful" IS '불성실공시';
+COMMENT ON COLUMN "listed_company_state"."low_liquidity" IS '단일가매매대상 초저유동성종목';
+COMMENT ON COLUMN "listed_company_state"."lack_listed" IS '상장주식수 부족 우선주';
+COMMENT ON COLUMN "listed_company_state"."overheated" IS '단기과열종목';
+COMMENT ON COLUMN "listed_company_state"."caution" IS '투자주의종목';
+COMMENT ON COLUMN "listed_company_state"."warning" IS '투자경고종목';
+COMMENT ON COLUMN "listed_company_state"."risk" IS '투자위험종목';
 

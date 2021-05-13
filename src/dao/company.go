@@ -1,50 +1,66 @@
-
-
 package dao
 
 import (
-	"github.com/gchaincl/dotsql"
 	"corplist/db"
+	"corplist/src"
 	"corplist/src/model"
+
+	"github.com/gchaincl/dotsql"
 )
+
 var SqlCompany Company
 
-type Company struct{
-	db.DB  
+type Company struct {
+	db.DB
 }
 
-func init()  {
+func init() {
 	SqlCompany = Company{
 		db.DB{},
 	}
 }
 
-func (obj Company) Create_company_seed(){
+func (obj Company) Create_company_seed() {
 
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	dot,err := dotsql.LoadFromFile("migrations/company/seed.sql")
+	dot, err := dotsql.LoadFromFile(src.Info["seed-fnm-init-compnay"])
 
 	if err != nil {
 		panic(err)
 	}
 	// Run queries
-	_, err = dot.Exec(db, "create-company-table-seed")
+	_, err = dot.Exec(db, src.Info["seed-nm-init-compnay"])
 	if err != nil {
 		panic(err)
 	}
 }
 
-
-
-func (obj Company)  Select_All() []model.Company{
+func (obj Company) Create_company_state_seed() {
 
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	rows, err := db.Query(`SELECT * FROM  listed_company ` )
-	
+	dot, err := dotsql.LoadFromFile(src.Info["seed-fnm-init-compnay_state"])
+
+	if err != nil {
+		panic(err)
+	}
+	// Run queries
+	_, err = dot.Exec(db, src.Info["seed-nm-init-compnay_state"])
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (obj Company) Select_All() []model.Company {
+
+	var db = obj.DB.Conn()
+	defer db.Close()
+
+	rows, err := db.Query(`SELECT * FROM  listed_company `)
+
 	if err != nil {
 		panic(err)
 	}
@@ -69,4 +85,3 @@ func (obj Company)  Select_All() []model.Company{
 	}
 	return company_list
 }
-

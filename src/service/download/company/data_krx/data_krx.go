@@ -2,6 +2,7 @@ package data_krx
 
 import (
 	"bytes"
+	"corplist/src"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -9,27 +10,80 @@ import (
 	"os"
 )
 
-// http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201020103
-
-const get_code_url string = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd"
-const get_file_url string = "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd"
-
-var (
-	fileName string = "listed_company.xlsx"
-)
-
-func Save() {
-	// Put content on file
-	down_file(down_code())
-
+type Data_krx interface {
+	downCode()
+	downData()
+	Save()
 }
 
-func down_file(down_code string) {
+type ListedCompanyBaisc struct {
+	urlCode     string
+	urlData     string
+	code        string
+	codeReqBody string
+	saveNm      string
+}
+
+func (o *ListedCompanyBaisc) downCode() Data_krx {
+	o.code = down_code(o.urlCode, o.codeReqBody)
+	fmt.Println("o.code11111=", o.code)
+	return nil
+}
+
+func (o *ListedCompanyBaisc) downData() Data_krx {
+	fmt.Println("o.code 2222222222=", o.code)
+	down_file(o.saveNm, o.urlData, o.code)
+	return nil
+}
+
+func (o ListedCompanyBaisc) Save() Data_krx {
+	o.saveNm = src.Info["path-company"]
+	o.urlCode = src.Info["url-krx-company-code"]
+	o.urlData = src.Info["url-krx-company-data"]
+	o.codeReqBody = "mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms/MDC/STAT/standard/MDCSTAT01901"
+
+	o.downCode()
+	o.downData()
+	return nil
+}
+
+type ListedCompanyState struct {
+	urlCode     string
+	urlData     string
+	code        string
+	codeReqBody string
+	saveNm      string
+}
+
+func (o *ListedCompanyState) downCode() Data_krx {
+	o.code = down_code(o.urlCode, o.codeReqBody)
+
+	return nil
+}
+
+func (o *ListedCompanyState) downData() Data_krx {
+
+	down_file(o.saveNm, o.urlData, o.code)
+	return nil
+}
+
+func (o ListedCompanyState) Save() Data_krx {
+	o.saveNm = src.Info["path-company_state"]
+	o.urlCode = src.Info["url-krx-company_state-code"]
+	o.urlData = src.Info["url-krx-company_state-data"]
+	o.codeReqBody = "mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms/MDC/STAT/standard/MDCSTAT02001"
+
+	o.downCode()
+	o.downData()
+	return nil
+}
+
+func down_file(fnm string, url string, down_code string) {
 	// 파일명
-	file := createFile()
+	file := createFile(fnm)
 
 	reqBody := bytes.NewBufferString("code=" + down_code)
-	resp, err := http.Post(get_file_url, "application/x-www-form-urlencoded", reqBody)
+	resp, err := http.Post(url, "application/x-www-form-urlencoded", reqBody)
 	if err != nil {
 		panic(err)
 	}
@@ -37,7 +91,9 @@ func down_file(down_code string) {
 	defer resp.Body.Close()
 
 	size, err := io.Copy(file, resp.Body)
-	fmt.Println("counte=", size)
+
+	fmt.Println("down_file size=", size)
+
 	defer file.Close()
 
 	if err != nil {
@@ -46,15 +102,9 @@ func down_file(down_code string) {
 
 }
 
-func createFile() *os.File {
-	file, err := os.Create(fileName)
-	checkError(err)
-	return file
-}
-
-func down_code() string {
-	reqBody := bytes.NewBufferString("mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms%2FMDC%2FSTAT%2Fstandard%2FMDCSTAT01901")
-	resp, err := http.Post(get_code_url, "application/x-www-form-urlencoded", reqBody)
+func down_code(url, reqbody string) string {
+	reqBody := bytes.NewBufferString(reqbody)
+	resp, err := http.Post(url, "application/x-www-form-urlencoded", reqBody)
 	if err != nil {
 		panic(err)
 	}
@@ -67,12 +117,20 @@ func down_code() string {
 		str := string(respBody)
 		println(str)
 	}
-	fmt.Println("down_code=", respBody)
-	return string(respBody)
+	var str_resp = string(respBody)
+	fmt.Println("down_code=", str_resp)
+
+	return str_resp
 }
 
 func checkError(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func createFile(fileName string) *os.File {
+	file, err := os.Create(fileName)
+	checkError(err)
+	return file
 }
