@@ -6,7 +6,13 @@ docker exec -u postgres corplist_db_1 psql -d dev -c "COPY (SELECT array_to_json
 
 #컨테이너 터미널 알아서 열기
 su - postgres
-psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t where stop is false   ) TO  '/var/lib/postgresql/export_price_not_stop.json' ENCODING 'UTF8' " 
+psql -d dev -c "COPY (
+    SELECT array_to_json(array_agg(tt)) FROM 
+    (
+    select * from view_price_day t where stop is false order by  "fluctuation_rate" desc
+    ) tt
+
+  ) TO  '/var/lib/postgresql/export_price_not_stop.json' ENCODING 'UTF8' " 
 psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t where stop is true   ) TO  '/var/lib/postgresql/export_price_is_stop.json' ENCODING 'UTF8' " 
 
 psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_market_day t ) TO  '/var/lib/postgresql/export_market.json' ENCODING 'UTF8' " 
