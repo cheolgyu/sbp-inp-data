@@ -95,3 +95,25 @@ RETURN res;
 END;
 
 $ BODY $ LANGUAGE PLPGSQL;
+
+---------------------------------
+--
+--  포맷 네이버링크-마켓
+--      SELECT fmt_naver_link_market('aaaaa')
+---------------------------------
+DROP FUNCTION IF EXISTS "fmt_naver_link_market";
+
+CREATE FUNCTION fmt_naver_link_market(item text) RETURNS text as $$ DECLARE res text;
+
+BEGIN
+select
+    concat(
+        'https://finance.naver.com/sise/sise_index.nhn?code=',
+        item
+    ) into res;
+
+RETURN res;
+
+END;
+
+$$ LANGUAGE PLPGSQL;
