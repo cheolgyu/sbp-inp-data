@@ -1,3 +1,7 @@
+CREATE SCHEMA "price_day";
+CREATE SCHEMA "price_week";
+CREATE SCHEMA "price_month";
+CREATE SCHEMA "market_day";
 
 DROP TABLE IF EXISTS "meta";
 

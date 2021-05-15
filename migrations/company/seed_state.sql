@@ -12696,7 +12696,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'084695',  '대상홀딩스우',  false,  false,  false,    false,  false,  false, false,  false,       true,  false,  false,now(),  now() ) 
+		(		'084695',  '대상홀딩스우',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -12710,7 +12710,7 @@
 				"lack_listed" = 'false',
 				"overheated" = 'false',
 
-				"caution" = 'true',
+				"caution" = 'false',
 				"warning" = 'false',
 				"risk" = 'false',
 				"updated_date" = now()
@@ -13425,7 +13425,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'048910',  '대원미디어',  false,  false,  false,    false,  false,  false, false,  false,       false,  true,  false,now(),  now() ) 
+		(		'048910',  '대원미디어',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -13440,7 +13440,7 @@
 				"overheated" = 'false',
 
 				"caution" = 'false',
-				"warning" = 'true',
+				"warning" = 'false',
 				"risk" = 'false',
 				"updated_date" = now()
 				
@@ -15774,11 +15774,11 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'001529',  '동양3우B',  false,  false,  false,    false,  false,  false, true,  true,       false,  false,  true,now(),  now() ) 
+		(		'001529',  '동양3우B',  true,  false,  false,    false,  false,  false, true,  true,       false,  false,  true,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
-				"stop" = 'false',
+				"stop" = 'true',
 				"clear" = 'false',
 				"managed" = 'false',
 				
@@ -17691,11 +17691,11 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'106520',  '디지탈옵틱',  true,  false,  true,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
+		(		'106520',  '디지탈옵틱',  false,  false,  true,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
-				"stop" = 'true',
+				"stop" = 'false',
 				"clear" = 'false',
 				"managed" = 'true',
 				
@@ -21471,7 +21471,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'279600',  '미디어젠',  false,  false,  false,    false,  false,  false, false,  false,       false,  true,  false,now(),  now() ) 
+		(		'279600',  '미디어젠',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -21486,7 +21486,7 @@
 				"overheated" = 'false',
 
 				"caution" = 'false',
-				"warning" = 'true',
+				"warning" = 'false',
 				"risk" = 'false',
 				"updated_date" = now()
 				
@@ -26763,11 +26763,11 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'307870',  '상상인이안1호스팩',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
+		(		'307870',  '상상인이안1호스팩',  true,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
-				"stop" = 'false',
+				"stop" = 'true',
 				"clear" = 'false',
 				"managed" = 'false',
 				
@@ -29706,11 +29706,11 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'053110',  '소리바다',  true,  false,  false,    false,  true,  false, false,  false,       false,  false,  false,now(),  now() ) 
+		(		'053110',  '소리바다',  false,  false,  false,    false,  true,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
-				"stop" = 'true',
+				"stop" = 'false',
 				"clear" = 'false',
 				"managed" = 'false',
 				
@@ -30300,7 +30300,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'185190',  '수프로',  false,  false,  false,    false,  false,  false, false,  false,       false,  true,  false,now(),  now() ) 
+		(		'185190',  '수프로',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -30315,7 +30315,7 @@
 				"overheated" = 'false',
 
 				"caution" = 'false',
-				"warning" = 'true',
+				"warning" = 'false',
 				"risk" = 'false',
 				"updated_date" = now()
 				
@@ -31704,7 +31704,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'009275',  '신원우',  false,  false,  false,    false,  false,  false, false,  true,       false,  false,  false,now(),  now() ) 
+		(		'009275',  '신원우',  false,  false,  false,    false,  false,  false, false,  true,       false,  true,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -31719,7 +31719,7 @@
 				"overheated" = 'true',
 
 				"caution" = 'false',
-				"warning" = 'false',
+				"warning" = 'true',
 				"risk" = 'false',
 				"updated_date" = now()
 				
@@ -36996,7 +36996,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'306040',  '에스제이그룹',  false,  false,  false,    false,  false,  false, false,  false,       false,  true,  false,now(),  now() ) 
+		(		'306040',  '에스제이그룹',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -37011,7 +37011,7 @@
 				"overheated" = 'false',
 
 				"caution" = 'false',
-				"warning" = 'true',
+				"warning" = 'false',
 				"risk" = 'false',
 				"updated_date" = now()
 				
@@ -37590,7 +37590,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'140910',  '에이리츠',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
+		(		'140910',  '에이리츠',  false,  false,  false,    false,  false,  false, false,  false,       false,  true,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -37605,7 +37605,7 @@
 				"overheated" = 'false',
 
 				"caution" = 'false',
-				"warning" = 'false',
+				"warning" = 'true',
 				"risk" = 'false',
 				"updated_date" = now()
 				
@@ -38239,6 +38239,33 @@
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
 		(		'044780',  '에이치케이',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
+				ON CONFLICT ("code")
+				DO 
+				UPDATE SET
+				"stop" = 'false',
+				"clear" = 'false',
+				"managed" = 'false',
+				
+				"ventilation" = 'false',
+				"unfaithful" = 'false',
+				"low_liquidity" = 'false',
+				"lack_listed" = 'false',
+				"overheated" = 'false',
+
+				"caution" = 'false',
+				"warning" = 'false',
+				"risk" = 'false',
+				"updated_date" = now()
+				
+				; 
+
+
+		INSERT INTO "listed_company_state" 
+			("code", "name", "stop", "clear", "managed", 
+			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
+			"caution", "warning", "risk", "created_date", "updated_date")
+		VALUES 
+		(		'357230',  '에이치피오',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -44853,7 +44880,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'206650',  '유바이오로직스',  false,  false,  false,    false,  false,  false, false,  false,       false,  true,  false,now(),  now() ) 
+		(		'206650',  '유바이오로직스',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -44868,7 +44895,7 @@
 				"overheated" = 'false',
 
 				"caution" = 'false',
-				"warning" = 'true',
+				"warning" = 'false',
 				"risk" = 'false',
 				"updated_date" = now()
 				
@@ -45528,7 +45555,7 @@
 			"ventilation", "unfaithful", "low_liquidity", "lack_listed", "overheated", 
 			"caution", "warning", "risk", "created_date", "updated_date")
 		VALUES 
-		(		'000225',  '유유제약1우',  false,  false,  false,    false,  false,  false, false,  false,       false,  false,  false,now(),  now() ) 
+		(		'000225',  '유유제약1우',  false,  false,  false,    false,  false,  false, false,  false,       true,  false,  false,now(),  now() ) 
 				ON CONFLICT ("code")
 				DO 
 				UPDATE SET
@@ -45542,7 +45569,7 @@
 				"lack_listed" = 'false',
 				"overheated" = 'false',
 
-				"caution" = 'false',
+				"caution" = 'true',
 				"warning" = 'false',
 				"risk" = 'false',
 				"updated_date" = now()

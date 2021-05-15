@@ -51,12 +51,12 @@ CREATE TABLE "public"."high_point_month" (
 ---------------------------------
 DROP FUNCTION IF EXISTS "get_fluctuation_rate";
 CREATE FUNCTION get_fluctuation_rate(
-     now_price integer ,
-     old_price  integer
+     now_price numeric ,
+     old_price  numeric
     )
 RETURNS TABLE (
     -- 대비
-    contrast_price integer,
+    contrast_price numeric,
     -- 등락률
     fluctuation_rate numeric
     )  AS
@@ -171,11 +171,11 @@ DROP FUNCTION IF EXISTS "comm_high_point";
     CREATE OR REPLACE FUNCTION comm_high_point(schema_nm text, tb_nm text)
     RETURNS table(
         high_date INTEGER,
-        high_price INTEGER,
+        high_price numeric,
         last_date INTEGER,
-        last_close_price INTEGER,
+        last_close_price numeric,
         -- 대비
-        contrast_price integer,
+        contrast_price numeric,
         -- 등락률
         fluctuation_rate numeric
         ) AS $$
@@ -183,20 +183,20 @@ DROP FUNCTION IF EXISTS "comm_high_point";
     
         i INTEGER;
         i_date INTEGER;
-        i_price INTEGER;
+        i_price numeric;
         j_date INTEGER;
-        j_price INTEGER;
+        j_price numeric;
 
         
         g_way  text;
-        g_way_price  INTEGER;
-        point_price  INTEGER;
+        g_way_price  numeric;
+        point_price  numeric;
         point_date  INTEGER;
 
         sel_point_date INTEGER;
-        sel_point_price INTEGER;
+        sel_point_price numeric;
 
-        last_close_price INTEGER;
+        last_close_price numeric;
         
         loop_cnt INTEGER;
     BEGIN

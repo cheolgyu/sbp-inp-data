@@ -1,11 +1,29 @@
 ---------------------------------
 --
 --  콤마달기
---      select fmt_comma(1111111) ; 
+-- select fmt_comma(1111111.22) ; 
 ---------------------------------
 DROP FUNCTION IF EXISTS "fmt_comma";
 
-CREATE FUNCTION fmt_comma(item float) RETURNS text as $ BODY $ DECLARE res text;
+CREATE OR REPLACE  FUNCTION fmt_comma(item numeric) RETURNS text as $$ DECLARE res text;
+
+BEGIN
+select
+    to_char(item, 'FM999,999,999,999,999,999.99') into res;
+
+RETURN res;
+
+END;
+
+$$ LANGUAGE PLPGSQL;
+---------------------------------
+--
+--  콤마달기
+-- select fmt_comma(1111111) ; 
+---------------------------------
+DROP FUNCTION IF EXISTS "fmt_comma_int";
+
+CREATE OR REPLACE  FUNCTION fmt_comma_int(item integer) RETURNS text as $$ DECLARE res text;
 
 BEGIN
 select
@@ -15,7 +33,7 @@ RETURN res;
 
 END;
 
-$ BODY $ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
 
 ---------------------------------
 --
