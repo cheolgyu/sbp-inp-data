@@ -159,7 +159,7 @@ $$ LANGUAGE plpgsql
         sel_point_date = i_date;
         sel_point_price = i_price;
 
-        RETURN query select sel_point_date, sel_point_price, last_date, last_close_price, * from get_fluctuation_rate(last_close_price, sel_point_price);
+        RETURN query select sel_point_date, sel_point_price, last_date, last_close_price, * from comm_fluctuation_rate(last_close_price, sel_point_price);
     END;
     $$ LANGUAGE plpgsql
     ;
