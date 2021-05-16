@@ -1,32 +1,32 @@
-
-
- package dao
+package dao
 
 import (
-	"github.com/gchaincl/dotsql"
 	"corplist/db"
+	"corplist/src"
 	"corplist/src/model"
+	"fmt"
+
+	"github.com/gchaincl/dotsql"
 )
 
 var SqlMarket Market
 
-type Market struct{
-	db.DB  
+type Market struct {
+	db.DB
 }
 
-func init()  {
+func init() {
 	SqlMarket = Market{
 		db.DB{},
 	}
 }
 
-
-func (obj Market) Create_market_Table(arr []model.NaverChartMarket){
+func (obj Market) Create_market_Table(arr []model.NaverChartMarket) {
 	var db = obj.DB.Conn()
 	defer db.Close()
 
 	for _, item := range arr {
-		dot,err := dotsql.LoadFromFile(item.GetSeedFilePath())
+		dot, err := dotsql.LoadFromFile(item.GetSeedFilePath())
 
 		if err != nil {
 			panic(err)
@@ -40,19 +40,20 @@ func (obj Market) Create_market_Table(arr []model.NaverChartMarket){
 
 }
 
-func (obj Market) Daily_market_Table(){
+func (obj Market) Daily_market_Table() {
+	fmt.Println("daily-sql을 실행 중입니다.")
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	dot,err := dotsql.LoadFromFile("migrations/market/daily.sql")
+	dot, err := dotsql.LoadFromFile(src.Info["seed-fnm-daily-market"])
 
 	if err != nil {
 		panic(err)
 	}
 	// Run queries
-	_, err = dot.Exec(db, "daily-market-table-seed")
+	_, err = dot.Exec(db, src.Info["seed-nm-daily-market"])
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("daily-sql을 실행했습니다.")
 }
-

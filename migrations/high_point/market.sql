@@ -3,6 +3,7 @@
 -- 테이블 생성: 최고가 저장용 일/주/월 
 --
 ---------------------------------
+DROP VIEW IF EXISTS "view_market_day";
 DROP TABLE IF EXISTS "high_point_market_day";
 CREATE TABLE "public"."high_point_market_day" (
     "short_code" text  NOT NULL UNIQUE,
@@ -12,6 +13,7 @@ CREATE TABLE "public"."high_point_market_day" (
     "last_close_price" numeric NOT NULL,
     "contrast_price" numeric  NULL,
     "fluctuation_rate" numeric  NULL,
+    "day_count" integer  NULL,
     "created_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updated_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 ) WITH (oids = false);
@@ -69,6 +71,7 @@ DECLARE
     cur_last_close_price numeric;
     fr_contrast_price numeric;
     fr_fluctuation_rate numeric;
+    day_count INTEGER;
 
     is_exist INTEGER;
     schema_nm TEXT;
@@ -80,7 +83,7 @@ BEGIN
     tb_nm := 'tb_'|| inp_short_code;
 
 
-    select  * into point_date, point_price, cur_last_date , cur_last_close_price , fr_contrast_price, fr_fluctuation_rate  
+    select  * into point_date, point_price, cur_last_date , cur_last_close_price , fr_contrast_price, fr_fluctuation_rate  , day_count 
     from public.comm_high_point(schema_nm, tb_nm);
 
     EXECUTE format(' SELECT count(*) FROM  "public".high_point_market_%I tb_hp  WHERE tb_hp."short_code" = %L ', schema_type, inp_short_code ) INTO is_exist;
@@ -95,13 +98,14 @@ BEGIN
             || format('"last_close_price" = %L, ', cur_last_close_price)
             || format('"contrast_price" = %L, ', fr_contrast_price)
             || format('"fluctuation_rate" =%L , ', fr_fluctuation_rate)
+            || format('"day_count" =%L , ', day_count)
             || format('"updated_date" = %L ', current_timestamp)
             || format(' WHERE "short_code" = %L  ', inp_short_code)
         ;
     ELSE
         EXECUTE format('INSERT INTO "public".high_point_market_%I ', schema_type) 
-            || format(' ("short_code", "high_date", "high_price", "last_date", "last_close_price", "contrast_price", "fluctuation_rate") ' )
-            || format('VALUES (%L, %L, %L, %L, %L, %L, %L  )  ',inp_short_code, point_date, point_price, cur_last_date, cur_last_close_price, fr_contrast_price, fr_fluctuation_rate )
+            || format(' ("short_code", "high_date", "high_price", "last_date", "last_close_price", "contrast_price", "fluctuation_rate", "day_count") ' )
+            || format('VALUES (%L, %L, %L, %L, %L, %L, %L, %L  )  ',inp_short_code, point_date, point_price, cur_last_date, cur_last_close_price, fr_contrast_price, fr_fluctuation_rate, day_count )
         ;
 
     END IF;

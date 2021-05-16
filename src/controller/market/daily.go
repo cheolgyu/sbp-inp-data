@@ -55,14 +55,14 @@ func (c DailyMarketController) update() {
 
 	var company_list = src.GetMarketList()
 
-	var _, last, now, _, _ = dao.SqlInfo.Select_Info("updated_market_" + c.schema_type)
+	var _, start, end = dao.SqlInfo.SelectGetDate("updated_market_" + c.schema_type)
 
 	//하루 두번할 경우 발생하는 오류방지
 
 	var naver_chart_list []model.NaverChartMarket
 
 	for index, item := range company_list {
-		naver_chart_list = append(naver_chart_list, naver_chart.Get(item.Short_code, last, now))
+		naver_chart_list = append(naver_chart_list, naver_chart.Get(item.Short_code, start, end))
 
 		var str = fmt.Sprintf("downloading.. (%v / %v) ", index+1, len(company_list))
 		fmt.Println(str)

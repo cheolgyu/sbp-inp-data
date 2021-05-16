@@ -28,7 +28,10 @@ func main() {
 
 func test() {
 	fmt.Println("test ")
+	daily_price()
 	daily_market()
+	update_high_point()
+	update_high_point_market()
 	//init_listed_company_state()
 
 }

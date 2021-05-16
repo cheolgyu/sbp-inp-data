@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"log"
 
+	"corplist/src"
 	"corplist/src/model"
 	"os"
 )
 
 func Daily_file_price(schema_type string, arr []model.NaverChart) {
 
-	f, err := os.Create("migrations/price/daily.sql")
+	fmt.Println("daily-sql 을 만드는 중입니다.")
+
+	f, err := os.Create(src.Info["seed-fnm-daily-price"])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -20,45 +23,31 @@ func Daily_file_price(schema_type string, arr []model.NaverChart) {
 	}
 
 	defer f.Close()
-
-	var str = `-- name: daily-price-table-seed`
-	str += "\n"
+	var str = "-- name: " + src.Info["seed-nm-daily-price"] + "\n"
 
 	for _, item := range arr {
 		var schema_nm = item.GetSchemaName(schema_type)
 		var tb_nm = item.GetTableName()
 
 		if len(item.DayList) > 0 {
-			str += `INSERT INTO "` + schema_nm + `"."` + tb_nm + `" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate") VALUES`
 
-			for j_index, j := range item.DayList {
+			for _, j := range item.DayList {
+				str += `INSERT INTO "` + schema_nm + `"."` + tb_nm + `" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate") VALUES`
 				str += fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate)
-				if j_index+1 == len(item.DayList) {
-					str += " \n"
-				} else {
-					str += ", \n"
-				}
-			}
-
-			// 1개일 경우....  최신데이터로
-			if len(item.DayList) == 1 {
 				str += `
 				ON CONFLICT ("Date")
 				DO 
 				UPDATE SET
-				"OpenPrice" = '` + fmt.Sprintf("%v", item.DayList[0].OpenPrice) + `',
-				"HighPrice" = '` + fmt.Sprintf("%v", item.DayList[0].HighPrice) + `',
-				"LowPrice" = '` + fmt.Sprintf("%v", item.DayList[0].LowPrice) + `',
-				"ClosePrice" = '` + fmt.Sprintf("%v", item.DayList[0].ClosePrice) + `',
-				"Volume" = '` + fmt.Sprintf("%v", item.DayList[0].Volume) + `',
-				"ForeignerBurnoutRate" = '` + fmt.Sprintf("%v", item.DayList[0].ForeignerBurnoutRate) + `'
+				"OpenPrice" = '` + fmt.Sprintf("%v", j.OpenPrice) + `',
+				"HighPrice" = '` + fmt.Sprintf("%v", j.HighPrice) + `',
+				"LowPrice" = '` + fmt.Sprintf("%v", j.LowPrice) + `',
+				"ClosePrice" = '` + fmt.Sprintf("%v", j.ClosePrice) + `',
+				"Volume" = '` + fmt.Sprintf("%v", j.Volume) + `',
+				"ForeignerBurnoutRate" = '` + fmt.Sprintf("%v", j.ForeignerBurnoutRate) + `'
 				`
-
-			} else {
-				str += `ON CONFLICT ("Date")  DO NOTHING  `
+				str += "; \n"
 			}
 
-			str += "; \n\n"
 		}
 
 	}
@@ -68,12 +57,13 @@ func Daily_file_price(schema_type string, arr []model.NaverChart) {
 	if err2 != nil {
 		log.Fatal(err2)
 	}
+	fmt.Println("sql을 완성했습니다.")
 
 }
 
 func Daily_file_market(schema_type string, arr []model.NaverChartMarket) {
 
-	f, err := os.Create("migrations/market/daily.sql")
+	f, err := os.Create(src.Info["seed-fnm-daily-market"])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -84,8 +74,7 @@ func Daily_file_market(schema_type string, arr []model.NaverChartMarket) {
 
 	defer f.Close()
 
-	var str = `-- name: daily-market-table-seed`
-	str += "\n"
+	var str = "-- name: " + src.Info["seed-nm-daily-market"] + "\n"
 
 	for _, item := range arr {
 		var schema_nm = item.GetSchemaName(schema_type)
@@ -94,36 +83,24 @@ func Daily_file_market(schema_type string, arr []model.NaverChartMarket) {
 		// arr 가 비었으면 오류 안나게
 		str += `select 1 ;`
 		if len(item.List) > 0 {
-			str += `INSERT INTO "` + schema_nm + `"."` + tb_nm + `" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate") VALUES`
 
-			for j_index, j := range item.List {
+			for _, j := range item.List {
+				str += `INSERT INTO "` + schema_nm + `"."` + tb_nm + `" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate") VALUES`
 				str += fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate)
-				if j_index+1 == len(item.List) {
-					str += " \n"
-				} else {
-					str += ", \n"
-				}
-			}
-
-			// 1개일 경우....  최신데이터로
-			if len(item.List) == 1 {
 				str += `
 				ON CONFLICT ("Date")
 				DO 
 				UPDATE SET
-				"OpenPrice" = '` + fmt.Sprintf("%v", item.List[0].OpenPrice) + `',
-				"HighPrice" = '` + fmt.Sprintf("%v", item.List[0].HighPrice) + `',
-				"LowPrice" = '` + fmt.Sprintf("%v", item.List[0].LowPrice) + `',
-				"ClosePrice" = '` + fmt.Sprintf("%v", item.List[0].ClosePrice) + `',
-				"Volume" = '` + fmt.Sprintf("%v", item.List[0].Volume) + `',
-				"ForeignerBurnoutRate" = '` + fmt.Sprintf("%v", item.List[0].ForeignerBurnoutRate) + `'
+				"OpenPrice" = '` + fmt.Sprintf("%v", j.OpenPrice) + `',
+				"HighPrice" = '` + fmt.Sprintf("%v", j.HighPrice) + `',
+				"LowPrice" = '` + fmt.Sprintf("%v", j.LowPrice) + `',
+				"ClosePrice" = '` + fmt.Sprintf("%v", j.ClosePrice) + `',
+				"Volume" = '` + fmt.Sprintf("%v", j.Volume) + `',
+				"ForeignerBurnoutRate" = '` + fmt.Sprintf("%v", j.ForeignerBurnoutRate) + `'
 				`
-
-			} else {
-				str += `ON CONFLICT ("Date")  DO NOTHING  `
+				str += "; \n"
 			}
 
-			str += "; \n\n"
 		}
 
 	}
