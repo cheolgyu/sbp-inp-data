@@ -1,14 +1,14 @@
 package price
 
 import (
-	"fmt"
-
+	"corplist/src"
 	"corplist/src/controller"
 	"corplist/src/dao"
 	"corplist/src/model"
 	"corplist/src/service/download/price/naver_chart"
 	"corplist/src/service/file"
 	"corplist/src/service/info"
+	"fmt"
 )
 
 type DailyPriceController struct {
@@ -73,6 +73,8 @@ func (c DailyPriceController) update() {
 	}
 
 	file.Daily_file_price(c.schema_type, naver_chart_list)
-	dao.SqlPrice.Daily_price_Table()
+	var fnm = src.Info["seed"]["path"]["price-daily"]
+	var seednm = src.Info["seed"]["name"]["price-daily"]
+	dao.SqlSeed.Run(fnm, seednm)
 
 }

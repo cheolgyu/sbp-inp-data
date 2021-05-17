@@ -3,6 +3,7 @@ package market
 import (
 	"fmt"
 
+	"corplist/src"
 	"corplist/src/controller"
 	"corplist/src/dao"
 	"corplist/src/model"
@@ -68,6 +69,9 @@ func (c DailyMarketController) update() {
 	}
 
 	file.Daily_file_market(c.schema_type, naver_chart_list)
-	dao.SqlMarket.Daily_market_Table()
+
+	var fnm = src.Info["seed"]["path"]["market-daily"]
+	var seednm = src.Info["seed"]["name"]["market-daily"]
+	dao.SqlSeed.Run(fnm, seednm)
 
 }

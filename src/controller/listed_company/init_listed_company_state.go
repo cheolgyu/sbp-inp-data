@@ -1,6 +1,7 @@
 package listed_company
 
 import (
+	"corplist/src"
 	"corplist/src/controller"
 	"corplist/src/dao"
 	"corplist/src/model"
@@ -83,7 +84,9 @@ func (c InitListedComapnyStateController) ExecSql() {
 
 	c.log.Exec_Upid(c.up_id, "insert", "start")
 
-	dao.SqlCompany.Create_company_state_seed()
+	var fnm = src.Info["seed"]["path"]["compnay_state-init"]
+	var seednm = src.Info["seed"]["name"]["compnay_state-init"]
+	dao.SqlSeed.Run(fnm, seednm)
 
 	c.log.Exec_Upid(c.up_id, "insert", "end")
 }

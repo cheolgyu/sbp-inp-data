@@ -41,23 +41,3 @@ func (obj Price) Create_price_Table(arr []model.NaverChart) {
 	}
 
 }
-
-func (obj Price) Daily_price_Table() {
-
-	var fnm = src.Info["seed"]["path"]["price-daily"]
-	var seednm = src.Info["seed"]["name"]["price-daily"]
-
-	var db = obj.DB.Conn()
-	defer db.Close()
-
-	dot, err := dotsql.LoadFromFile(fnm)
-
-	if err != nil {
-		panic(err)
-	}
-	// Run queries
-	_, err = dot.Exec(db, seednm)
-	if err != nil {
-		panic(err)
-	}
-}

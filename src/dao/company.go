@@ -2,10 +2,7 @@ package dao
 
 import (
 	"corplist/db"
-	"corplist/src"
 	"corplist/src/model"
-
-	"github.com/gchaincl/dotsql"
 )
 
 var SqlCompany Company
@@ -17,46 +14,6 @@ type Company struct {
 func init() {
 	SqlCompany = Company{
 		db.DB{},
-	}
-}
-
-func (obj Company) Create_company_seed() {
-
-	var fnm = src.Info["seed"]["path"]["company-init"]
-	var seednm = src.Info["seed"]["name"]["company-init"]
-
-	var db = obj.DB.Conn()
-	defer db.Close()
-
-	dot, err := dotsql.LoadFromFile(fnm)
-
-	if err != nil {
-		panic(err)
-	}
-	// Run queries
-	_, err = dot.Exec(db, seednm)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func (obj Company) Create_company_state_seed() {
-
-	var fnm = src.Info["seed"]["path"]["compnay_state-init"]
-	var seednm = src.Info["seed"]["name"]["compnay_state-init"]
-
-	var db = obj.DB.Conn()
-	defer db.Close()
-
-	dot, err := dotsql.LoadFromFile(fnm)
-
-	if err != nil {
-		panic(err)
-	}
-	// Run queries
-	_, err = dot.Exec(db, seednm)
-	if err != nil {
-		panic(err)
 	}
 }
 
