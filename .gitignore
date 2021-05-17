@@ -15,11 +15,7 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-migrations/*/seed.sql
-migrations/*/daily.sql
-migrations/price/daily.sql
-migrations/price/seed/*.sql
-migrations/market/seed/*.sql
-migrations/company/seed_state.sql
+
+tmp_seed/
 *.xlsx
 price.json
