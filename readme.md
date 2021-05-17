@@ -9,7 +9,7 @@
 docker-compose up 시키고 
 수동으로 실행 해야될 목록
 
-migrations\company\init.sql
+db\init\*.sql
 
 -- high_point 계산
 migrations\high_point\comm.sql
