@@ -100,6 +100,11 @@ a, ab,  prcie_day init start ...
 <details markdown="1">
 <summary>펼치기</summary>
 
++ 코드정리
++ + const.go 1차원 배열에서 3차원 배열로 수정 : 한눈에 보기 어려움.
++ + 여러 dao의 각각의 seed 실행 함수 하나로
++ + 파일 생성할 때 string 모아 한번에 쓰기보다 loop안에서 바로바로 쓰게 수정 및 쓰기 공통함수 추가 ==> 속도 개선됨.
++ + 
 
 + init_market 나스닥,코스닥,코스피 + high_point_market ===> 코스닥,코스피, src\const.go....GetMarketList() 참조
 +  init 시세데이터 시작일 변경. 및 데이터 초기화

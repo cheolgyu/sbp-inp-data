@@ -33,3 +33,6 @@ docker cp corplist_db_1:/var/lib/postgresql/export_price_is_stop.json C://Users/
 docker cp corplist_db_1:/var/lib/postgresql/export_market.json C://Users//cheolgyu//workspace//stock-app//static//data//market.json
 docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu//workspace//stock-app//static//data//info.json
 
+## 
+docker exec -it corplist_db_1 bash <
+docker exec -it corplist_db_1 bash
