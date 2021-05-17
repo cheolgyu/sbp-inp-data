@@ -169,8 +169,8 @@ a, ab,  prcie_day init start ...
 
 ## 변수명
 ```
-listed_compnay 상장기업
-listed_compnay_state 상장기업 지정내역 
+listed_company 상장기업
+listed_company_state 상장기업 지정내역 
 price 가격
 ```
 

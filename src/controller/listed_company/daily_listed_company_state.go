@@ -83,8 +83,8 @@ func (c *DailyListedComapnyStateController) ExecSql() {
 
 	c.log.Exec_Upid(c.up_id, "insert", "start")
 
-	var fnm = src.Info["seed"]["path"]["compnay_state-init"]
-	var seednm = src.Info["seed"]["name"]["compnay_state-init"]
+	var fnm = src.Info["seed"]["path"]["company_state-init"]
+	var seednm = src.Info["seed"]["name"]["company_state-init"]
 	dao.SqlSeed.Run(fnm, seednm)
 
 	c.log.Exec_Upid(c.up_id, "insert", "end")

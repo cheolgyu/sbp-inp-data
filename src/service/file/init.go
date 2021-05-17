@@ -28,8 +28,8 @@ func Init_file_listed_company(seed []model.Company) {
 
 func Init_file_listed_company_state(seed []model.CompanyState) {
 
-	var fnm = src.Info["seed"]["path"]["compnay_state-init"]
-	var seednm = src.Info["seed"]["name"]["compnay_state-init"]
+	var fnm = src.Info["seed"]["path"]["company_state-init"]
+	var seednm = src.Info["seed"]["name"]["company_state-init"]
 
 	f := CreateFile(fnm)
 
