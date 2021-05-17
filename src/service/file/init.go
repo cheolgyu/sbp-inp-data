@@ -11,11 +11,7 @@ import (
 
 func Init_file_listed_company(seed []model.Company) {
 
-	f, err := os.Create(src.Info["seed-fnm-init-compnay"])
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	f := CreateFile(src.Info["seed-fnm-init-compnay"])
 
 	defer f.Close()
 
@@ -42,11 +38,7 @@ func Init_file_listed_company(seed []model.Company) {
 
 func Init_file_listed_company_state(seed []model.CompanyState) {
 
-	f, err := os.Create(src.Info["seed-fnm-init-compnay_state"])
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	f := CreateFile(src.Info["seed-fnm-init-compnay_state"])
 
 	defer f.Close()
 
@@ -105,11 +97,7 @@ func Init_file_price(schema_type string, arr []model.NaverChart) {
 		var schema_nm = item.GetSchemaName(schema_type)
 		var tb_nm = item.GetTableName()
 
-		f, err := os.Create(item.GetSeedFilePath())
-
-		if err != nil {
-			log.Fatal(err)
-		}
+		f := CreateFile(item.GetSeedFilePath())
 
 		defer f.Close()
 
@@ -162,11 +150,7 @@ func Init_file_market(schema_type string, arr []model.NaverChartMarket) {
 		var schema_nm = item.GetSchemaName(schema_type)
 		var tb_nm = item.GetTableName()
 
-		f, err := os.Create(item.GetSeedFilePath())
-
-		if err != nil {
-			log.Fatal(err)
-		}
+		f := CreateFile(item.GetSeedFilePath())
 
 		defer f.Close()
 
@@ -205,4 +189,16 @@ func Init_file_market(schema_type string, arr []model.NaverChartMarket) {
 
 	}
 
+}
+
+func CreateFile(fileName string) *os.File {
+	file, err := os.Create(fileName)
+	checkError(err)
+	return file
+}
+
+func checkError(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

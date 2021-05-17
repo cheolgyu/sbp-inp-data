@@ -6,21 +6,13 @@ import (
 
 	"corplist/src"
 	"corplist/src/model"
-	"os"
 )
 
 func Daily_file_price(schema_type string, arr []model.NaverChart) {
 
 	fmt.Println("daily-sql 을 만드는 중입니다.")
 
-	f, err := os.Create(src.Info["seed-fnm-daily-price"])
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	f := CreateFile(src.Info["seed-fnm-daily-price"])
 
 	defer f.Close()
 	var str = "-- name: " + src.Info["seed-nm-daily-price"] + "\n"
@@ -63,14 +55,7 @@ func Daily_file_price(schema_type string, arr []model.NaverChart) {
 
 func Daily_file_market(schema_type string, arr []model.NaverChartMarket) {
 
-	f, err := os.Create(src.Info["seed-fnm-daily-market"])
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	f := CreateFile(src.Info["seed-fnm-daily-market"])
 
 	defer f.Close()
 
