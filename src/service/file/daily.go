@@ -11,11 +11,13 @@ import (
 func Daily_file_price(schema_type string, arr []model.NaverChart) {
 
 	fmt.Println("daily-sql 을 만드는 중입니다.")
+	var fnm = src.Info["seed"]["path"]["price-daily"]
+	var seednm = src.Info["seed"]["name"]["price-daily"]
 
-	f := CreateFile(src.Info["seed-fnm-daily-price"])
+	f := CreateFile(fnm)
 
 	defer f.Close()
-	var str = "-- name: " + src.Info["seed-nm-daily-price"] + "\n"
+	var str = "-- name: " + seednm + "\n"
 
 	for _, item := range arr {
 		var schema_nm = item.GetSchemaName(schema_type)
@@ -55,11 +57,13 @@ func Daily_file_price(schema_type string, arr []model.NaverChart) {
 
 func Daily_file_market(schema_type string, arr []model.NaverChartMarket) {
 
-	f := CreateFile(src.Info["seed-fnm-daily-market"])
+	var fnm = src.Info["seed"]["path"]["market-daily"]
+	var seednm = src.Info["seed"]["name"]["market-daily"]
+	f := CreateFile(fnm)
 
 	defer f.Close()
 
-	var str = "-- name: " + src.Info["seed-nm-daily-market"] + "\n"
+	var str = "-- name: " + seednm + "\n"
 
 	for _, item := range arr {
 		var schema_nm = item.GetSchemaName(schema_type)

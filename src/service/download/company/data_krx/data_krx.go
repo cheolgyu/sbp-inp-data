@@ -37,9 +37,9 @@ func (o *ListedCompanyBaisc) downData() Data_krx {
 }
 
 func (o ListedCompanyBaisc) Save() Data_krx {
-	o.saveNm = src.Info["path-company"]
-	o.urlCode = src.Info["url-krx-company-code"]
-	o.urlData = src.Info["url-krx-company-data"]
+	o.saveNm = src.Info["download"]["path"]["company"]
+	o.urlCode = src.Info["download"]["url"]["krx-company-code"]
+	o.urlData = src.Info["download"]["url"]["krx-company-data"]
 	o.codeReqBody = "mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms/MDC/STAT/standard/MDCSTAT01901"
 
 	o.downCode()
@@ -68,9 +68,9 @@ func (o *ListedCompanyState) downData() Data_krx {
 }
 
 func (o ListedCompanyState) Save() Data_krx {
-	o.saveNm = src.Info["path-company_state"]
-	o.urlCode = src.Info["url-krx-company_state-code"]
-	o.urlData = src.Info["url-krx-company_state-data"]
+	o.saveNm = src.Info["download"]["path"]["company_state"]
+	o.urlCode = src.Info["download"]["url"]["krx-company_state-code"]
+	o.urlData = src.Info["download"]["url"]["krx-company_state-data"]
 	o.codeReqBody = "mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms/MDC/STAT/standard/MDCSTAT02001"
 
 	o.downCode()

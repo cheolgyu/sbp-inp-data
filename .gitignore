@@ -16,6 +16,6 @@
 # vendor/
 
 
-tmp_seed/
+tmp/
 *.xlsx
 price.json

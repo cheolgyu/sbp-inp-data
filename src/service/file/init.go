@@ -11,11 +11,14 @@ import (
 
 func Init_file_listed_company(seed []model.Company) {
 
-	f := CreateFile(src.Info["seed-fnm-init-compnay"])
+	var fnm = src.Info["seed"]["path"]["company-init"]
+	var seednm = src.Info["seed"]["name"]["company-init"]
+
+	f := CreateFile(fnm)
 
 	defer f.Close()
 
-	_, err2 := f.WriteString("-- name: " + src.Info["seed-nm-init-compnay"] + "\n")
+	_, err2 := f.WriteString("-- name: " + seednm + "\n")
 
 	if err2 != nil {
 		log.Fatal(err2)
@@ -38,12 +41,15 @@ func Init_file_listed_company(seed []model.Company) {
 
 func Init_file_listed_company_state(seed []model.CompanyState) {
 
-	f := CreateFile(src.Info["seed-fnm-init-compnay_state"])
+	var fnm = src.Info["seed"]["path"]["compnay_state-init"]
+	var seednm = src.Info["seed"]["name"]["compnay_state-init"]
+
+	f := CreateFile(fnm)
 
 	defer f.Close()
 
 	var str = `
-		-- name: ` + src.Info["seed-nm-init-compnay_state"] + "\n"
+		-- name: ` + seednm + "\n"
 
 	for _, item := range seed {
 		str += `
@@ -93,6 +99,8 @@ func Init_file_listed_company_state(seed []model.CompanyState) {
 
 func Init_file_price(schema_type string, arr []model.NaverChart) {
 
+	var seednm = src.Info["seed"]["name"]["price-init"]
+
 	for _, item := range arr {
 		var schema_nm = item.GetSchemaName(schema_type)
 		var tb_nm = item.GetTableName()
@@ -101,9 +109,7 @@ func Init_file_price(schema_type string, arr []model.NaverChart) {
 
 		defer f.Close()
 
-		var str = `
-		-- name: ` + src.Info["seed-nm-init-price"] + `
-		`
+		var str = `-- name: ` + seednm + "\n"
 
 		str += `
 		DROP TABLE IF EXISTS "` + schema_nm + `"."` + tb_nm + `";
@@ -141,10 +147,7 @@ func Init_file_price(schema_type string, arr []model.NaverChart) {
 
 func Init_file_market(schema_type string, arr []model.NaverChartMarket) {
 
-	var err = os.MkdirAll(arr[0].GetTemFilePath(), 0755)
-	if err != nil {
-		log.Fatal(err)
-	}
+	var seednm = src.Info["seed"]["name"]["market-init"]
 
 	for _, item := range arr {
 		var schema_nm = item.GetSchemaName(schema_type)
@@ -154,8 +157,7 @@ func Init_file_market(schema_type string, arr []model.NaverChartMarket) {
 
 		defer f.Close()
 
-		var str = `
-		-- name: ` + src.Info["seed-nm-init-market"]
+		var str = `-- name: ` + seednm + "\n"
 
 		str += `
 		DROP TABLE IF EXISTS "` + schema_nm + `"."` + tb_nm + `";

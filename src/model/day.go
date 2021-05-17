@@ -16,7 +16,7 @@ type NaverChart struct {
 }
 
 func (o NaverChart) GetSeedFilePath() string {
-	return "tmp_seed/price/seed/" + o.GetTableName() + ".sql"
+	return "tmp/seed/price/seed/" + o.GetTableName() + ".sql"
 }
 
 func (o NaverChart) GetTableName() string {
@@ -51,9 +51,9 @@ func (o NaverChartMarket) GetSchemaName(schema_type string) string {
 }
 
 func (o NaverChartMarket) GetTemFilePath() string {
-	return "tmp_seed/market/seed"
+	return "tmp/seed/market/seed"
 }
 
 func (o NaverChartMarket) GetSeedFilePath() string {
-	return "tmp_seed/market/seed/" + o.GetTableName() + ".sql"
+	return "tmp/seed/market/seed/" + o.GetTableName() + ".sql"
 }

@@ -13,7 +13,7 @@ func Run() []model.Company {
 	var company_list []model.Company
 	fmt.Println("== xlsx package tutorial ==")
 
-	excelFileName := src.Info["path-company"]
+	excelFileName := src.Info["download"]["path"]["company"]
 	xlFile, err := xlsx.OpenFile(excelFileName)
 	if err != nil {
 		panic(err)
@@ -51,7 +51,7 @@ func RunCompanyState() []model.CompanyState {
 	var company_list []model.CompanyState
 	fmt.Println("== xlsx package tutorial ==")
 
-	excelFileName := src.Info["path-company_state"]
+	excelFileName := src.Info["download"]["path"]["company_state"]
 	xlFile, err := xlsx.OpenFile(excelFileName)
 	if err != nil {
 		panic(err)

@@ -8,39 +8,57 @@ import (
 	"corplist/src/model"
 )
 
-var Info map[string]string
+var Info map[string]map[string]map[string]string
 
 func init() {
 
-	var arr_mkDir = []string{"tmp_seed/company", "tmp_seed/price", "tmp_seed/market"}
+	Info = map[string]map[string]map[string]string{
+
+		"download": {
+			"path": {
+				"dir":           "tmp/file/",
+				"company":       "tmp/file/listed_company.xlsx",
+				"company_state": "tmp/file/company_state.xlsx",
+			},
+			"url": {
+				"krx-company-code":       "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd",
+				"krx-company-data":       "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd",
+				"krx-company_state-code": "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd",
+				"krx-company_state-data": "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd",
+			},
+		},
+		"seed": {
+			"name": {
+				"company-init":       "init-company",
+				"company_state-init": "init-company_state",
+				"price-init":         "init-price",
+				"price-daily":        "daily-price",
+				"market-init":        "init-market",
+				"market-daily":       "daily-market",
+			},
+			"path": {
+				"company-init":       "tmp/seed/company/seed.sql",
+				"company_state-init": "tmp/seed/company/seed_state.sql",
+				"price-daily":        "tmp/seed/price/daily.sql",
+				"market-daily":       "tmp/seed/market/daily.sql",
+				"market-dir":         "tmp/seed/market/seed",
+				"price-dir":          "tmp/seed/price/seed",
+				"company-dir":        "tmp/seed/company",
+			},
+		},
+	}
+
+	var arr_mkDir = []string{
+		Info["download"]["path"]["dir"],
+		Info["seed"]["path"]["company-dir"],
+		Info["seed"]["path"]["market-dir"],
+		Info["seed"]["path"]["price-dir"],
+	}
 
 	for _, item := range arr_mkDir {
 		mkdirAll(item)
 	}
 
-	Info = map[string]string{
-		"path-company":                "listed_company.xlsx",
-		"path-company_state":          "company_state.xlsx",
-		"":                            "",
-		"url-krx-company-code":        "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd",
-		"url-krx-company-data":        "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd",
-		"url-krx-company_state-code":  "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd",
-		"url-krx-company_state-data":  "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd",
-		"seed-nm-init-compnay":        "create-company-table-seed",
-		"seed-nm-init-price":          "create-price-table-seed",
-		"seed-nm-init-market":         "create-market-table-seed",
-		"seed-fnm-init-compnay":       "tmp_seed/company/seed.sql",
-		"seed-fnm-init-price":         "",
-		"seed-fnm-init-market":        "",
-		"seed-nm-init-compnay_state":  "create-company_state-table-seed",
-		"seed-fnm-init-compnay_state": "tmp_seed/company/seed_state.sql",
-		"seed-nm-daily-compnay":       "",
-		"seed-fnm-daily-price":        "tmp_seed/price/daily.sql",
-		"seed-nm-daily-price":         "daily-price-table-seed",
-		"seed-fnm-daily-market":       "tmp_seed/market/daily.sql",
-		"seed-nm-daily-market":        "daily-market-table-seed",
-		"seed-nm-daily-compnay_state": "",
-	}
 }
 
 func mkdirAll(path string) {
