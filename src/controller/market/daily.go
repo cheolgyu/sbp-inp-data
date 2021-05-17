@@ -3,7 +3,6 @@ package market
 import (
 	"fmt"
 
-	"corplist/src"
 	"corplist/src/controller"
 	"corplist/src/dao"
 	"corplist/src/model"
@@ -53,7 +52,7 @@ func (c DailyMarketController) run() {
 
 func (c DailyMarketController) update() {
 
-	var company_list = src.GetMarketList()
+	var company_list = GetMarketList()
 
 	var _, start, end = dao.SqlInfo.SelectGetDate("updated_market_" + c.schema_type)
 

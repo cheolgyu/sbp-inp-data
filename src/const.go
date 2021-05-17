@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"time"
-
-	"corplist/src/model"
 )
 
 var Info map[string]map[string]map[string]string
@@ -91,16 +89,7 @@ func GetStartDate(str string) string {
 	return res
 }
 
-func GetMarketList() []model.Company {
+func GetMarketList() []string {
 
-	var company_list = []model.Company{
-		model.Company{
-			Short_code: "KOSPI",
-		}, model.Company{
-			Short_code: "KOSDAQ",
-		}, model.Company{
-			Short_code: "KPI200",
-		},
-	}
-	return company_list
+	return []string{"KOSPI", "KOSDAQ", "KPI200"}
 }
