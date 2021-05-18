@@ -3,9 +3,9 @@ package data_krx
 import (
 	"bytes"
 	"corplist/src"
-	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 )
@@ -26,12 +26,12 @@ type ListedCompanyBaisc struct {
 
 func (o *ListedCompanyBaisc) downCode() Data_krx {
 	o.code = down_code(o.urlCode, o.codeReqBody)
-	fmt.Println("o.code11111=", o.code)
+
 	return nil
 }
 
 func (o *ListedCompanyBaisc) downData() Data_krx {
-	fmt.Println("o.code 2222222222=", o.code)
+
 	down_file(o.saveNm, o.urlData, o.code)
 	return nil
 }
@@ -92,7 +92,7 @@ func down_file(fnm string, url string, down_code string) {
 
 	size, err := io.Copy(file, resp.Body)
 
-	fmt.Println("down_file size=", size)
+	log.Println("down_file size=", size, "filenm=", fnm)
 
 	defer file.Close()
 
@@ -118,7 +118,6 @@ func down_code(url, reqbody string) string {
 		println(str)
 	}
 	var str_resp = string(respBody)
-	fmt.Println("down_code=", str_resp)
 
 	return str_resp
 }

@@ -5,39 +5,17 @@ import (
 
 	"corplist/src"
 	"corplist/src/model"
+	"os"
 )
 
-func Init_file_listed_company(seed []model.Company) {
+func Write_Comm_file_listed_company(f *os.File, item model.Company) {
 
-	var fnm = src.Info["seed"]["path"]["company-init"]
-	var seednm = src.Info["seed"]["name"]["company-init"]
-
-	f := CreateFile(fnm)
-
-	defer f.Close()
-	Write(f, "-- name: "+seednm)
-
-	for _, item := range seed {
-		Write(f, "-- name: "+`SELECT "insert_listed_company" ('`+item.Full_code+`', '`+item.Short_code+`', '`+item.Full_name_kr+`', '`+item.Short_name_kr+`', '`+item.Full_name_eng+`', '`+item.Listing_date+`', '`+item.Market+`', '`+item.Securities_classification+`', '`+item.Department+`', '`+item.Stock_type+`', '`+item.Face_value+`', '`+item.Listed_stocks+`');`+"\n")
-
-	}
-
-	fmt.Println("done")
+	Write(f, `SELECT "insert_listed_company" ('`+item.Full_code+`', '`+item.Short_code+`', '`+item.Full_name_kr+`', '`+item.Short_name_kr+`', '`+item.Full_name_eng+`', '`+item.Listing_date+`', '`+item.Market+`', '`+item.Securities_classification+`', '`+item.Department+`', '`+item.Stock_type+`', '`+item.Face_value+`', '`+item.Listed_stocks+`');`)
 
 }
 
-func Init_file_listed_company_state(seed []model.CompanyState) {
-
-	var fnm = src.Info["seed"]["path"]["company_state-init"]
-	var seednm = src.Info["seed"]["name"]["company_state-init"]
-
-	f := CreateFile(fnm)
-
-	defer f.Close()
-
-	Write(f, "-- name: "+seednm)
-
-	for _, item := range seed {
+func Write_Comm_file_listed_company_state(f *os.File, item model.CompanyState) {
+	if len(item.Code) > 0 {
 		Write(f, `
 		INSERT INTO "listed_company_state" 
 			("code", "name", "stop", "clear", "managed", 
@@ -74,24 +52,18 @@ func Init_file_listed_company_state(seed []model.CompanyState) {
 				`)
 	}
 
-	fmt.Println("done")
-
 }
 
-func Init_file_price(schema_type string, arr []model.NaverChart) {
+func Write_Init_file_price(f *os.File, schema_type string, item model.NaverChart) {
 
 	var seednm = src.Info["seed"]["name"]["price-init"]
 
-	for _, item := range arr {
-		var schema_nm = item.GetSchemaName(schema_type)
-		var tb_nm = item.GetTableName()
+	var schema_nm = item.GetSchemaName(schema_type)
+	var tb_nm = item.GetTableName()
 
-		f := CreateFile(item.GetSeedFilePath())
+	Write(f, "-- name: "+seednm)
 
-		defer f.Close()
-		Write(f, "-- name: "+seednm)
-
-		Write(f, `
+	Write(f, `
 		DROP TABLE IF EXISTS "`+schema_nm+`"."`+tb_nm+`";
 		CREATE TABLE "`+schema_nm+`"."`+tb_nm+`" (
 			"Date" integer NOT NULL UNIQUE ,
@@ -106,34 +78,26 @@ func Init_file_price(schema_type string, arr []model.NaverChart) {
 		VALUES 
 		`)
 
-		for j_index, j := range item.DayList {
-			Write(f, fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate))
-			if j_index+1 == len(item.DayList) {
-				Write(f, " ; ")
-			} else {
-				Write(f, " , ")
-			}
+	for j_index, j := range item.DayList {
+		Write(f, fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate))
+		if j_index+1 == len(item.DayList) {
+			Write(f, " ; ")
+		} else {
+			Write(f, " , ")
 		}
-
 	}
 
 }
 
-func Init_file_market(schema_type string, arr []model.NaverChartMarket) {
+func Write_Init_file_market(f *os.File, schema_type string, item model.NaverChartMarket) {
 
 	var seednm = src.Info["seed"]["name"]["market-init"]
 
-	for _, item := range arr {
-		var schema_nm = item.GetSchemaName(schema_type)
-		var tb_nm = item.GetTableName()
+	var schema_nm = item.GetSchemaName(schema_type)
+	var tb_nm = item.GetTableName()
 
-		f := CreateFile(item.GetSeedFilePath())
-
-		defer f.Close()
-
-		Write(f, "-- name: "+seednm)
-
-		Write(f, `
+	Write(f, "-- name: "+seednm)
+	Write(f, `
 		DROP TABLE IF EXISTS "`+schema_nm+`"."`+tb_nm+`";
 		CREATE TABLE "`+schema_nm+`"."`+tb_nm+`" (
 			"Date" integer NOT NULL UNIQUE ,
@@ -148,15 +112,13 @@ func Init_file_market(schema_type string, arr []model.NaverChartMarket) {
 		VALUES 
 		`)
 
-		for j_index, j := range item.List {
-			Write(f, fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate))
-			if j_index+1 == len(item.List) {
-				Write(f, " ; ")
-			} else {
-				Write(f, " , ")
-			}
+	for j_index, j := range item.List {
+		Write(f, fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate))
+		if j_index+1 == len(item.List) {
+			Write(f, " ; ")
+		} else {
+			Write(f, " , ")
 		}
-
 	}
 
 }
