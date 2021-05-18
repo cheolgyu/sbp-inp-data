@@ -19,3 +19,4 @@
 tmp/
 *.xlsx
 price.json
+test/*.sql
