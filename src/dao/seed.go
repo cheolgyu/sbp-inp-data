@@ -20,20 +20,21 @@ func init() {
 }
 
 func (obj Seed) Run(fnm string, seednm string) {
-	log.Println("Seed Run Start")
-	log.Println(fnm, seednm)
+	log.Println(" sql-시드 실행 시작 :", fnm, ", 시드 이름:", seednm)
 	var db = obj.DB.Conn()
 	defer db.Close()
 
 	dot, err := dotsql.LoadFromFile(fnm)
 
 	if err != nil {
+		log.Fatal(err)
 		panic(err)
 	}
 	// Run queries
 	_, err = dot.Exec(db, seednm)
 	if err != nil {
+		log.Fatal(err)
 		panic(err)
 	}
-	log.Println("Seed Run End")
+	log.Println(" sql-시드 실행 종료 ", fnm, ", 시드 이름:", seednm)
 }

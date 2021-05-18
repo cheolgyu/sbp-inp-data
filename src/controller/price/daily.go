@@ -4,11 +4,8 @@ import (
 	"corplist/src"
 	"corplist/src/controller"
 	"corplist/src/dao"
-	"corplist/src/model"
-	"corplist/src/service/download/price/naver_chart"
-	"corplist/src/service/file"
 	"corplist/src/service/info"
-	"fmt"
+	"corplist/src/service/naver_chart"
 )
 
 type DailyPriceController struct {
@@ -29,7 +26,6 @@ func (c DailyPriceController) New(schema_type string) controller.TimeFrameContro
 	c.schema_type = schema_type
 
 	return c
-
 }
 
 func (c DailyPriceController) Exec() {
@@ -44,37 +40,20 @@ func (c DailyPriceController) Exec() {
 //
 //////////////////////////////////////////////////////
 
-func (c DailyPriceController) run() {
-
-	c.update()
-
-}
-
-func (c DailyPriceController) update() {
+func (c *DailyPriceController) run() {
 
 	var _, start, end = dao.SqlInfo.SelectGetDate("updated_price_" + c.schema_type)
 
-	var company_list []model.Company = dao.SqlCompany.Select_All()
-	var naver_chart_list []model.NaverChart
-
-	var print_last = 0
-
-	for index, item := range company_list {
-		naver_chart_list = append(naver_chart_list, naver_chart.Get(item.Short_code, start, end))
-
-		var per = (index + 1) * 100 / len(company_list)
-
-		if print_last != per {
-			var str = fmt.Sprintf("%v개 종목 downloading...  (%v / 100) ", len(company_list), per)
-			fmt.Println(str)
-			print_last = per
-		}
-
+	svc := naver_chart.One{
+		Item:        "price",
+		Fnm:         src.Info["seed"]["path"]["price-daily"],
+		Seednm:      src.Info["seed"]["name"]["price-daily"],
+		List:        dao.SqlCompany.Select_All(),
+		Schema_type: c.schema_type,
+		Start:       start,
+		End:         end,
 	}
 
-	file.Daily_file_price(c.schema_type, naver_chart_list)
-	var fnm = src.Info["seed"]["path"]["price-daily"]
-	var seednm = src.Info["seed"]["name"]["price-daily"]
-	dao.SqlSeed.Run(fnm, seednm)
+	svc.Exec()
 
 }
