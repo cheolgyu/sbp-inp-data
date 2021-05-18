@@ -67,6 +67,13 @@ go run test/main.go
 <details markdown="1">
 <summary>펼치기</summary>
 
+
++ 프론트 
++ + 즐겨찾기 기능. 
++ + data/json 아끼기
++ + + 페이지 로드시 localstoreage 에서 체크 해서 오늘자 없으면 요청 보내기.
+
+
 |제목|내용|
 |--|--|
 |1|1|
