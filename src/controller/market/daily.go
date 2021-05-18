@@ -1,15 +1,11 @@
 package market
 
 import (
-	"fmt"
-
 	"corplist/src"
 	"corplist/src/controller"
 	"corplist/src/dao"
-	"corplist/src/model"
-	"corplist/src/service/download/market/naver_chart"
-	"corplist/src/service/file"
 	"corplist/src/service/info"
+	"corplist/src/service/naver_chart"
 )
 
 type DailyMarketController struct {
@@ -51,27 +47,20 @@ func (c DailyMarketController) run() {
 
 }
 
-func (c DailyMarketController) update() {
-
-	var company_list = GetMarketList()
+func (c *DailyMarketController) update() {
 
 	var _, start, end = dao.SqlInfo.SelectGetDate("updated_market_" + c.schema_type)
 
-	//하루 두번할 경우 발생하는 오류방지
-
-	var naver_chart_list []model.NaverChartMarket
-
-	for index, item := range company_list {
-		naver_chart_list = append(naver_chart_list, naver_chart.Get(item.Short_code, start, end))
-
-		var str = fmt.Sprintf("downloading.. (%v / %v) ", index+1, len(company_list))
-		fmt.Println(str)
+	svc := naver_chart.One{
+		Item:        "market",
+		Fnm:         src.Info["seed"]["path"]["market-daily"],
+		Seednm:      src.Info["seed"]["name"]["market-daily"],
+		List:        GetMarketList(),
+		Schema_type: c.schema_type,
+		Start:       start,
+		End:         end,
 	}
 
-	file.Daily_file_market(c.schema_type, naver_chart_list)
-
-	var fnm = src.Info["seed"]["path"]["market-daily"]
-	var seednm = src.Info["seed"]["name"]["market-daily"]
-	dao.SqlSeed.Run(fnm, seednm)
+	svc.Exec()
 
 }

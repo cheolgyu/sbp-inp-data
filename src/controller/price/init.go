@@ -1,26 +1,26 @@
-package market
+package price
 
 import (
-	"fmt"
-	"time"
-
 	"corplist/src"
 	"corplist/src/controller"
+	"corplist/src/dao"
 	"corplist/src/service/info"
 	"corplist/src/service/naver_chart"
+	"fmt"
+	"time"
 )
 
-type InitMarketController struct {
+type InitPriceController struct {
 	log         controller.LogController
 	up_id       string
 	schema_type string
 }
 
-func (c InitMarketController) New(schema_type string) controller.TimeFrameController {
+func (c InitPriceController) New(schema_type string) controller.TimeFrameController {
 
 	var log = controller.LogController{
 		LogTitleP1: "init",
-		LogTitleP2: "market_" + schema_type,
+		LogTitleP2: "price_" + schema_type,
 		LogTitleP3: "start",
 	}
 	c.log = log
@@ -30,11 +30,11 @@ func (c InitMarketController) New(schema_type string) controller.TimeFrameContro
 	return c
 }
 
-func (c InitMarketController) Exec() {
+func (c InitPriceController) Exec() {
 
 	c.run()
 	c.log.Exec_Upid(c.up_id, "end", "end")
-	info.Update_Info("init_market_" + c.schema_type)
+	info.Update_Info("init_price_" + c.schema_type)
 
 }
 
@@ -42,17 +42,17 @@ func (c InitMarketController) Exec() {
 //
 //////////////////////////////////////////////////////
 
-func (c InitMarketController) run() {
+func (c *InitPriceController) run() {
 
 	var t = time.Now()
-	var start = src.GetStartDate("init-market")
+	var start = src.GetStartDate("init-price")
 	var end = fmt.Sprintf("%d%02d%02d", t.Year(), t.Month(), t.Day())
 
 	svc := naver_chart.Each{
-		Item:        "market",
-		List:        GetMarketList(),
+		Item:        "price",
+		List:        dao.SqlCompany.Select_All(),
 		Schema_type: c.schema_type,
-		Seednm:      src.Info["seed"]["name"]["market-init"],
+		Seednm:      src.Info["seed"]["name"]["price-init"],
 		Start:       start,
 		End:         end,
 	}

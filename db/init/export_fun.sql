@@ -42,7 +42,7 @@ $$ LANGUAGE PLPGSQL;
 ---------------------------------
 DROP FUNCTION IF EXISTS "fmt_yyyymmdd";
 
-CREATE FUNCTION fmt_yyyymmdd(item integer) RETURNS text as $ BODY $ DECLARE res text;
+CREATE OR REPLACE FUNCTION fmt_yyyymmdd(item integer) RETURNS text as $$ DECLARE res text;
 
 BEGIN
 select
@@ -52,7 +52,7 @@ RETURN res;
 
 END;
 
-$ BODY $ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
 
 ---------------------------------
 --
@@ -61,7 +61,7 @@ $ BODY $ LANGUAGE PLPGSQL;
 ---------------------------------
 DROP FUNCTION IF EXISTS "fmt_timestamp";
 
-CREATE FUNCTION fmt_timestamp(item timestamp) RETURNS text as $ BODY $ DECLARE res text;
+CREATE OR REPLACE FUNCTION fmt_timestamp(item timestamp) RETURNS text as $$ DECLARE res text;
 
 BEGIN
 select
@@ -71,7 +71,7 @@ RETURN res;
 
 END;
 
-$ BODY $ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
 
 ---------------------------------
 --
@@ -80,7 +80,7 @@ $ BODY $ LANGUAGE PLPGSQL;
 ---------------------------------
 DROP FUNCTION IF EXISTS "fmt_per";
 
-CREATE FUNCTION fmt_per(item float) RETURNS text as $ BODY $ DECLARE res text;
+CREATE OR REPLACE FUNCTION fmt_per(item float) RETURNS text as $$ DECLARE res text;
 
 BEGIN
 select
@@ -90,7 +90,7 @@ RETURN res;
 
 END;
 
-$ BODY $ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
 
 ---------------------------------
 --
@@ -99,7 +99,7 @@ $ BODY $ LANGUAGE PLPGSQL;
 ---------------------------------
 DROP FUNCTION IF EXISTS "fmt_naver_link";
 
-CREATE FUNCTION fmt_naver_link(item text) RETURNS text as $ BODY $ DECLARE res text;
+CREATE OR REPLACE FUNCTION fmt_naver_link(item text) RETURNS text as $$ DECLARE res text;
 
 BEGIN
 select
@@ -112,7 +112,7 @@ RETURN res;
 
 END;
 
-$ BODY $ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
 
 ---------------------------------
 --
@@ -121,7 +121,7 @@ $ BODY $ LANGUAGE PLPGSQL;
 ---------------------------------
 DROP FUNCTION IF EXISTS "fmt_naver_link_market";
 
-CREATE FUNCTION fmt_naver_link_market(item text) RETURNS text as $$ DECLARE res text;
+CREATE OR REPLACE FUNCTION fmt_naver_link_market(item text) RETURNS text as $$ DECLARE res text;
 
 BEGIN
 select

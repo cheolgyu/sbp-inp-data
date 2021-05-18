@@ -40,28 +40,7 @@ go run . init
 |1|1|
 |2|10|
 
-```
-고루틴 적용
-기존 순서
-daily
-1. 회사-회사상태
 
-    1. 회사상태 전체 목록 엑셀다운.
-    2. for 돌려서 한줄씩 array에 추가
-    3. 배열 전체 sql파일 만들기
-    4. sql 파일 실행.
-
-go run test/main.go
-엑셀파일 한줄 읽어 sqlfile 에 추가.
-다되면 sqlfile 실행.
-
-
-
-회사-가격정보-highpoint
-마켓정보-highpoint
-
-
-```
 
 ## 다음 할것
 <details markdown="1">
@@ -73,12 +52,14 @@ go run test/main.go
 |2|10|
 
 + ?
-+ go루틴 적용
+
 ```
 ㅇ
 ```
-+ listed_company 기준으로 가격 조회하는데 listed_company은 업데이트 안하는중; 신규 회사 없음;
++ 종목의 전체 기간에 대한 시세 데이터 받고 highpoint 함수 업글한다음 두점의 x값 y과 기울기를   highpoint 스키마와 종목tb 에 저장 하기.
++ + 저장한것에서 유용한것 찾아보기.
 
++ 시드 파일 로드할때 파일 크기가 크면 오래걸림. 파일크게 작하려면 저장or업데이트 함수 만들어서 그 함수 호출해야됨. init 할때 특히 오래걸림
 + LOG 테이블 변경( 한눈에 파악하기 힘듬)
 + + src/const에서 가져다가 쓸때 log 업데이트는 어떨지?
    
@@ -132,6 +113,63 @@ a, ab,  prcie_day init start ...
 <details markdown="1">
 <summary>펼치기</summary>
 
++ listed_company 기준으로 가격 조회하는데 listed_company은 업데이트 안하는중; 신규 회사 없음; < 추가함.
++ 고루틴 적용 + init daily 테스트 완료. + 서비스 따로 뺴고  price,company,state,market 폴더에서  네이버차트,data_krx 폴더 별로 기능 묶어버림.
+```
+고루틴 적용
+기존 순서
+daily
+1. 회사-회사상태
+
+    1. 회사상태 전체 목록 엑셀다운.
+    2. for 돌려서 한줄씩 array에 추가
+    3. 배열 전체 sql파일 만들기
+    4. sql 파일 실행.
+
+go run test/main.go
+엑셀파일 한줄 읽어 sqlfile 에 추가.
+다되면 sqlfile 실행.
+
+
+
+회사-가격정보-highpoint
+마켓정보-highpoint
+
+
+===================
+
+price 
+    naver_chart
+        daily - oneFile run
+        init - eachFile run
+market
+    naver_chart
+        daily - oneFile run
+        init - eachFile run        
+company_state
+    data_krx
+        daily - onefile run
+        init - onefile run
+
+===================
+
+naver_chart
+    oneFile Run
+        price-daily
+        market-daily
+
+        list, start,end, fnm, seednm 
+        write() sql 쿼리가 다름. init 용과 daily용이 다름. 
+
+    eachFile Run
+        price-init
+        market-init
+        
+        list, start,end, fnm, seednm 
+        write() sql 쿼리가 다름.
+
+===================
+```
 + 코드정리
 + + const.go 1차원 배열에서 3차원 배열로 수정 : 한눈에 보기 어려움.
 + + 여러 dao의 각각의 seed 실행 함수 하나로
