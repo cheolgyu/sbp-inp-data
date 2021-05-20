@@ -14,6 +14,19 @@ func Write_Daily_file_price(f *os.File, schema_type string, item model.NaverChar
 	if len(item.DayList) > 0 {
 
 		for _, j := range item.DayList {
+			// 신규 상장 회사가 있을 경우 오류나기 때문에 추가함.
+			Write(f, `
+			CREATE TABLE IF NOT EXISTS "`+schema_nm+`"."`+tb_nm+`" (
+				"Date" integer NOT NULL UNIQUE ,
+				"OpenPrice" integer,
+				"HighPrice" integer,
+				"LowPrice" integer,
+				"ClosePrice" integer,
+				"Volume" integer,
+				"ForeignerBurnoutRate" double precision
+			);
+			`)
+
 			Write(f, `INSERT INTO "`+schema_nm+`"."`+tb_nm+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate") VALUES`)
 			Write(f, fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate))
 			Write(f, `
