@@ -10,7 +10,7 @@ type DB struct {
 	Info string
 }
 
-const conn_info string = "host=localhost port=5432 user=postgres password=example dbname=dev2 sslmode=disable"
+const conn_info string = "host=localhost port=5432 user=postgres password=example dbname=dev sslmode=disable"
 
 func (db DB) Conn() *sql.DB {
 

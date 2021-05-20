@@ -5,6 +5,7 @@ import (
 	"os"
 	"sync"
 
+	"corplist/src/controller/export"
 	"corplist/src/controller/high_point"
 	"corplist/src/controller/listed_company"
 	"corplist/src/controller/market"
@@ -37,6 +38,7 @@ func main() {
 		fmt.Println("daily")
 		project_daily()
 		project_high_point()
+		export.MakeFile()
 	default:
 		fmt.Printf("init or daily   go run . init or go run . daily")
 		test()
@@ -45,7 +47,6 @@ func main() {
 
 func test() {
 	fmt.Println("test ")
-
 }
 
 ////////////////////////

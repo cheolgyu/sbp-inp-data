@@ -1,0 +1,69 @@
+-- select export_for_web();
+DROP FUNCTION IF EXISTS "export_for_web"();
+
+CREATE
+OR REPLACE FUNCTION export_for_web() RETURNS TABLE (item json) AS $$
+DECLARE
+    BEGIN
+        RETURN QUERY
+        SELECT
+            json_build_object(
+                'info',
+                exp_info.item,
+                'price_not_stop',
+                exp_price_ns.item,
+                'price_is_stop',
+                exp_price_is.item,
+                'market',
+                exp_market.item
+            )
+        FROM
+            (
+                SELECT
+                    array_agg(to_json(t. *)) AS item
+                FROM
+                    (
+                        SELECT
+                            NAME,
+                            fmt_timestamp(updated_date):: text as updated_date
+                        FROM
+                            "info"
+                        WHERE
+                            NAME LIKE 'updated_company%'
+                            OR NAME LIKE 'updated_price_day%'
+                            OR NAME LIKE 'updated_high%'
+                    ) t
+            ) exp_info,
+            (
+                SELECT
+                    array_to_json(array_agg(tt)) AS item
+                FROM
+                    (
+                        SELECT
+                            *
+                        FROM
+                            view_price_day t
+                        WHERE
+                            stop IS FALSE
+                        ORDER BY
+                            "fluctuation_rate" DESC
+                    ) tt
+            ) exp_price_ns,
+            (
+                SELECT
+                    array_to_json(array_agg(t)) AS item
+                FROM
+                    view_price_day t
+                WHERE
+                    stop IS TRUE
+            ) exp_price_is,
+            (
+                SELECT
+                    array_to_json(array_agg(t)) AS item
+                FROM
+                    view_market_day t
+            ) exp_market;
+
+END;
+
+$$ LANGUAGE plpgsql;

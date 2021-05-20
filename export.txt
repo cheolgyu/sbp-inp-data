@@ -1,4 +1,6 @@
 
+
+
 # 하  TO STDOUT 에서 한글깨짐. 컨테이서한글 설정하다가 컨테이너 고장나서 테이블 벡업후 껏다 키고 데이터 다시 넣고 작업해야됌 
 docker exec -u postgres corplist_db_1 psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t ) TO STDOUT CSV HEADER ENCODING 'UTF8' " 
 
@@ -36,3 +38,14 @@ docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu
 ## 
 docker exec -it corplist_db_1 bash <
 docker exec -it corplist_db_1 bash
+
+
+
+ ssh -i "highserpot_stock.pem" ec2-user@54.180.224.126
+ scp -i [pem파일경로] [업로드할 파일 이름] [ec2-user계정명]@[ec2 instance의 public DNS]:~/[경로]
+
+scp -i "highserpot_stock.pem" tmp/data.json  ec2-user@54.180.224.126:~/data.json
+
+scp -i "highserpot_stock.pem" data-server/bin/data-server  ec2-user@54.180.224.126:~/data-server
+
+

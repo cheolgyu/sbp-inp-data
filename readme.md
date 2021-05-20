@@ -3,6 +3,7 @@
 주식 데이터베이스를 업데이트 하고 필요한 지표를 계산하고 데이터베이스에 저장하는 용도로 사용한다.    
 보여주는건 별도의 [web 프로젝트](https://github.com/cheolgyu/stock-app) 를 생성하여 진행한다.   
 
+
 ## 실행방법
 
 ```
@@ -30,6 +31,80 @@ pull request하면 s3 배포 (git actions 이용해서 만들어놈.)
 go run . init
 
 ```
+## 흐름
+
+```
+stock-dbment    :  go main . daily 실행하면 tmp/data.json 까지 생성 해줌.
+수동복사         : stock-app//static//data//data.json
+stock-web-app   : aws s3 배포 github actions으로 (분기로 data.json만 배포 필요)
+
+```
+
+## 프론트
+<details markdown="1">
+<summary>펼치기</summary>
+
+```
+#컨테이너 터미널 알아서 열기
+su - postgres
+psql -d dev -c "COPY (
+    SELECT array_to_json(array_agg(tt)) FROM 
+    (
+    select * from view_price_day t where stop is false order by  "fluctuation_rate" desc
+    ) tt
+
+  ) TO  '/var/lib/postgresql/export_price_not_stop.json' ENCODING 'UTF8' " 
+psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t where stop is true   ) TO  '/var/lib/postgresql/export_price_is_stop.json' ENCODING 'UTF8' " 
+
+psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_market_day t ) TO  '/var/lib/postgresql/export_market.json' ENCODING 'UTF8' " 
+psql -d dev -c "COPY ( 
+   SELECT json_object( 
+    array_agg(
+        name
+        
+    ),
+    array_agg(
+        fmt_timestamp(updated_date)::text
+    )
+)  FROM "info"
+ ) TO  '/var/lib/postgresql/export_info.json' ENCODING 'UTF8' " 
+# 윈도우 터미널에서 실행
+docker cp corplist_db_1:/var/lib/postgresql/export_price_not_stop.json C://Users//cheolgyu//workspace//stock-app//static//data//price.json
+docker cp corplist_db_1:/var/lib/postgresql/export_price_is_stop.json C://Users//cheolgyu//workspace//stock-app//static//data//price_is_stop.json
+docker cp corplist_db_1:/var/lib/postgresql/export_market.json C://Users//cheolgyu//workspace//stock-app//static//data//market.json
+docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu//workspace//stock-app//static//data//info.json
+
+
+```
+</details>
+
+## 백엔드 -- 보류 
+<details markdown="1">
+<summary>펼치기</summary>
+
++ 빌드
+    ```
+    $env:GOOS = 'linux'
+    $env:GOARCH = 'amd64'
+    go build -o data-server/bin/data-server data-server/main.go
+    ```
++ 빌드 후 배포 (수동)
+    ```
+    scp -i "highserpot_stock.pem" data-server/bin/data-server  ec2-user@54.180.224.126:~/data-server
+
+    ```
++ json파일 배포 (자동)
+    ```
+    참고 : src\controller\export\export.go
+    
+    kill -9 $(lsof -t -i:5000)
+    nohup ./data-server > log.txt 2>&1 &
+    ```
+
+</details>
+
+
+
 ## 기준
 + init 다운데이터 시작일 정의한 곳 src\const.go
 + daily 다운데이터 시작일 정의한 곳 src\dao\info.go
@@ -46,10 +121,22 @@ go run . init
 <summary>펼치기</summary>
 
 
+
 + 프론트 
-+ + 즐겨찾기 기능. 
-+ + data/json 아끼기
-+ + + 페이지 로드시 localstoreage 에서 체크 해서 오늘자 없으면 요청 보내기.
++ + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.
++ + 변경된 data.json 구조 적용 하기. 
++ + data.json 은 localstoreage 저장하고 없으면 요청하기
++ + 즐겨찾기 기능. localstoreage에 저장
+
++ dbment
++ + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.
++ + sql price init/daily 함수 생성 (insert 내용이 배열로 있는경우)
+
++ 백엔드 (보류)
++ + daily 시 ec2에 json 파일 업로드 및 data서버 재기동 프론트는 data서버에서 data.json 요청
++ + + ec2에 업로드 및 ec2 재기동 
+
+
 
 
 |제목|내용|
@@ -112,6 +199,10 @@ a, ab,  prcie_day init start ...
 ## 작업한 기능
 <details markdown="1">
 <summary>펼치기</summary>
+
++ export.sql 생성
++ + export.sql로 select 
++ + 후 data.json 만들어 ec2 upload 기능 (보류)
 
 + listed_company 기준으로 가격 조회하는데 listed_company은 업데이트 안하는중; 신규 회사 없음; < 추가함.
 + 고루틴 적용 + init daily 테스트 완료. + 서비스 따로 뺴고  price,company,state,market 폴더에서  네이버차트,data_krx 폴더 별로 기능 묶어버림.
