@@ -37,6 +37,7 @@ DECLARE
                             NAME LIKE 'updated_company%'
                             OR NAME LIKE 'updated_price_day%'
                             OR NAME LIKE 'updated_high%'
+                            OR NAME LIKE 'updated_market%'
                     ) t
             ) exp_info,
             (
