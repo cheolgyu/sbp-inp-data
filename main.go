@@ -47,6 +47,7 @@ func main() {
 
 func test() {
 	fmt.Println("test ")
+	export.MakeFile()
 }
 
 ////////////////////////

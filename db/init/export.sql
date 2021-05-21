@@ -2,21 +2,23 @@
 DROP FUNCTION IF EXISTS "export_for_web"();
 
 CREATE
-OR REPLACE FUNCTION export_for_web() RETURNS TABLE (item json) AS $$
+OR REPLACE FUNCTION export_for_web() RETURNS TABLE (info_json json, data_json json) AS $$
 DECLARE
     BEGIN
         RETURN QUERY
         SELECT
             json_build_object(
                 'info',
-                exp_info.item,
+                exp_info.item
+            ) AS info_json,
+            json_build_object(
                 'price_not_stop',
                 exp_price_ns.item,
                 'price_is_stop',
                 exp_price_is.item,
                 'market',
                 exp_market.item
-            )
+            ) data_json
         FROM
             (
                 SELECT
@@ -25,7 +27,7 @@ DECLARE
                     (
                         SELECT
                             NAME,
-                            fmt_timestamp(updated_date):: text as updated_date
+                            fmt_timestamp(updated_date) :: text AS updated_date
                         FROM
                             "info"
                         WHERE

@@ -16,19 +16,19 @@ func init() {
 	}
 }
 
-func (obj Export) Run() string {
+func (obj Export) Run() (string, string) {
 
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	var item string
+	var info_json, data_json string
 
 	query := `SELECT *  FROM  export_for_web() `
 
-	err := db.QueryRow(query).Scan(&item)
+	err := db.QueryRow(query).Scan(&info_json, &data_json)
 	if err != nil {
 		panic(err)
 	}
 
-	return item
+	return info_json, data_json
 }

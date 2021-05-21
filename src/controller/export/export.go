@@ -12,8 +12,9 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-var fnm = "data.json"
-var export_path = "tmp/" + fnm
+var fnm_info = "info.json"
+var fnm_data = "data.json"
+var export_path = "tmp/"
 
 func Exec() {
 	//makeFile()
@@ -21,14 +22,20 @@ func Exec() {
 }
 
 func MakeFile() {
-	item := dao.SqlExport.Run()
-	log.Println("export string len:", len(item))
-	f, err := os.Create(export_path)
+	info, data := dao.SqlExport.Run()
+	log.Println("export info len:", len(info))
+	log.Println("export data len:", len(data))
+
+	mkfile(export_path+fnm_info, info)
+	mkfile(export_path+fnm_data, data)
+}
+func mkfile(fnm string, txt string) {
+	f, err := os.Create(fnm)
 
 	if err != nil {
 		panic(err)
 	}
-	f.WriteString(item)
+	f.WriteString(txt)
 	defer f.Close()
 }
 
@@ -36,6 +43,7 @@ func upload() {
 	var pem_path = "highserpot_stock.pem"
 	var user = "ec2-user"
 	var host = "54.180.224.126:22"
+	var fnm = ""
 
 	pemBytes, err := ioutil.ReadFile(pem_path)
 	if err != nil {

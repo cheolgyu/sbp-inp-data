@@ -129,7 +129,6 @@ docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu
 + + 즐겨찾기 기능. localstoreage에 저장
 
 + dbment
-+ + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.
 + + sql price init/daily 함수 생성 (insert 내용이 배열로 있는경우)
 
 + 백엔드 (보류)
@@ -199,6 +198,9 @@ a, ab,  prcie_day init start ...
 ## 작업한 기능
 <details markdown="1">
 <summary>펼치기</summary>
+
++ dbment
++ + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.
 
 + export.sql 생성
 + + export.sql로 select 
