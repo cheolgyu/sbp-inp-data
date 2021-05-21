@@ -22,7 +22,10 @@ DECLARE
         FROM
             (
                 SELECT
-                    array_agg(to_json(t. *)) AS item
+                    json_object(
+                        array_agg(NAME),
+                        array_agg(updated_date)
+                    ) AS item
                 FROM
                     (
                         SELECT
