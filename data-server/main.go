@@ -1,8 +1,8 @@
 package main
 
 import (
-	"corplist/data-server/ds"
 	"encoding/json"
+	"github/cheolgyu/stock/backend/dbment/data-server/ds"
 	"log"
 	"os"
 )

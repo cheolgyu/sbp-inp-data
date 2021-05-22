@@ -5,11 +5,11 @@ import (
 	"os"
 	"sync"
 
-	"corplist/src/controller/export"
-	"corplist/src/controller/high_point"
-	"corplist/src/controller/listed_company"
-	"corplist/src/controller/market"
-	"corplist/src/controller/price"
+	"github/cheolgyu/stock/backend/dbment/src/controller/export"
+	"github/cheolgyu/stock/backend/dbment/src/controller/high_point"
+	"github/cheolgyu/stock/backend/dbment/src/controller/listed_company"
+	"github/cheolgyu/stock/backend/dbment/src/controller/market"
+	"github/cheolgyu/stock/backend/dbment/src/controller/price"
 	"log"
 	"time"
 )

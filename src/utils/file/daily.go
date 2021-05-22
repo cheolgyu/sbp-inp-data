@@ -1,8 +1,8 @@
 package file
 
 import (
-	"corplist/src/model"
 	"fmt"
+	"github/cheolgyu/stock/backend/dbment/src/model"
 	"os"
 )
 

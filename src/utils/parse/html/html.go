@@ -12,7 +12,7 @@ package html
 // 	"golang.org/x/text/encoding/korean"
 // 	"strconv"
 
-// 	"corplist/model"
+// 	"github/cheolgyu/stock/backend/dbment/model"
 // )
 
 // var (
@@ -24,7 +24,7 @@ package html
 // 	return html_query()
 // }
 
-// func html_query() []model.Company { 
+// func html_query() []model.Company {
 // 	var company_list []model.Company
 
 // 	content, err := ioutil.ReadFile(marketType+".txt")
@@ -47,8 +47,8 @@ package html
 // 		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
 // 			var t model.Company
 // 			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
-// 				td_txt :=  r.Replace(tablecell.Text()) 
-// 				td_txt2 :=  r_br.Replace(td_txt) 
+// 				td_txt :=  r.Replace(tablecell.Text())
+// 				td_txt2 :=  r_br.Replace(td_txt)
 // 				if indexth == 0 {
 // 					t.Name = td_txt2
 // 				} else if indexth == 1 {
@@ -73,7 +73,7 @@ package html
 // 			if t.Name != ""{
 // 				company_list = append(company_list, t)
 // 			}
-			
+
 // 		})
 // 	})
 // 	fmt.Println("####### 마켓 = ",marketType,",len=", len(company_list))

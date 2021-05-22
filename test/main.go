@@ -20,7 +20,7 @@ package main
 
 */
 import (
-	"corplist/src/model"
+	"github/cheolgyu/stock/backend/dbment/src/model"
 	"log"
 	"strings"
 

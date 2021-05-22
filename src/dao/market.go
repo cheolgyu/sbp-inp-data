@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"corplist/db"
-	"corplist/src"
-	"corplist/src/model"
+	"github/cheolgyu/stock/backend/dbment/db"
+	"github/cheolgyu/stock/backend/dbment/src"
+	"github/cheolgyu/stock/backend/dbment/src/model"
 
 	"github.com/gchaincl/dotsql"
 )

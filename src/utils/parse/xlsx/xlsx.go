@@ -1,7 +1,7 @@
 package xlsx
 
 import (
-	"corplist/src/model"
+	"github/cheolgyu/stock/backend/dbment/src/model"
 	"strings"
 
 	"github.com/tealeg/xlsx"

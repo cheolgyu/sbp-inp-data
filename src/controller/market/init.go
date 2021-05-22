@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"corplist/src"
-	"corplist/src/controller"
-	"corplist/src/service/info"
-	"corplist/src/service/naver_chart"
+	"github/cheolgyu/stock/backend/dbment/src"
+	"github/cheolgyu/stock/backend/dbment/src/controller"
+	"github/cheolgyu/stock/backend/dbment/src/service/info"
+	"github/cheolgyu/stock/backend/dbment/src/service/naver_chart"
 )
 
 type InitMarketController struct {

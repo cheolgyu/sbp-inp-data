@@ -1,11 +1,11 @@
 package naver_chart
 
 import (
-	"corplist/src/dao"
-	"corplist/src/model"
-	market_naver_chart "corplist/src/utils/download/market/naver_chart"
-	price_naver_chart "corplist/src/utils/download/price/naver_chart"
-	"corplist/src/utils/file"
+	"github/cheolgyu/stock/backend/dbment/src/dao"
+	"github/cheolgyu/stock/backend/dbment/src/model"
+	market_naver_chart "github/cheolgyu/stock/backend/dbment/src/utils/download/market/naver_chart"
+	price_naver_chart "github/cheolgyu/stock/backend/dbment/src/utils/download/price/naver_chart"
+	"github/cheolgyu/stock/backend/dbment/src/utils/file"
 	"log"
 )
 

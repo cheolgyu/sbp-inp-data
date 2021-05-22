@@ -1,8 +1,8 @@
 package dao
 
 import (
-	"corplist/db"
-	"corplist/src/model"
+	"github/cheolgyu/stock/backend/dbment/db"
+	"github/cheolgyu/stock/backend/dbment/src/model"
 )
 
 var SqlCompany Company

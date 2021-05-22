@@ -2,7 +2,7 @@ package data_krx
 
 import (
 	"bytes"
-	"corplist/src"
+	"github/cheolgyu/stock/backend/dbment/src"
 	"io"
 	"io/ioutil"
 	"log"

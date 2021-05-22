@@ -1,11 +1,11 @@
 package data_krx
 
 import (
-	"corplist/src/dao"
-	"corplist/src/model"
-	"corplist/src/utils/download/company/data_krx"
-	"corplist/src/utils/file"
-	parse_xlsx "corplist/src/utils/parse/xlsx"
+	"github/cheolgyu/stock/backend/dbment/src/dao"
+	"github/cheolgyu/stock/backend/dbment/src/model"
+	"github/cheolgyu/stock/backend/dbment/src/utils/download/company/data_krx"
+	"github/cheolgyu/stock/backend/dbment/src/utils/file"
+	parse_xlsx "github/cheolgyu/stock/backend/dbment/src/utils/parse/xlsx"
 	"log"
 	"sync"
 

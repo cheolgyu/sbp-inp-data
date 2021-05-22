@@ -1,8 +1,8 @@
 package export
 
 import (
-	"corplist/src/dao"
 	"fmt"
+	"github/cheolgyu/stock/backend/dbment/src/dao"
 	"io"
 	"io/ioutil"
 	"log"

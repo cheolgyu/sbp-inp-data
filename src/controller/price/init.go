@@ -1,12 +1,12 @@
 package price
 
 import (
-	"corplist/src"
-	"corplist/src/controller"
-	"corplist/src/dao"
-	"corplist/src/service/info"
-	"corplist/src/service/naver_chart"
 	"fmt"
+	"github/cheolgyu/stock/backend/dbment/src"
+	"github/cheolgyu/stock/backend/dbment/src/controller"
+	"github/cheolgyu/stock/backend/dbment/src/dao"
+	"github/cheolgyu/stock/backend/dbment/src/service/info"
+	"github/cheolgyu/stock/backend/dbment/src/service/naver_chart"
 	"time"
 )
 

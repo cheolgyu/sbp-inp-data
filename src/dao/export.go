@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"corplist/db"
+	"github/cheolgyu/stock/backend/dbment/db"
 )
 
 var SqlExport Export
