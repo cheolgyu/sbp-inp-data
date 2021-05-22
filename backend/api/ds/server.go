@@ -2,7 +2,9 @@ package ds
 
 import (
 	"compress/gzip"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -19,7 +21,13 @@ func Exec() {
 func server() {
 
 	http.Handle("/data/", makeGzipHandler(handler))
+	http.HandleFunc("/", HelloServer)
 	http.ListenAndServe(":5000", nil)
+}
+
+func HelloServer(w http.ResponseWriter, r *http.Request) {
+	log.Println("hi")
+	fmt.Fprintf(w, "안녕, %s!", r.URL.Path[1:])
 }
 
 func handler(w http.ResponseWriter, req *http.Request) {

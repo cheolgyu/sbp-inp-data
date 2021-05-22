@@ -22,7 +22,7 @@ var file_data []byte
 // go run data-server/main.go
 func main() {
 	log.Println("데이터 서버 시작")
-	load_data_json()
+	//load_data_json()
 	ds.Exec()
 }
 

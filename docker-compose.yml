@@ -2,19 +2,30 @@ version: '3.1'
 # Use postgres/example user/password credentials
 services:
 
-  db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: example
-      POSTGRES_USER: postgres
-      POSTGRES_DB: dev
-      TZ: Asia/Seoul
+  api:
+    build: 
+      context: ./backend/api
+      dockerfile: Dockerfile
     ports:
-      - 5432:5432
+      - "5000:5000"
+      - "5100:5100"
+    volumes: 
+      - ./backend/api:/go/src/app
+    command: gin --port 5100 --appPort 5000 run main.go 
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+  # db:
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: example
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_DB: dev
+  #     TZ: Asia/Seoul
+  #   ports:
+  #     - 5432:5432
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
