@@ -120,6 +120,35 @@ docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu
 <details markdown="1">
 <summary>펼치기</summary>
 
++ 폴더구조 바꾸기 
++ + corplist -> github.com/cheolgyu/stock-backend/dbment
++ + api -> github.com/cheolgyu/stock-backend/api
+
++ 저가 고가 종가 그래프 보기.
++ + 백엔드 필요하네.
++ + 백엔드 + db vs 백엔드 + 파일
+
++ 백엔드
++ + 만드는데 주식페이지는 변수에 담아놓고 그래프데이터는 db에서 가져오기
++ + dbment 에서 데이터 가공후 redis로 보내고 redis와 api와 front 로 보여줌.
++ + golang+dbment에서 가공후 redis 로 보내기.
++ + api-server+redis에서 갱신된 정보 응답해주기.
++ + + docker
++ + + + api(backend)
++ + + + redis
++ + + + + redis-view-tool
++ + + + dbment
++ + + + rdbms
++ + + + + rdbms-view-tool
++ + + + front
+
++ rdbms container 백업 및 저장
+    ```
+    docker commit -p 06bf1427d1e0 build-rdbms
+    docker save -o build-rdbms.tar build-rdbms
+    docker load < build-rdbms.tar
+    docker images
+    ```
 
 
 + 프론트 
@@ -194,25 +223,6 @@ a, ab,  prcie_day init start ...
 ## 작업한 기능
 <details markdown="1">
 <summary>펼치기</summary>
-
-
-+ 저가 고가 종가 그래프 보기.
-+ + 백엔드 필요하네.
-+ + 백엔드 + db vs 백엔드 + 파일
-
-+ 백엔드
-+ + 만드는데 주식페이지는 변수에 담아놓고 그래프데이터는 db에서 가져오기
-+ + dbment 에서 데이터 가공후 redis로 보내고 redis와 api와 front 로 보여줌.
-+ + golang+dbment에서 가공후 redis 로 보내기.
-+ + api-server+redis에서 갱신된 정보 응답해주기.
-+ + + docker
-+ + + + api(backend)
-+ + + + redis
-+ + + + dbment
-+ + + + rdbms
-+ + + + front
-
-
 
 + 프론트 
 + + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.

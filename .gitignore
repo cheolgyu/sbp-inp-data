@@ -22,3 +22,4 @@ price.json
 test/*.sql
 *.pem
 data-server/bin/
+*.tar
