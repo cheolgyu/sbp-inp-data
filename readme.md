@@ -196,6 +196,10 @@ a, ab,  prcie_day init start ...
 <summary>펼치기</summary>
 
 
++ 저가 고가 종가 그래프 보기.
++ + 백엔드 필요하네.
++ + 백엔드 + db vs 백엔드 + 파일
+
 + 프론트 
 + + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.
 + + 변경된 data.json 구조 적용 하기. 
