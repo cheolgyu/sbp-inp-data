@@ -12,7 +12,7 @@ package html
 // 	"golang.org/x/text/encoding/korean"
 // 	"strconv"
 
-// 	"github/cheolgyu/stock/backend/dbment/model"
+// 	"github.com/cheolgyu/stock/backend/dbment/model"
 // )
 
 // var (

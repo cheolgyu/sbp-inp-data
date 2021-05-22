@@ -1,4 +1,4 @@
-module github/cheolgyu/stock/backend/dbment
+module github.com/cheolgyu/stock/backend/dbment
 
 go 1.16
 

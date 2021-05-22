@@ -1,12 +1,13 @@
 package naver_chart
 
 import (
-	"github/cheolgyu/stock/backend/dbment/src/dao"
-	"github/cheolgyu/stock/backend/dbment/src/model"
-	market_naver_chart "github/cheolgyu/stock/backend/dbment/src/utils/download/market/naver_chart"
-	price_naver_chart "github/cheolgyu/stock/backend/dbment/src/utils/download/price/naver_chart"
-	"github/cheolgyu/stock/backend/dbment/src/utils/file"
 	"log"
+
+	"github.com/cheolgyu/stock/backend/dbment/src/dao"
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
+	market_naver_chart "github.com/cheolgyu/stock/backend/dbment/src/utils/download/market/naver_chart"
+	price_naver_chart "github.com/cheolgyu/stock/backend/dbment/src/utils/download/price/naver_chart"
+	"github.com/cheolgyu/stock/backend/dbment/src/utils/file"
 )
 
 type One struct {

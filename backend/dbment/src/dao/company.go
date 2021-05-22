@@ -1,8 +1,8 @@
 package dao
 
 import (
-	"github/cheolgyu/stock/backend/dbment/db"
-	"github/cheolgyu/stock/backend/dbment/src/model"
+	"github.com/cheolgyu/stock/backend/dbment/db"
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
 )
 
 var SqlCompany Company

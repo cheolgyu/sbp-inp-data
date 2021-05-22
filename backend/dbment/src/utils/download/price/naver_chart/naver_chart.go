@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github/cheolgyu/stock/backend/dbment/src/model"
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
 )
 
 func Get(short_code string, startDate string, endDate string) model.NaverChart {

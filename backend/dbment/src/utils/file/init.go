@@ -3,9 +3,10 @@ package file
 import (
 	"fmt"
 
-	"github/cheolgyu/stock/backend/dbment/src"
-	"github/cheolgyu/stock/backend/dbment/src/model"
 	"os"
+
+	"github.com/cheolgyu/stock/backend/dbment/src"
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
 )
 
 func Write_Comm_file_listed_company(f *os.File, item model.Company) {

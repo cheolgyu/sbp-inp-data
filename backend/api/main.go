@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"github/cheolgyu/stock/backend/dbment/data-server/ds"
 	"log"
 	"os"
+
+	"github.com/cheolgyu/stock/backend/api/ds"
 )
 
 /*

@@ -1,9 +1,9 @@
 package high_point
 
 import (
-	"github/cheolgyu/stock/backend/dbment/src/controller"
-	"github/cheolgyu/stock/backend/dbment/src/service/high_point"
-	"github/cheolgyu/stock/backend/dbment/src/service/info"
+	"github.com/cheolgyu/stock/backend/dbment/src/controller"
+	"github.com/cheolgyu/stock/backend/dbment/src/service/high_point"
+	"github.com/cheolgyu/stock/backend/dbment/src/service/info"
 )
 
 type HighPointMarketController struct {

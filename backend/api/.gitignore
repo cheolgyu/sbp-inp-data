@@ -21,4 +21,5 @@ tmp/
 price.json
 test/*.sql
 *.pem
+bin/
 *.tar

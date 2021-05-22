@@ -20,9 +20,10 @@ package main
 
 */
 import (
-	"github/cheolgyu/stock/backend/dbment/src/model"
 	"log"
 	"strings"
+
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
 
 	"os"
 	"sync"

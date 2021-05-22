@@ -5,13 +5,14 @@ import (
 	"os"
 	"sync"
 
-	"github/cheolgyu/stock/backend/dbment/src/controller/export"
-	"github/cheolgyu/stock/backend/dbment/src/controller/high_point"
-	"github/cheolgyu/stock/backend/dbment/src/controller/listed_company"
-	"github/cheolgyu/stock/backend/dbment/src/controller/market"
-	"github/cheolgyu/stock/backend/dbment/src/controller/price"
 	"log"
 	"time"
+
+	"github.com/cheolgyu/stock/backend/dbment/src/controller/export"
+	"github.com/cheolgyu/stock/backend/dbment/src/controller/high_point"
+	"github.com/cheolgyu/stock/backend/dbment/src/controller/listed_company"
+	"github.com/cheolgyu/stock/backend/dbment/src/controller/market"
+	"github.com/cheolgyu/stock/backend/dbment/src/controller/price"
 )
 
 func ElapsedTime(tag string, msg string) func() {

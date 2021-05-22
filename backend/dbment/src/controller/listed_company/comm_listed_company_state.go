@@ -1,11 +1,11 @@
 package listed_company
 
 import (
-	"github/cheolgyu/stock/backend/dbment/src"
-	"github/cheolgyu/stock/backend/dbment/src/controller"
-	"github/cheolgyu/stock/backend/dbment/src/model"
-	"github/cheolgyu/stock/backend/dbment/src/service/data_krx"
-	"github/cheolgyu/stock/backend/dbment/src/service/info"
+	"github.com/cheolgyu/stock/backend/dbment/src"
+	"github.com/cheolgyu/stock/backend/dbment/src/controller"
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
+	"github.com/cheolgyu/stock/backend/dbment/src/service/data_krx"
+	"github.com/cheolgyu/stock/backend/dbment/src/service/info"
 )
 
 type CommListedComapnyStateController struct {

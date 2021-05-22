@@ -1,8 +1,9 @@
 package dao
 
 import (
-	"github/cheolgyu/stock/backend/dbment/db"
 	"log"
+
+	"github.com/cheolgyu/stock/backend/dbment/db"
 
 	"github.com/gchaincl/dotsql"
 )

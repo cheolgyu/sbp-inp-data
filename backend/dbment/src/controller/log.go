@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github/cheolgyu/stock/backend/dbment/src/dao"
+	"github.com/cheolgyu/stock/backend/dbment/src/dao"
 )
 
 var LogTitls map[string]map[string]map[string]string

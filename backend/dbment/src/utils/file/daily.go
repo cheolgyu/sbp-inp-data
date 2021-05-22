@@ -2,8 +2,9 @@ package file
 
 import (
 	"fmt"
-	"github/cheolgyu/stock/backend/dbment/src/model"
 	"os"
+
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
 )
 
 func Write_Daily_file_price(f *os.File, schema_type string, item model.NaverChart) {

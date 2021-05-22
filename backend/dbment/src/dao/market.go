@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"github/cheolgyu/stock/backend/dbment/db"
-	"github/cheolgyu/stock/backend/dbment/src"
-	"github/cheolgyu/stock/backend/dbment/src/model"
+	"github.com/cheolgyu/stock/backend/dbment/db"
+	"github.com/cheolgyu/stock/backend/dbment/src"
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
 
 	"github.com/gchaincl/dotsql"
 )

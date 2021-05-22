@@ -1,8 +1,9 @@
 package xlsx
 
 import (
-	"github/cheolgyu/stock/backend/dbment/src/model"
 	"strings"
+
+	"github.com/cheolgyu/stock/backend/dbment/src/model"
 
 	"github.com/tealeg/xlsx"
 )

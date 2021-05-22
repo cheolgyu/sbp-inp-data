@@ -1,7 +1,7 @@
 package info
 
 import (
-	"github/cheolgyu/stock/backend/dbment/src/dao"
+	"github.com/cheolgyu/stock/backend/dbment/src/dao"
 )
 
 func Update_Info(name string) {
