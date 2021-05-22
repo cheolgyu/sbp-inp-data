@@ -120,6 +120,12 @@ docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu
 <details markdown="1">
 <summary>펼치기</summary>
 
+db => 몽고디비로 바꾸기.+ db함수 다 바꿔야됨 오래걸림      
+dbment -> mongo 에 쓰고 
+mongo의 일별 데이터만 redis 에 넣고    
+redis와 api 연결지어 출력하기    
+
+
 + 폴더구조 바꾸기 
 + + corplist -> github.com/cheolgyu/stock-backend/dbment
 + + api -> github.com/cheolgyu/stock-backend/api
