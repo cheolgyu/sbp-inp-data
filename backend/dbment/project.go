@@ -4,7 +4,6 @@ import (
 	"log"
 	"sync"
 
-	"github.com/cheolgyu/stock/backend/dbment/src/controller/export"
 	"github.com/cheolgyu/stock/backend/dbment/src/controller/high_point"
 	"github.com/cheolgyu/stock/backend/dbment/src/controller/listed_company"
 	"github.com/cheolgyu/stock/backend/dbment/src/controller/market"
@@ -23,7 +22,7 @@ func (p *Project) Run(arg string) {
 	case "daily":
 		p.Daily()
 	default:
-		log.Printf("init or daily   go run . init or go run . daily")
+		log.Printf("init or daily   go run . -run=daily    ")
 	}
 }
 
@@ -35,7 +34,7 @@ func (p Project) Init() {
 func (p Project) Daily() {
 	project_daily()
 	project_high_point()
-	export.MakeFile()
+	//export.MakeFile()
 }
 
 ////////////////////////

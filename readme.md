@@ -14,10 +14,10 @@ docker-compose up 시키고
 db\init\*.sql
 
 평일 장열린날 할것
-backend/dbment  : go run . daily   
+backend/dbment  :   go run . -run=daily  -prod
 
 프로젝트 처음 할것 (오래전 주식 데이터 수집)
-backend/dbment  : go run . init
+backend/dbment  : go run . -run=init  
 
 ```
 ## 흐름
