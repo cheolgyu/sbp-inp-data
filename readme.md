@@ -1,8 +1,9 @@
 # 프로적트 소개
-이 프로젝트는    
-주식 데이터베이스를 업데이트 하고 필요한 지표를 계산하고 데이터베이스에 저장하는 용도로 사용한다.    
-보여주는건 별도의 [web 프로젝트](https://github.com/cheolgyu/stock-app) 를 생성하여 진행한다.   
 
+backend/dbment  :   주식 데이터베이스를 업데이트 하고 필요한 지표를 계산하고 데이터베이스에 저장하는 용도   
+backend/ticker  :   dbment 실행 용
+backend/api     :   frontend-app의 요청응답.   
+frontend/app    :   [public web site](https://github.com/cheolgyu/stock-app)
 
 ## 실행방법
 
@@ -12,71 +13,29 @@ docker-compose up 시키고
 
 db\init\*.sql
 
--- high_point 계산
-migrations\high_point\comm.sql
-migrations\high_point\market.sql
-migrations\high_point\price.sql
-
--- view 출력
-migrations\fun\export_fun.sql
-migrations\view.sql
-
 평일 장열린날 할것
-go run . daily
-export.txt 보고 json 파일 만들기 ( 나중에 .sh 로 만들기)
-json 만든것 web.main 브랜치에 pull request 하기
-pull request하면 s3 배포 (git actions 이용해서 만들어놈.)
+backend/dbment  : go run . daily   
 
-처음 할것
-go run . init
+프로젝트 처음 할것 (오래전 주식 데이터 수집)
+backend/dbment  : go run . init
 
 ```
 ## 흐름
 
 ```
-stock-dbment    :  go main . daily 실행하면 tmp/data.json 까지 생성 해줌.
-수동복사         : stock-app//static//data//data.json
-stock-web-app   : aws s3 배포 github actions으로 (분기로 data.json만 배포 필요)
+ticker와 dbment를 빌드하여 ec2에 올리고
+ticker 를 실행시킨다.(ticker readme.md 참조)
+dbment에서 rds를 업데이트한다.
+api는 rds에서 데이터를 가져온다.
+
+aws ec2 안에 ticker와 dbment와 api 가 들어 있고 ( + 나중엔 레디스 응답캐시 넣기.)
+aws rds는 dbment(특정시간에만)와 api가 사용하고
+aws s3에 frontend 배포함.
+aws s3와 생성된 탄력적ip로  ec2가 연결
 
 ```
 
 ## 프론트
-<details markdown="1">
-<summary>펼치기</summary>
-
-```
-#컨테이너 터미널 알아서 열기
-su - postgres
-psql -d dev -c "COPY (
-    SELECT array_to_json(array_agg(tt)) FROM 
-    (
-    select * from view_price_day t where stop is false order by  "fluctuation_rate" desc
-    ) tt
-
-  ) TO  '/var/lib/postgresql/export_price_not_stop.json' ENCODING 'UTF8' " 
-psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_price_day t where stop is true   ) TO  '/var/lib/postgresql/export_price_is_stop.json' ENCODING 'UTF8' " 
-
-psql -d dev -c "COPY (SELECT array_to_json(array_agg(t)) FROM view_market_day t ) TO  '/var/lib/postgresql/export_market.json' ENCODING 'UTF8' " 
-psql -d dev -c "COPY ( 
-   SELECT json_object( 
-    array_agg(
-        name
-        
-    ),
-    array_agg(
-        fmt_timestamp(updated_date)::text
-    )
-)  FROM "info"
- ) TO  '/var/lib/postgresql/export_info.json' ENCODING 'UTF8' " 
-# 윈도우 터미널에서 실행
-docker cp corplist_db_1:/var/lib/postgresql/export_price_not_stop.json C://Users//cheolgyu//workspace//stock-app//static//data//price.json
-docker cp corplist_db_1:/var/lib/postgresql/export_price_is_stop.json C://Users//cheolgyu//workspace//stock-app//static//data//price_is_stop.json
-docker cp corplist_db_1:/var/lib/postgresql/export_market.json C://Users//cheolgyu//workspace//stock-app//static//data//market.json
-docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu//workspace//stock-app//static//data//info.json
-
-
-```
-</details>
 
 ## 백엔드 -- 보류 
 <details markdown="1">
@@ -105,34 +64,25 @@ docker cp corplist_db_1:/var/lib/postgresql/export_info.json C://Users//cheolgyu
 
 
 
-## 기준
+## dbment 참고
 + init 다운데이터 시작일 정의한 곳 src\const.go
 + daily 다운데이터 시작일 정의한 곳 src\dao\info.go
-
-
-|제목|내용|
-|--|--|
-|1|1|
-|2|10|
 
 
 ## 다음 할것
 <details markdown="1">
 <summary>펼치기</summary>
 
-db => 몽고디비로 바꾸기.+ db함수 다 바꿔야됨 오래걸림      
-dbment -> mongo 에 쓰고 
-mongo의 일별 데이터만 redis 에 넣고    
-redis와 api 연결지어 출력하기    
 
-
-+ 폴더구조 바꾸기 
-+ + corplist -> github.com/cheolgyu/stock-backend/dbment
-+ + api -> github.com/cheolgyu/stock-backend/api
+```
+수정하기
+```
 
 + 저가 고가 종가 그래프 보기.
 + + 백엔드 필요하네.
 + + 백엔드 + db vs 백엔드 + 파일
++ + + db 이용시 과금비용 발생하고
++ + + 파일 업로드 해야되고.
 
 + 백엔드
 + + 만드는데 주식페이지는 변수에 담아놓고 그래프데이터는 db에서 가져오기
@@ -167,13 +117,6 @@ redis와 api 연결지어 출력하기
 + + + ec2에 업로드 및 ec2 재기동 
 
 
-
-
-|제목|내용|
-|--|--|
-|1|1|
-|2|10|
-
 + ?
 
 + 시드 파일 로드할때 파일 크기가 크면 오래걸림. 파일크게 작하려면 저장or업데이트 함수 만들어서 그 함수 호출해야됨. init 할때 특히 오래걸림
@@ -197,21 +140,6 @@ redis와 api 연결지어 출력하기
 trading.avg_month 로 할까? 
 
 
- ``` 
-로그테이블 변경
-id, up_id, process ,  main_action, main_action_type, sub_action, sub_action_type , etc... 
-a, ab,  company_listed init start ...
-a, ab,  company_listed init start  download start
-a, ab,  company_listed init start  download end
-a, ab,  company_listed init start  parse start
-a, ab,  company_listed init start  parse end
-a, ab,  company_listed init start  insert start
-a, ab,  company_listed init start  insert end
-a, ab,  company_listed init end  insert end
-
-a, ab,  company_state init start ...
-a, ab,  prcie_day init start ...
-```
 
 + 나스닥 변동률에 따른 변화량  구하기 ===? .... 쓸모없나 ?> 
 > 나스닥이 1퍼 떨어질때 a 종목은 몇퍼 떨어졌나 알 필요가 있을까? 
@@ -225,6 +153,15 @@ a, ab,  prcie_day init start ...
     5. 나스닥 일별 전일대비 종복의 전일대비 
 </details>
 
+## 보류
+```
+db => 몽고디비로 바꾸기.+ db함수 다 바꿔야됨 오래걸림 
+dbment -> mongo 에 쓰고 
+mongo의 일별 데이터만 redis 에 넣고    
+redis와 api 연결지어 출력하기   
+--> mongo 브랜치-backend/dbment/test/mongo.go 에 일부분 작성함.
+
+```
 
 ## 작업한 기능
 <details markdown="1">
