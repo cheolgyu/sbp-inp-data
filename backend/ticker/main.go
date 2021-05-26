@@ -13,25 +13,31 @@ import (
 
 func main() {
 
-	arg := os.Args[1]
-	fmt.Println("hello world ", arg)
+	fmt.Println("hello world ")
 	t := Task{}
-	t.Run(arg)
+	t.Run()
 
 }
 
 type Task struct {
 }
 
-func (p *Task) Run(arg string) {
-	t := time.Now()
-	log.Println(t)
-	if arg == "test" {
-		ticker_exec_test()
+func (p *Task) Run() {
+
+	if len(os.Args) > 1 {
+
+		arg := os.Args[1]
+		if arg == "test" {
+			ticker_exec_test()
+		}
 
 	} else {
 		ticker_exec()
 	}
+
+	t := time.Now()
+	log.Println(t)
+
 }
 
 func ticker_exec_test() {
@@ -134,7 +140,7 @@ func execCmd_test() {
 
 func execCmd() {
 
-	cmd := exec.Command("dbment", "daily")
+	cmd := exec.Command("dbment", "-run=daily", "-prod")
 
 	cmd.Stdin = strings.NewReader("some input")
 	var out bytes.Buffer

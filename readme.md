@@ -1,17 +1,17 @@
 # 프로적트 소개
 
 backend/dbment  :   주식 데이터베이스를 업데이트 하고 필요한 지표를 계산하고 데이터베이스에 저장하는 용도   
-backend/ticker  :   dbment 실행 용
+backend/ticker  :   dbment 실행 용   
 backend/api     :   frontend-app의 요청응답.   
 frontend/app    :   [public web site](https://github.com/cheolgyu/stock-app)
 
 ## 실행방법
-
+dev
 ```
 docker-compose up 시키고 
 수동으로 실행 해야될 목록
 
-db\init\*.sql
+db\init\*.sql 쿼리 실행하기.
 
 평일 장열린날 할것
 backend/dbment  :   go run . -run=daily  -prod
@@ -20,6 +20,59 @@ backend/dbment  :   go run . -run=daily  -prod
 backend/dbment  : go run . -run=init  
 
 ```
+
+
+### postgres export
+```
+postgres container 
+export
+su - postgres
+pg_dump  dev >> dumpFile.sql
+
+window 
+docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
+
+```
+### postgres import
+```
+import
+su - postgres
+psql --dbname prod --host database-stock-1.czunxjjslnrd.ap-northeast-2.rds.amazonaws.com --port 5432 --username postgres < dumpFile.sql    
+
+window 
+docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
+
+```
+### 빌드배포
++  backend : (local) go build ==> ec2 upload
+    ```
+    ==============
+    backend/dbment
+    ==============
+    $env:GOOS = 'linux'
+    $env:GOARCH = 'amd64'
+
+    cd backend/dbment
+    go build -o bin/dbment main.go project.go
+
+    ==============
+    backend/ticker
+    ==============
+    cd backend/ticker
+    $env:GOOS = 'linux'
+    $env:GOARCH = 'amd64'
+    go build -o bin/ticker main.go
+
+    scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.36.62.138:~/dbment
+    scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.36.62.138:~/ticker
+    ssh -i "highserpot_stock.pem" ec2-user@ec2-3-36-62-138.ap-northeast-2.compute.amazonaws.
+    chmod +x ticker
+    chmod +x dbment
+
+    nohup ./ticker    > ticker.out &
+
+    ```
++ frontend: github action -> s3 upload    
 ## 흐름
 
 ```
@@ -36,37 +89,14 @@ aws s3와 생성된 탄력적ip로  ec2가 연결
 ```
 
 ## 프론트
-
-## 백엔드 -- 보류 
-<details markdown="1">
-<summary>펼치기</summary>
-
-+ 빌드
-    ```
-    $env:GOOS = 'linux'
-    $env:GOARCH = 'amd64'
-    go build -o data-server/bin/data-server data-server/main.go
-    ```
-+ 빌드 후 배포 (수동)
-    ```
-    scp -i "highserpot_stock.pem" data-server/bin/data-server  ec2-user@54.180.224.126:~/data-server
-
-    ```
-+ json파일 배포 (자동)
-    ```
-    참고 : src\controller\export\export.go
-    
-    kill -9 $(lsof -t -i:5000)
-    nohup ./data-server > log.txt 2>&1 &
-    ```
-
-</details>
-
-
-
-## dbment 참고
-+ init 다운데이터 시작일 정의한 곳 src\const.go
-+ daily 다운데이터 시작일 정의한 곳 src\dao\info.go
++
+## 백엔드 
++ api
++ dbment
+    + 참고
+        + init 다운데이터 시작일 정의한 곳 src\const.go
+        + daily 다운데이터 시작일 정의한 곳 src\dao\info.go
++ ticker
 
 
 ## 다음 할것
@@ -79,49 +109,12 @@ aws s3와 생성된 탄력적ip로  ec2가 연결
 ```
 
 + 저가 고가 종가 그래프 보기.
-+ + 백엔드 필요하네.
-+ + 백엔드 + db vs 백엔드 + 파일
-+ + + db 이용시 과금비용 발생하고
-+ + + 파일 업로드 해야되고.
-
-+ 백엔드
-+ + 만드는데 주식페이지는 변수에 담아놓고 그래프데이터는 db에서 가져오기
-+ + dbment 에서 데이터 가공후 redis로 보내고 redis와 api와 front 로 보여줌.
-+ + golang+dbment에서 가공후 redis 로 보내기.
-+ + api-server+redis에서 갱신된 정보 응답해주기.
-+ + + docker
-+ + + + api(backend)
-+ + + + redis
-+ + + + + redis-view-tool
-+ + + + dbment
-+ + + + rdbms
-+ + + + + rdbms-view-tool
-+ + + + front
-
-+ rdbms container 백업 및 저장
-    ```
-    docker commit -p 06bf1427d1e0 build-rdbms
-    docker save -o build-rdbms.tar build-rdbms
-    docker load < build-rdbms.tar
-    docker images
-    ```
-
-
-+ 프론트 
-
 + dbment
 + + sql price init/daily 함수 생성 (insert 내용이 배열로 있는경우)
-
-+ 백엔드 (보류)
-+ + daily 시 ec2에 json 파일 업로드 및 data서버 재기동 프론트는 data서버에서 data.json 요청
-+ + + ec2에 업로드 및 ec2 재기동 
-
-
 + ?
 
-+ 시드 파일 로드할때 파일 크기가 크면 오래걸림. 파일크게 작하려면 저장or업데이트 함수 만들어서 그 함수 호출해야됨. init 할때 특히 오래걸림
+
 + LOG 테이블 변경( 한눈에 파악하기 힘듬)
-+ + src/const에서 가져다가 쓸때 log 업데이트는 어떨지?
    
 + 종목별 안정성 공식 넣어보기
 + 누적일수 : 하이포인트 유지 일수 추가하기.
