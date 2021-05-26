@@ -66,7 +66,7 @@ docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//De
     scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.36.62.138:~/dbment
     scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.36.62.138:~/.env.prod
     scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.36.62.138:~/ticker
-    
+
     ssh -i "highserpot_stock.pem" ec2-user@ec2-3-36-62-138.ap-northeast-2.compute.amazonaws.
     chmod +x ticker
     chmod +x dbment
@@ -111,6 +111,10 @@ aws s3와 생성된 탄력적ip로  ec2가 연결
 ```
 수정하기
 ```
+백엔드 view_price 페이징 요청 기능 및 db 조회
+프론트 테이블 내용 백엔드에서 요청해서 가져오기.
+
+
 
 + 저가 고가 종가 그래프 보기.
 + dbment
