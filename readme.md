@@ -64,6 +64,7 @@ docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//De
     go build -o bin/ticker main.go
 
     scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.36.62.138:~/dbment
+    scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.36.62.138:~/.env.prod
     scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.36.62.138:~/ticker
     ssh -i "highserpot_stock.pem" ec2-user@ec2-3-36-62-138.ap-northeast-2.compute.amazonaws.
     chmod +x ticker
@@ -71,6 +72,8 @@ docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//De
 
     nohup ./ticker    > ticker.out &
 
+    ./dbment -run=test -prod
+    ./dbment -run=daily -prod
     ```
 + frontend: github action -> s3 upload    
 ## 흐름

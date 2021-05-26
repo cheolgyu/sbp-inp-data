@@ -140,7 +140,7 @@ func execCmd_test() {
 
 func execCmd() {
 
-	cmd := exec.Command("dbment", "-run=daily", "-prod")
+	cmd := exec.Command("./dbment", "-run=daily", "-prod")
 
 	cmd.Stdin = strings.NewReader("some input")
 	var out bytes.Buffer
