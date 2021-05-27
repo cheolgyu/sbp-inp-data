@@ -27,12 +27,12 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func ViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.Header().Set("Content-Type", "application/json")
+	setCors(&w)
+
 	res := service.GetViewPrice(r)
 	log.Println("res:", len(res))
 
-	enc := json.NewEncoder(w)
-	enc.Encode(res)
+	json.NewEncoder(w).Encode(res)
 
 	//enc.Encode(u)
 
@@ -46,17 +46,28 @@ func Graph(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("code"))
 }
 
+func setCors(w *http.ResponseWriter) {
+	header := (*w).Header()
+
+	header.Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	header.Set("Access-Control-Allow-Origin", frontend_url)
+	header.Set("Access-Control-Allow-Credentials", "true")
+	header.Set("Content-Type", "application/json")
+}
+
 func server() {
 	router := httprouter.New()
 
+	log.Println("frontend_url", frontend_url)
+
 	router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("Access-Control-Request-Method") != "" {
-			// Set CORS headers
-			header := w.Header()
-			header.Set("Access-Control-Allow-Methods", header.Get("Allow"))
-			header.Set("Access-Control-Allow-Origin", frontend_url)
-		}
 
+			header := w.Header()
+			header.Set("Access-Control-Allow-Origin", frontend_url)
+			header.Set("Access-Control-Allow-Methods", r.Header.Get("Allow"))
+			header.Set("Access-Control-Allow-Credentials", "true")
+		}
 		// Adjust status code to 204
 		w.WriteHeader(http.StatusNoContent)
 	})

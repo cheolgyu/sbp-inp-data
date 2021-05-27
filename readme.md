@@ -67,7 +67,8 @@ docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//De
     scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.36.62.138:~/.env.prod
     scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.36.62.138:~/ticker
 
-    ssh -i "highserpot_stock.pem" ec2-user@ec2-3-36-62-138.ap-northeast-2.compute.amazonaws.
+    ssh -i "highserpot_stock.pem" ec2-user@ec2-3-36-62-138.ap-northeast-2.compute.amazonaws.com
+    ssh -i "highserpot_stock.pem" ec2-user@ec2-3-36-62-138.ap-northeast-2.compute.amazonaws.com
     chmod +x ticker
     chmod +x dbment
 
