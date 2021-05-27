@@ -1,50 +1,45 @@
 package main
 
 import (
-	"encoding/json"
+	"flag"
 	"log"
-	"os"
 
-	"github.com/cheolgyu/stock/backend/api/ds"
+	"github.com/cheolgyu/stock/backend/api/src/server"
+	"github.com/joho/godotenv"
 )
 
 /*
-$env:GOOS = 'linux'
-$env:GOARCH = 'amd64'
-go build -o data-server/bin/data-server data-server/main.go
+
+gin -i --appPort 5001  --port 5000  run -- -prod main.go
+gin -i --appPort 5001  --port 5000  run  main.go
 */
 
-var updated_date string
-var paylod map[string][]map[string]interface{}
-var data_json_path = "data.json"
-var file_data []byte
+var isDebug bool = true
+
+func init() {
+	flag_prod := flag.Bool("prod", false, "a bool")
+
+	flag.Parse()
+
+	if *flag_prod {
+		err := godotenv.Load(".env.prod")
+		if err != nil {
+			log.Panic("Error loading .env file")
+		}
+	} else {
+		err := godotenv.Load(".env.local")
+		if err != nil {
+			log.Panic("Error loading .env file")
+		}
+	}
+
+	log.Println("prod", *flag_prod)
+
+	isDebug = !*flag_prod
+}
 
 // go run data-server/main.go
 func main() {
 	log.Println("데이터 서버 시작")
-	//load_data_json()
-	ds.Exec()
-}
-
-func load_data_json() {
-
-	bf, err := os.ReadFile(data_json_path)
-	file_data = bf
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// []interface{}, for JSON arrays
-	// map[string]interface{}, for JSON objects
-	json.Unmarshal(bf, &paylod)
-
-	for _, item := range paylod["info"] {
-		if item["name"].(string) == "updated_price_day" {
-			updated_date = item["updated_date"].(string)
-		}
-	}
-
-	log.Println("updated_date", updated_date)
-	ds.UPDATED = updated_date
-	ds.DATA = file_data
+	server.Exec(isDebug)
 }

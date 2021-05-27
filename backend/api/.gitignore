@@ -23,4 +23,5 @@ test/*.sql
 *.pem
 bin/
 *.tar
-gin-bin
+.env.prod
+bin/

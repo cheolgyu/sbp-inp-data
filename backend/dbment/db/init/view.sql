@@ -22,28 +22,75 @@ order by
 ;
 -- SELECT array_to_json(array_agg(t)) FROM view_price_day t;
 -- 사용자용 시세뷰 (일/주/월 )
+
 DROP VIEW IF EXISTS "view_price_day";
 CREATE VIEW view_price_day AS
 SELECT
-    cb.short_code,
-    cb.short_name_kr,
+    cb.short_code as code,
+    cb.short_name_kr as name,
     cb.market,
-    fmt_yyyymmdd(hp.high_date) as high_date,
-    fmt_comma_int(hp.high_price) as high_price,
-    fmt_yyyymmdd(hp.last_date) as last_date,
-    fmt_comma_int(hp.last_close_price) as last_close_price,
-    fmt_comma_int(hp.contrast_price) as contrast_price,
+    hp.high_date,
+    hp.high_price,
+
+    hp.last_close_price,
+    hp.contrast_price,
+    fmt_yyyymmdd(hp.high_date) as fmt_high_date,
+    fmt_comma_int(hp.high_price) as fmt_high_price,
+    fmt_yyyymmdd(hp.last_date) as fmt_last_date,
+    
+    fmt_comma_int(hp.last_close_price) as fmt_last_close_price,
+    fmt_comma_int(hp.contrast_price) as fmt_contrast_price,
     hp.fluctuation_rate as fluctuation_rate,
     hp.day_count as day_count,
-    fmt_timestamp(hp.updated_date) as high_point_updated_date,
+    fmt_timestamp(hp.updated_date) as updated_date_high_point,
+    
     fmt_naver_link(cb.short_code) as naver_link,
-cs.*
+    cs.stop,
+    cs.clear,
+    cs.managed,
+    cs.ventilation,
+    
+    cs.unfaithful,
+    cs.low_liquidity,
+    cs.lack_listed,
+    cs.overheated,
+    cs.caution,
+    
+    cs.warning,
+    cs.risk,
+    fmt_timestamp(cs.updated_date) as updated_date_company_state
 from
     high_point_day hp
     left join listed_company cb on hp.short_code = cb.short_code
     left join listed_company_state cs on hp.short_code = cs.code
+where 
+ hp.short_code not in ('KPI200','KOSPI','KOSDAQ')    
 order by
     hp.fluctuation_rate ASC
+
+
+-- DROP VIEW IF EXISTS "view_price_day";
+-- CREATE VIEW view_price_day AS
+-- SELECT
+--     cb.short_code,
+--     cb.short_name_kr,
+--     cb.market,
+--     fmt_yyyymmdd(hp.high_date) as high_date,
+--     fmt_comma_int(hp.high_price) as high_price,
+--     fmt_yyyymmdd(hp.last_date) as last_date,
+--     fmt_comma_int(hp.last_close_price) as last_close_price,
+--     fmt_comma_int(hp.contrast_price) as contrast_price,
+--     hp.fluctuation_rate as fluctuation_rate,
+--     hp.day_count as day_count,
+--     fmt_timestamp(hp.updated_date) as high_point_updated_date,
+--     fmt_naver_link(cb.short_code) as naver_link,
+-- cs.*
+-- from
+--     high_point_day hp
+--     left join listed_company cb on hp.short_code = cb.short_code
+--     left join listed_company_state cs on hp.short_code = cs.code
+-- order by
+--     hp.fluctuation_rate ASC
 
 -- SELECT
 --     cb.full_code,
