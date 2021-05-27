@@ -1,4 +1,4 @@
-package ds
+package src
 
 import (
 	"compress/gzip"
