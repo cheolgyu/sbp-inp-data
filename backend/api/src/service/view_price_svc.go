@@ -11,7 +11,6 @@ import (
 )
 
 type ViewPrice struct {
-	Item, ExcelFnm, Fnm, Seednm string
 }
 
 func GetViewPrice(r *http.Request) []model.ViewPrice {

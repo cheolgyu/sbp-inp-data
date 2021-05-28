@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/cheolgyu/stock/backend/api/src/model"
 	"github.com/cheolgyu/stock/backend/api/src/service"
 	"github.com/julienschmidt/httprouter"
 )
@@ -26,12 +27,20 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Welcome!\n")
 }
 
+type ViewPriceResult struct {
+	Info  map[string]string `json:"info"`
+	Price []model.ViewPrice `json:"price"`
+}
+
 func ViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	setCors(&w)
 
-	res := service.GetViewPrice(r)
-	log.Println("res:", len(res))
-
+	list := service.GetViewPrice(r)
+	info := service.GetInfo()
+	log.Println("info:", info)
+	res := ViewPriceResult{}
+	res.Info = info
+	res.Price = list
 	json.NewEncoder(w).Encode(res)
 
 	//enc.Encode(u)
@@ -73,7 +82,7 @@ func server() {
 	})
 
 	router.GET("/", Index)
-	router.GET("/high_point", ViewPrice)
+	router.GET("/price", ViewPrice)
 	router.GET("/graph/:code", Graph)
 
 	log.Fatal(http.ListenAndServe(port, router))
