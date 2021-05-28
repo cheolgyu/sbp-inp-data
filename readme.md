@@ -56,6 +56,14 @@ docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//De
     go build -o bin/dbment main.go project.go
 
     ==============
+    backend/api
+    ==============
+    cd backend/api
+    $env:GOOS = 'linux'
+    $env:GOARCH = 'amd64'
+    go build -o bin/api main.go
+
+    ==============
     backend/ticker
     ==============
     cd backend/ticker
@@ -63,14 +71,19 @@ docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//De
     $env:GOARCH = 'amd64'
     go build -o bin/ticker main.go
 
-    scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.36.62.138:~/dbment
-    scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.36.62.138:~/.env.prod
-    scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.36.62.138:~/ticker
+    scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.35.30.100:~/dbment
+    scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.35.30.100:~/.env.prod
+    scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.35.30.100:~/ticker
 
-    ssh -i "highserpot_stock.pem" ec2-user@ec2-3-36-62-138.ap-northeast-2.compute.amazonaws.com
-    ssh -i "highserpot_stock.pem" ec2-user@ec2-3-36-62-138.ap-northeast-2.compute.amazonaws.com
+    scp -i "highserpot_stock.pem" backend/api/bin/api  ec2-user@3.35.30.100:~/api/api
+    scp -i "highserpot_stock.pem" backend/api/.env.prod  ec2-user@3.35.30.100:~/api/.env.prod
+
+    ssh -i "highserpot_stock.pem" ec2-user@ec2-3-35-30-100.ap-northeast-2.compute.amazonaws.com
     chmod +x ticker
-    chmod +x dbment
+    chmod +x dbment 
+    chmod +x ./api
+
+    nohup ./api -prod    > api.out &
 
     nohup ./ticker    > ticker.out &
 
