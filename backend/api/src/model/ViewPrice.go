@@ -3,6 +3,7 @@ package model
 import (
 	"database/sql"
 	"strconv"
+	"strings"
 )
 
 const Rows = 10
@@ -24,7 +25,7 @@ func init() {
 	var allMarket [3]string
 	allMarket[0] = "KOSPI"
 	allMarket[1] = "KOSDAQ"
-	allMarket[2] = "KPI200"
+	allMarket[2] = "KONEX"
 
 	AllowMarket = allMarket
 }
@@ -34,7 +35,7 @@ type ViewPriceParms struct {
 	Offset int
 	Sort   string
 	Desc   bool
-	Market string
+	Market []string
 	State  bool
 	Search string
 }
@@ -90,13 +91,29 @@ func (obj *ViewPriceParms) SetEtc(market string, state_stop string, search strin
 		obj.State = false
 	}
 
-	obj.Market = ""
-	for _, s := range AllowMarket {
-		if s == market {
-			obj.Market = market
-			break
+	//var m_arr []string
+
+	m_arr := make(map[string]bool)
+	market_str := strings.TrimSpace(market)
+	str := strings.Split(market_str, ",")
+
+	for _, i := range AllowMarket {
+		is := false
+		for _, j := range str {
+			if i == j {
+				is = true
+			}
+		}
+		m_arr[i] = is
+	}
+	keys := []string{}
+	for key, value := range m_arr {
+		if value {
+			keys = append(keys, key)
 		}
 	}
+
+	obj.Market = keys
 	obj.Search = search
 }
 

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/cheolgyu/stock/backend/api/src/dao"
@@ -13,7 +14,7 @@ type ViewPrice struct {
 func GetViewPrice(r *http.Request) []model.ViewPrice {
 
 	q := r.URL.Query()
-
+	log.Println("query=", q)
 	vpp := model.ViewPriceParms{}
 	vpp.SetPageRows(q.Get("page"), q.Get("rows"))
 	vpp.SetSortDesc(q.Get("sort"), q.Get("desc"))

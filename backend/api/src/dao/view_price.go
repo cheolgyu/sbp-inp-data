@@ -27,10 +27,24 @@ func (obj ViewPrice) Select(parms model.ViewPriceParms) []model.ViewPrice {
 
 	q := `SELECT count(*) OVER() AS full_count,* FROM  view_price_day `
 
+	q += ` where  1=1 `
+
 	if parms.State {
-		q += ` where  stop is true `
+		q += ` and  stop is true `
 	} else {
-		q += ` where  stop is false `
+		q += ` and  stop is false `
+	}
+
+	if len(parms.Market) > 0 {
+		q += `and market in ( `
+		for i, v := range parms.Market {
+			if i > 0 {
+				q += ` ,`
+			}
+			q += ` '` + v + `' `
+		}
+
+		q += ` ) `
 	}
 
 	if parms.Sort != "" {
