@@ -57,7 +57,7 @@ func openLogFile(logfile string) {
 		t := time.Now()
 		dirname := t.Format("2006-01-02")
 		filename := t.Format("2006-01-02_15_04_05_000Z")
-		os.MkdirAll("./logs/api/"+dirname, 0640)
+		os.MkdirAll("./logs/api/"+dirname, 0755)
 		lf, err := os.OpenFile("./logs/api/"+dirname+"/"+filename, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0640)
 
 		if err != nil {
