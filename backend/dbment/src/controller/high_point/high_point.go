@@ -3,35 +3,31 @@ package high_point
 import (
 	"github.com/cheolgyu/stock/backend/dbment/src/controller"
 	"github.com/cheolgyu/stock/backend/dbment/src/service/high_point"
-	"github.com/cheolgyu/stock/backend/dbment/src/service/info"
 )
 
 type HighPointController struct {
 	log         controller.LogController
-	up_id       string
 	schema_type string
 }
 
-func (c HighPointController) New(schema_type string) controller.TimeFrameController {
+func (c *HighPointController) New(schema_type string) controller.TimeFrameController {
 
-	var log = controller.LogController{
-		LogTitleP1: "update",
-		LogTitleP2: "high_point_" + schema_type,
-		LogTitleP3: "start",
-	}
-	c.log = log
-	c.up_id = log.Exec("start")
+	c.log.LogTitleP1 = "daily"
+	c.log.LogTitleP2 = "high_point_" + schema_type
+	c.log.LogTitleP3 = "start"
+	c.log.InfoTitle = c.log.LogTitleP1 + "_" + c.log.LogTitleP2
+	c.log.Init()
+
 	c.schema_type = schema_type
 
 	return c
 
 }
 
-func (c HighPointController) Exec() {
+func (c *HighPointController) Exec() {
 
 	c.run()
-	c.log.Exec_Upid(c.up_id, "end", "end")
-	info.Update_Info("updated_high_point_" + c.schema_type)
+	c.log.End()
 
 }
 
@@ -39,7 +35,7 @@ func (c HighPointController) Exec() {
 //
 //////////////////////////////////////////////////////
 
-func (c HighPointController) run() {
+func (c *HighPointController) run() {
 	high_point.Update_HighPoint(c.schema_type)
 
 }

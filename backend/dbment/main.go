@@ -8,6 +8,7 @@ import (
 
 	"flag"
 
+	"github.com/cheolgyu/stock/backend/dbment/project"
 	"github.com/joho/godotenv"
 )
 
@@ -52,6 +53,7 @@ func main() {
 }
 
 func project_run() {
-	p := Project{}
+
+	p := project.Project{}
 	p.Run(run_type)
 }

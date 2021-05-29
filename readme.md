@@ -53,7 +53,7 @@ docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//De
     $env:GOARCH = 'amd64'
 
     cd backend/dbment
-    go build -o bin/dbment main.go project.go
+    go build -o bin/dbment main.go 
 
     ==============
     backend/api
@@ -126,9 +126,8 @@ aws s3와 생성된 탄력적ip로  ec2가 연결
 ```
 수정하기
 ```
-+ ticker 예상대로 안됨.
-+ tcker 로그 파일 생성하기
-+ dbment 실행 시간 날짜별로 로그 파일 생성하기.
+
+
 + api 요청 로그 남기기 파일로 저장하기.
 + api-front
     + 마켓테이블 조회
@@ -140,12 +139,9 @@ aws s3와 생성된 탄력적ip로  ec2가 연결
 
 
 + 저가 고가 종가 그래프 보기.
-+ dbment
-+ + sql price init/daily 함수 생성 (insert 내용이 배열로 있는경우)
-+ ?
 
 
-+ LOG 테이블 변경( 한눈에 파악하기 힘듬)
+
    
 + 종목별 안정성 공식 넣어보기
 + 누적일수 : 하이포인트 유지 일수 추가하기.
@@ -178,6 +174,11 @@ trading.avg_month 로 할까?
 </details>
 
 ## 보류
++ dbment
++ + sql price init/daily 함수 생성 (insert 내용이 배열로 있는경우)
++ ?
+
++ dbment 실행 시간 날짜별로 로그 파일 생성하기. ==> db에  넣는데?
 ```
 db => 몽고디비로 바꾸기.+ db함수 다 바꿔야됨 오래걸림 
 dbment -> mongo 에 쓰고 
@@ -192,6 +193,9 @@ redis와 api 연결지어 출력하기
 <summary>펼치기</summary>
 
 
++ dbment-LOG 테이블 변경( 한눈에 파악하기 힘듬)
++ ticker 예상대로 안됨.
++ tcker 로그 파일 생성하기
 
 백엔드 view_price 페이징 요청 기능 및 db 조회
 프론트 테이블 내용 백엔드에서 요청해서 가져오기.

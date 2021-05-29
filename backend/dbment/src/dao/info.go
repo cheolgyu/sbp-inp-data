@@ -1,6 +1,8 @@
 package dao
 
 import (
+	"log"
+
 	"github.com/cheolgyu/stock/backend/dbment/db"
 )
 
@@ -19,6 +21,8 @@ func init() {
 func (obj Info) Update_Info(name string) {
 	var db = obj.DB.Conn()
 	defer db.Close()
+
+	log.Println(name)
 
 	query := ` UPDATE "info" SET
 	 "updated_date" = now()

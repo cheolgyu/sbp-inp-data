@@ -16,19 +16,19 @@ func init() {
 	}
 }
 
-func (obj Log) Insert_Log(title string, content string) string {
+func (obj Log) Insert_Log_p_id(t1 string, t2 string, t3 string, t4 string) string {
 	var id string
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	query := ` INSERT INTO "log" ("id", "up_id", "title", "content", "created_date") VALUES (uuid_generate_v4(), NULL, $1, $2, now()) RETURNING id; `
+	query := ` INSERT INTO "log" ("id", "t1", "t2","t3", "t4", "created_date") VALUES (uuid_generate_v4(),  $1,  $2, $3, $4, now()) RETURNING id; `
 	stmt, err := db.Prepare(query)
 	if err != nil {
 		panic(err)
 	}
 	defer stmt.Close()
 
-	err = stmt.QueryRow(title, content).Scan(&id)
+	err = stmt.QueryRow(t1, t2, t3, t4).Scan(&id)
 
 	if err != nil {
 		panic(err)
@@ -36,19 +36,39 @@ func (obj Log) Insert_Log(title string, content string) string {
 	return id
 }
 
-func (obj Log) Insert_Log_With_Up_id(up_id string, title string, content string) string {
+func (obj Log) Insert_Log(p_id string, t1 string, t2 string, t3 string, t4 string) string {
 	var id string
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	query := ` INSERT INTO "log" ("id", "up_id", "title", "content", "created_date") VALUES (uuid_generate_v4(), $1, $2, $3, now()) RETURNING id; `
+	query := ` INSERT INTO "log" ("id", "p_id","up_id", "t1", "t2","t3", "t4", "created_date") VALUES (uuid_generate_v4(),  $1, NULL, $2, $3, $4, $5, now()) RETURNING id; `
 	stmt, err := db.Prepare(query)
 	if err != nil {
 		panic(err)
 	}
 	defer stmt.Close()
 
-	err = stmt.QueryRow(up_id, title, content).Scan(&id)
+	err = stmt.QueryRow(p_id, t1, t2, t3, t4).Scan(&id)
+
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
+func (obj Log) Insert_Log_With_Up_id(p_id string, up_id string, t1 string, t2 string, t3 string, t4 string) string {
+	var id string
+	var db = obj.DB.Conn()
+	defer db.Close()
+
+	query := ` INSERT INTO "log" ("id","p_id", "up_id","t1", "t2","t3", "t4", "created_date") VALUES (uuid_generate_v4(), $1,  $2, $3, $4, $5, $6, now()) RETURNING id; `
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		panic(err)
+	}
+	defer stmt.Close()
+
+	err = stmt.QueryRow(p_id, up_id, t1, t2, t3, t4).Scan(&id)
 
 	if err != nil {
 		panic(err)

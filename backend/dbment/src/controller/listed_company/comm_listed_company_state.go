@@ -3,38 +3,31 @@ package listed_company
 import (
 	"github.com/cheolgyu/stock/backend/dbment/src"
 	"github.com/cheolgyu/stock/backend/dbment/src/controller"
-	"github.com/cheolgyu/stock/backend/dbment/src/model"
 	"github.com/cheolgyu/stock/backend/dbment/src/service/data_krx"
-	"github.com/cheolgyu/stock/backend/dbment/src/service/info"
 )
 
 type CommListedComapnyStateController struct {
-	log   controller.LogController
-	up_id string
+	log      controller.LogController
+	Run_Type string
 }
 
-var list []model.CompanyState
+func (c *CommListedComapnyStateController) New() controller.DefaultController {
 
-func (obj CommListedComapnyStateController) New() controller.DefaultController {
-	var log = controller.LogController{
-		LogTitleP1: "init",
-		LogTitleP2: "listed_company_state",
-		LogTitleP3: "start",
-	}
+	c.log.LogTitleP1 = c.Run_Type
+	c.log.LogTitleP2 = "listed_company_state"
+	c.log.LogTitleP3 = "start"
+	c.log.InfoTitle = c.log.LogTitleP1 + "_company_state"
+	c.log.Init()
 
-	obj.log = log
-	obj.up_id = log.Exec("start")
-
-	return obj
+	return c
 
 }
 
-func (c CommListedComapnyStateController) Exec() {
+func (c *CommListedComapnyStateController) Exec() {
 
 	c.run()
 
-	c.log.Exec_Upid(c.up_id, "end", "end")
-	info.Update_Info("init_company_state")
+	c.log.End()
 
 }
 
@@ -42,7 +35,7 @@ func (c CommListedComapnyStateController) Exec() {
 //
 //////////////////////////////////////////////////////
 
-func (c CommListedComapnyStateController) run() {
+func (c *CommListedComapnyStateController) run() {
 
 	svc := data_krx.One{
 		Item:     "company_state",

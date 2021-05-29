@@ -7,35 +7,31 @@ import (
 	"github.com/cheolgyu/stock/backend/dbment/src"
 	"github.com/cheolgyu/stock/backend/dbment/src/controller"
 	"github.com/cheolgyu/stock/backend/dbment/src/dao"
-	"github.com/cheolgyu/stock/backend/dbment/src/service/info"
 	"github.com/cheolgyu/stock/backend/dbment/src/service/naver_chart"
 )
 
 type InitPriceController struct {
 	log         controller.LogController
-	up_id       string
 	schema_type string
 }
 
-func (c InitPriceController) New(schema_type string) controller.TimeFrameController {
+func (c *InitPriceController) New(schema_type string) controller.TimeFrameController {
 
-	var log = controller.LogController{
-		LogTitleP1: "init",
-		LogTitleP2: "price_" + schema_type,
-		LogTitleP3: "start",
-	}
-	c.log = log
-	c.up_id = log.Exec("start")
+	c.log.LogTitleP1 = "init"
+	c.log.LogTitleP2 = "price_" + schema_type
+	c.log.LogTitleP3 = "start"
+	c.log.InfoTitle = c.log.LogTitleP1 + "_" + c.log.LogTitleP2
+	c.log.Init()
+
 	c.schema_type = schema_type
 
 	return c
 }
 
-func (c InitPriceController) Exec() {
+func (c *InitPriceController) Exec() {
 
 	c.run()
-	c.log.Exec_Upid(c.up_id, "end", "end")
-	info.Update_Info("init_price_" + c.schema_type)
+	c.log.End()
 
 }
 

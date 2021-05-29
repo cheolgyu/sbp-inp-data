@@ -1,9 +1,10 @@
-package main
+package project
 
 import (
 	"log"
 	"sync"
 
+	"github.com/cheolgyu/stock/backend/dbment/src/controller"
 	"github.com/cheolgyu/stock/backend/dbment/src/controller/high_point"
 	"github.com/cheolgyu/stock/backend/dbment/src/controller/listed_company"
 	"github.com/cheolgyu/stock/backend/dbment/src/controller/market"
@@ -13,17 +14,27 @@ import (
 type Project struct {
 }
 
+var run_type string
+
 func (p *Project) Run(arg string) {
+
 	switch arg {
 	case "init":
-
+		run_type = "init"
+		setProcess_LogID()
 		p.Init()
-
 	case "daily":
+		run_type = "daily"
+		setProcess_LogID()
 		p.Daily()
 	default:
 		log.Printf("init or daily   go run . -run=daily    ")
 	}
+}
+
+func setProcess_LogID() {
+	log_controller := controller.LogController{}
+	log_controller.Process_LogID(run_type)
 }
 
 func (p Project) Init() {
@@ -46,6 +57,7 @@ func (p Project) Daily() {
 func comm_listed_company() {
 
 	var project = &listed_company.CommListedComapnyController{}
+	project.Run_Type = run_type
 	var p = project.New()
 	p.Exec()
 
@@ -54,6 +66,7 @@ func comm_listed_company() {
 func comm_listed_company_state(_wg *sync.WaitGroup) {
 
 	var project = &listed_company.CommListedComapnyStateController{}
+	project.Run_Type = run_type
 	var p = project.New()
 	p.Exec()
 	defer _wg.Done()

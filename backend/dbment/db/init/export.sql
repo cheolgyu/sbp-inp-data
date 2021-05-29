@@ -34,10 +34,10 @@ DECLARE
                         FROM
                             "info"
                         WHERE
-                            NAME LIKE 'updated_company%'
-                            OR NAME LIKE 'updated_price_day%'
-                            OR NAME LIKE 'updated_high%'
-                            OR NAME LIKE 'updated_market%'
+                            NAME LIKE 'daily_company%'
+                            OR NAME LIKE 'daily_price_day%'
+                            OR NAME LIKE 'daily_high%'
+                            OR NAME LIKE 'daily_market%'
                     ) t
             ) exp_info,
             (

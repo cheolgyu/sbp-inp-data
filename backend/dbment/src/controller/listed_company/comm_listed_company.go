@@ -8,30 +8,29 @@ import (
 )
 
 type CommListedComapnyController struct {
-	log   controller.LogController
-	up_id string
+	log      controller.LogController
+	Run_Type string
 }
 
-func (obj CommListedComapnyController) New() controller.DefaultController {
-	var log = controller.LogController{
-		LogTitleP1: "init",
-		LogTitleP2: "listed_company",
-		LogTitleP3: "start",
-	}
+func (c *CommListedComapnyController) New() controller.DefaultController {
 
-	obj.log = log
-	obj.up_id = log.Exec("start")
+	c.log.LogTitleP1 = c.Run_Type
+	c.log.LogTitleP2 = "listed_company"
+	c.log.LogTitleP3 = "start"
+	c.log.InfoTitle = c.log.LogTitleP1 + "_company"
 
-	return obj
+	c.log.Init()
+
+	return c
 
 }
 
-func (c CommListedComapnyController) Exec() {
+func (c *CommListedComapnyController) Exec() {
 
 	c.run()
 
-	c.log.Exec_Upid(c.up_id, "end", "end")
-	info.Update_Info("init_company")
+	c.log.End()
+	info.Update_Info(c.Run_Type + "_company")
 
 }
 
@@ -39,7 +38,7 @@ func (c CommListedComapnyController) Exec() {
 //
 //////////////////////////////////////////////////////
 
-func (c CommListedComapnyController) run() {
+func (c *CommListedComapnyController) run() {
 
 	svc := data_krx.One{
 		Item:     "company",
