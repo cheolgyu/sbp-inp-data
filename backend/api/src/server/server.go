@@ -9,6 +9,7 @@ import (
 
 	"github.com/cheolgyu/stock/backend/api/src/model"
 	"github.com/cheolgyu/stock/backend/api/src/service"
+	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -20,10 +21,31 @@ var port string
 func Exec(isDebug bool) {
 	frontend_url = os.Getenv("FRONTEND_URL")
 	port = ":" + os.Getenv("PORT")
+	log.Println("frontend_url", frontend_url)
 	server()
 }
 
+type Middleware struct {
+	next    http.Handler
+	message string
+}
+
+func NewMiddleware(next http.Handler, message string) *Middleware {
+	return &Middleware{next: next, message: message}
+}
+
+func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	req_id := uuid.New().String()
+	r.Header.Add("req_id", req_id)
+	log.Printf("[Middleware] <%s> %s %s %s\n", req_id, r.RemoteAddr, r.Method, r.URL)
+	m.next.ServeHTTP(w, r)
+	log.Printf("[Middleware] <%s> %s \n", req_id, w.Header())
+}
+
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+	log.Printf("<%s> \n ", req_id)
 	fmt.Fprint(w, "Welcome!\n")
 }
 
@@ -33,22 +55,16 @@ type ViewPriceResult struct {
 }
 
 func ViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	req_id := r.Header.Get("req_id")
 	setCors(&w)
 
-	list := service.GetViewPrice(r)
-	info := service.GetInfo()
-	log.Println("info:", info)
+	list := service.GetViewPrice(req_id, r)
+	info := service.GetInfo(req_id)
 	res := ViewPriceResult{}
 	res.Info = info
 	res.Price = list
 	json.NewEncoder(w).Encode(res)
 
-	//enc.Encode(u)
-
-	//fmt.Println(page, rows, sort, search, market, state)
-	//fmt.Fprintf(w, "page: %s; rows: %s", page, rows)
-
-	//fmt.Fprint(w, "Welcome! ViewPrice\n", res)
 }
 
 func Graph(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -66,9 +82,6 @@ func setCors(w *http.ResponseWriter) {
 
 func server() {
 	router := httprouter.New()
-
-	log.Println("frontend_url", frontend_url)
-
 	router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("Access-Control-Request-Method") != "" {
 
@@ -80,10 +93,9 @@ func server() {
 		// Adjust status code to 204
 		w.WriteHeader(http.StatusNoContent)
 	})
-
 	router.GET("/", Index)
 	router.GET("/price", ViewPrice)
 	router.GET("/graph/:code", Graph)
-
-	log.Fatal(http.ListenAndServe(port, router))
+	m := NewMiddleware(router, "I'm a middleware")
+	log.Fatal(http.ListenAndServe(port, m))
 }

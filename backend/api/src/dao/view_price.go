@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"database/sql"
 	"log"
 	"strconv"
 
@@ -20,7 +21,7 @@ func init() {
 	}
 }
 
-func (obj ViewPrice) Select(parms model.ViewPriceParms) []model.ViewPrice {
+func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []model.ViewPrice {
 
 	var db = obj.DB.Conn()
 	defer db.Close()
@@ -28,6 +29,10 @@ func (obj ViewPrice) Select(parms model.ViewPriceParms) []model.ViewPrice {
 	q := `SELECT count(*) OVER() AS full_count,* FROM  view_price_day `
 
 	q += ` where  1=1 `
+
+	if parms.Search != "" {
+		q += ` and  name like $1 `
+	}
 
 	if parms.State {
 		q += ` and  stop is true `
@@ -52,10 +57,19 @@ func (obj ViewPrice) Select(parms model.ViewPriceParms) []model.ViewPrice {
 	}
 	q += `limit ` + strconv.Itoa(parms.Limit) + ` OFFSET ` + strconv.Itoa(parms.Offset)
 
-	log.Println(q)
-	rows, err := db.Query(q)
+	log.Printf("<%s> query=%s \n", req_id, q)
+
+	var rows *sql.Rows
+	var err error
+	if parms.Search != "" {
+
+		rows, err = db.Query(q, "%"+parms.Search+"%")
+	} else {
+		rows, err = db.Query(q)
+	}
 
 	if err != nil {
+		log.Printf("<%s> error \n", req_id)
 		panic(err)
 	}
 
@@ -77,6 +91,7 @@ func (obj ViewPrice) Select(parms model.ViewPriceParms) []model.ViewPrice {
 		)
 
 		if err != nil {
+			log.Printf("<%s> error \n", req_id)
 			panic(err)
 		}
 		list = append(list, item)

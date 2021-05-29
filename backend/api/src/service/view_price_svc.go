@@ -11,15 +11,15 @@ import (
 type ViewPrice struct {
 }
 
-func GetViewPrice(r *http.Request) []model.ViewPrice {
+func GetViewPrice(req_id string, r *http.Request) []model.ViewPrice {
 
 	q := r.URL.Query()
-	log.Println("query=", q)
+	log.Printf("<%s>  params=%s \n", req_id, q)
 	vpp := model.ViewPriceParms{}
 	vpp.SetPageRows(q.Get("page"), q.Get("rows"))
 	vpp.SetSortDesc(q.Get("sort"), q.Get("desc"))
 	vpp.SetEtc(q.Get("market"), q.Get("state_stop"), q.Get("search"))
 
-	return dao.SqlViewPrice.Select(vpp)
+	return dao.SqlViewPrice.Select(req_id, vpp)
 
 }

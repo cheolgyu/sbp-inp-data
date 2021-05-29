@@ -1,6 +1,8 @@
 package dao
 
 import (
+	"log"
+
 	"github.com/cheolgyu/stock/backend/api/src/db"
 )
 
@@ -16,7 +18,7 @@ func init() {
 	}
 }
 
-func (obj InfoDao) Select() map[string]string {
+func (obj InfoDao) Select(req_id string) map[string]string {
 
 	var db = obj.DB.Conn()
 	defer db.Close()
@@ -38,6 +40,7 @@ func (obj InfoDao) Select() map[string]string {
 	rows, err := db.Query(q)
 
 	if err != nil {
+		log.Printf("<%s> error \n", req_id)
 		panic(err)
 	}
 
@@ -53,6 +56,7 @@ func (obj InfoDao) Select() map[string]string {
 		err = rows.Scan(&nm, &val)
 		item[nm] = val
 		if err != nil {
+			log.Printf("<%s> error \n", req_id)
 			panic(err)
 		}
 
