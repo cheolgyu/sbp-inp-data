@@ -22,7 +22,7 @@ func (obj *Log) Write(f *os.File, text string) {
 
 func (obj *Log) CreateFile(fileName string) *os.File {
 
-	err := os.MkdirAll(obj.LogDir, os.ModeDir)
+	err := os.MkdirAll(obj.LogDir, os.ModePerm)
 	obj.CheckError(err)
 
 	file, err := os.Create(obj.LogDir + fileName)

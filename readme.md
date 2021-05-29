@@ -71,6 +71,7 @@ docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//De
     $env:GOARCH = 'amd64'
     go build -o bin/ticker main.go
 
+    cd C:\Users\cheolgyu\go\github.com\cheolgyu\stock\
     scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.35.30.100:~/dbment
     scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.35.30.100:~/.env.prod
     scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.35.30.100:~/ticker
