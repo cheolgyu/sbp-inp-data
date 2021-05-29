@@ -50,8 +50,9 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 type ViewPriceResult struct {
-	Info  map[string]string `json:"info"`
-	Price []model.ViewPrice `json:"price"`
+	Info   map[string]string  `json:"info"`
+	Price  []model.ViewPrice  `json:"price"`
+	Market []model.ViewMarket `json:"market"`
 }
 
 func ViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -60,9 +61,12 @@ func ViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	list := service.GetViewPrice(req_id, r)
 	info := service.GetInfo(req_id)
+	market_list := service.GetMarket(req_id)
+
 	res := ViewPriceResult{}
 	res.Info = info
 	res.Price = list
+	res.Market = market_list
 	json.NewEncoder(w).Encode(res)
 
 }

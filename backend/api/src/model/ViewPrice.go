@@ -154,3 +154,17 @@ type ViewPrice struct {
 	Risk                       bool   `json:"risk"`
 	Updated_date_company_state string `json:"updated_date_company_state"`
 }
+
+type ViewMarket struct {
+	ShortCode        string `json:"short_code"`
+	High_date        string `json:"high_date"`
+	High_price       string `json:"high_price"`
+	Last_date        string `json:"last_date"`
+	Last_close_price string `json:"last_close_price"`
+
+	Contrast_price          string `json:"contrast_price"`
+	Fluctuation_rate        string `json:"fluctuation_rate"`
+	Day_count               int    `json:"day_count"`
+	High_point_updated_date string `json:"high_point_updated_date"`
+	Naver_link              string `json:"naver_link"`
+}
