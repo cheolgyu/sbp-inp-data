@@ -140,7 +140,7 @@ $env:GOARCH = 'amd64'
     + init 다운데이터 시작일 정의한 곳 src\const.go
     + daily 다운데이터 시작일 정의한 곳 src\dao\info.go
 + ticker
-  + 30분 마다 체크함. 
+  + 1분 마다 체크함. 
 
 ---
 ## 다음 할것
