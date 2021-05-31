@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/cheolgyu/stock/backend/api/src/model"
 	"github.com/cheolgyu/stock/backend/api/src/service"
@@ -55,7 +56,7 @@ type ViewPriceResult struct {
 	Market []model.ViewMarket `json:"market"`
 }
 
-func ViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func HandlerViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 	setCors(&w)
 
@@ -71,8 +72,35 @@ func ViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 }
 
-func Graph(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("code"))
+func HandlerDetailChart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+	setCors(&w)
+
+	req_code := ps.ByName("code")
+	q := r.URL.Query()
+	page := q.Get("page")
+
+	p, err := strconv.Atoi(page)
+	if err != nil {
+		p = 1
+	}
+
+	list := service.GetDetailChart(req_id, req_code, p)
+
+	json.NewEncoder(w).Encode(list)
+
+}
+
+func HandlerDetailCompany(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+	setCors(&w)
+
+	req_code := ps.ByName("code")
+
+	list := service.GetDetailCompany(req_id, req_code)
+
+	json.NewEncoder(w).Encode(list)
+
 }
 
 func setCors(w *http.ResponseWriter) {
@@ -98,8 +126,9 @@ func server() {
 		w.WriteHeader(http.StatusNoContent)
 	})
 	router.GET("/", Index)
-	router.GET("/price", ViewPrice)
-	router.GET("/graph/:code", Graph)
+	router.GET("/price", HandlerViewPrice)
+	router.GET("/detail/chart/:code", HandlerDetailChart)
+	router.GET("/detail/company/:code", HandlerDetailCompany)
 	m := NewMiddleware(router, "I'm a middleware")
 	log.Fatal(http.ListenAndServe(port, m))
 }
