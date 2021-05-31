@@ -1,147 +1,166 @@
 # 프로적트 소개
 
-backend/dbment  :   주식 데이터베이스를 업데이트 하고 필요한 지표를 계산하고 데이터베이스에 저장하는 용도   
+backend/dbment  :   데이터베이스를 업데이트    
 backend/ticker  :   dbment 실행 용   
 backend/api     :   frontend-app의 요청응답.   
-frontend/app    :   [public web site](https://github.com/cheolgyu/stock-app)
+frontend/app    :   [site](https://stock.highserpot.com) , [code](https://github.com/cheolgyu/stock-app)
 
-## 실행방법
-dev
+---
+
+## 기타
+
+   | item   | lang     | dev    | prod    |
+   | ------ | -------- | ------ | ------- |
+   | db     | postgres | docker | aws rds |
+   | dbment | golang   | local  | ec2.1   |
+   | ticker | golang   | local  | ec2.1   |
+   | api    | golang   | local  | ec2.1   |
+   | front  | vuejs    | local  | s3      |
+   
+---
+## 설치
+1. db 
+   1. 설치- docker-compose
+   2. db table,function 설치 (backend/dbment/db/init/*.sql)
+2. backend/dbment
+   1. cd backend/dbment
+   2. go run . -run=init  (오래걸림: 모든 종목 시세데이터 가져옴.)
+    
+
+---
+## 실행
+1. dbment
+   1. cd backend/dbment
+   2. go run . -run=daily
+2. ticker
+   1. cd backend/ticker    
+   2. go run . 
+3. api
+   1. cd backend/api
+   2. gin -i --appPort 5001  --port 5000  run  main.go 
+4. site
+   1. npm run dev
+
+---
+## 빌드
 ```
-docker-compose up 시키고 
-수동으로 실행 해야될 목록
+golang 환경변수 설정 (powershell)
 
-db\init\*.sql 쿼리 실행하기.
-
-평일 장열린날 할것
-backend/dbment  :   go run . -run=daily  -prod
-
-프로젝트 처음 할것 (오래전 주식 데이터 수집)
-backend/dbment  : go run . -run=init  
-
+$env:GOOS = 'linux'
+$env:GOARCH = 'amd64'
+    
 ```
-
-
-### postgres export
-```
-postgres container 
-export
-su - postgres
-pg_dump  dev >> dumpFile.sql
-
-window 
-docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
-
-```
-### postgres import
-```
-import
-su - postgres
-psql --dbname prod --host database-stock-1.czunxjjslnrd.ap-northeast-2.rds.amazonaws.com --port 5432 --username postgres < dumpFile.sql    
-
-window 
-docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
-
-```
-### 빌드배포
-+  backend : (local) go build ==> ec2 upload
+1. dbment
+   1. cd backend/dbment
+   2. go build -o bin/dbment main.go 
+2. ticker
+   1. cd backend/ticker    
+   2. go build -o bin/ticker main.go
+3. api
+   1. cd backend/api
+   2. go build -o bin/api main.go
+4. site
+   1. main 브랜치에 push시 빌드 및 배포
+   
+---
+## 배포 
+### ssh접속
+   1. ssh -i "highserpot_stock.pem" ec2-user@ec2-3-35-30-100.ap-northeast-2.compute.amazonaws.com
+### 준비
     ```
-    ==============
-    backend/dbment
-    ==============
-    $env:GOOS = 'linux'
-    $env:GOARCH = 'amd64'
-
-    cd backend/dbment
-    go build -o bin/dbment main.go 
-
-    ==============
-    backend/api
-    ==============
-    cd backend/api
-    $env:GOOS = 'linux'
-    $env:GOARCH = 'amd64'
-    go build -o bin/api main.go
-
-    ==============
-    backend/ticker
-    ==============
-    cd backend/ticker
-    $env:GOOS = 'linux'
-    $env:GOARCH = 'amd64'
-    go build -o bin/ticker main.go
-
-    cd C:\Users\cheolgyu\go\github.com\cheolgyu\stock\
-    scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.35.30.100:~/dbment
-    scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.35.30.100:~/.env.prod
-    scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.35.30.100:~/ticker
-
-    scp -i "highserpot_stock.pem" backend/api/bin/api  ec2-user@3.35.30.100:~/api/api
-    scp -i "highserpot_stock.pem" backend/api/.env.prod  ec2-user@3.35.30.100:~/api/.env.prod
-
-    ssh -i "highserpot_stock.pem" ec2-user@ec2-3-35-30-100.ap-northeast-2.compute.amazonaws.com
     chmod +x ticker
     chmod +x dbment 
     chmod +x ./api
-
-    nohup ./api -prod    > api.out &
-
-    nohup ./ticker    > ticker.out &
-
-    ./dbment -run=test -prod
-    ./dbment -run=daily -prod
     ```
-+ frontend: github action -> s3 upload    
-## 흐름
+    ec2 업로드 전 기존 프로세스 kill -9 p_id 시키기.
 
-```
-ticker와 dbment를 빌드하여 ec2에 올리고
-ticker 를 실행시킨다.(ticker readme.md 참조)
-dbment에서 rds를 업데이트한다.
-api는 rds에서 데이터를 가져온다.
+### ec2 업로드
+1. cd C:\Users\cheolgyu\go\github.com\cheolgyu\stock\
+   1. dbment
+      1. scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.35.30.100:~/.env.prod
+      2. scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.35.30.100:~/dbment
+   2. ticker
+      1. scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.35.30.100:~/ticker
+   3. api
+      1. scp -i "highserpot_stock.pem" backend/api/.env.prod  ec2-user@3.35.30.100:~/api/.env.prod
+      2. scp -i "highserpot_stock.pem" backend/api/bin/api  ec2-user@3.35.30.100:~/api/api
+### ec2 실행 명령어
+1. ssh 접속
+   1. dbment
+      1. ticker에서 실행시킴
+      2. 수동 
+         1. ./dbment -run=daily -prod
+   2. ticker
+      1. nohup ./ticker    > ticker.out &
+   3. api
+      1. nohup ./api -prod    > api.out &
+---
 
-aws ec2 안에 ticker와 dbment와 api 가 들어 있고 ( + 나중엔 레디스 응답캐시 넣기.)
-aws rds는 dbment(특정시간에만)와 api가 사용하고
-aws s3에 frontend 배포함.
-aws s3와 생성된 탄력적ip로  ec2가 연결
+### postgres 백업
+1. export
+    ```
+    postgres container 
+    export
+    su - postgres
+    pg_dump  dev >> dumpFile.sql
 
-```
+    window 
+    docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
 
-## 프론트
-+
-## 백엔드 
+    ```
+2. import
+    ```
+    import
+    su - postgres
+    psql --dbname prod --host database-stock-1.czunxjjslnrd.ap-northeast-2.rds.amazonaws.com --port 5432 --username postgres < dumpFile.sql    
+
+    window 
+    docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
+
+    ```
+    
+---
+### ticker  안될때
+> 
+    ``` 
+    // ‘Seoul’ 파일 확인
+    $ ls /usr/share/zoneinfo/Asia
+
+    // Localtime 심볼릭 링크 재설정
+    $ sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+    // 적용 확인
+    $ date
+    ```
+---
+### 참고 
 + api
 + dbment
-    + 참고
-        + init 다운데이터 시작일 정의한 곳 src\const.go
-        + daily 다운데이터 시작일 정의한 곳 src\dao\info.go
+  + 다운로드 데이터 시작일
+    + init 다운데이터 시작일 정의한 곳 src\const.go
+    + daily 다운데이터 시작일 정의한 곳 src\dao\info.go
 + ticker
+  + 30분 마다 체크함. 
 
-
+---
 ## 다음 할것
 <details markdown="1">
 <summary>펼치기</summary>
 
 
-```
-수정하기
-```
++ 매수
+    + 오늘 고저가 차이가 큰순으로 나열+ 상승그래프 구분 
+    + 최근 일주일간 고저 차이의 평균값 알기.
+    + 누적 n 일이고 고저차이의 평균이 크고 상승/하락 중인것 
+    + 종목의 업종 불러와 업종 선택하기?
+
++ 매도    
+    + 해당종목의 최근 10 건의 거래의 고저 차이의 평균이 있으니 최고에 근접할경우 팔기.
 
 
 
-+ api-front
  
-    + 종목클릭하면 페이지 이동해서? 저가 고가 종가 시가 차트 나오게하기
-    +  
-
-
-
-
-+ 저가 고가 종가 그래프 보기.
-
-
-
-   
+    
 + 종목별 안정성 공식 넣어보기
 + 누적일수 : 하이포인트 유지 일수 추가하기.
 + + 누적일수 10일 이상 되는 종목들 보니 
@@ -159,7 +178,6 @@ aws s3와 생성된 탄력적ip로  ec2가 연결
 trading.avg_month 로 할까? 
 
 
-
 + 나스닥 변동률에 따른 변화량  구하기 ===? .... 쓸모없나 ?> 
 > 나스닥이 1퍼 떨어질때 a 종목은 몇퍼 떨어졌나 알 필요가 있을까? 
 >> 나스닥이 마지막 고점에서 x퍼 떨어질때 마지막고점 날짜에서 종목은 몇퍼 떨어졌나? 알필요 있을까?
@@ -171,6 +189,8 @@ trading.avg_month 로 할까?
     4. 나스닥 데이터 저장
     5. 나스닥 일별 전일대비 종복의 전일대비 
 </details>
+
+---
 
 ## 보류
 + dbment
@@ -186,12 +206,13 @@ redis와 api 연결지어 출력하기
 --> mongo 브랜치-backend/dbment/test/mongo.go 에 일부분 작성함.
 
 ```
-
+---
 ## 작업한 기능
 <details markdown="1">
 <summary>펼치기</summary>
 
 
++ 종목클릭하면 페이지 이동해서? 저가 고가 종가 시가 차트 나오게하기
 + 마켓나오게 하기.
 + api 요청 로그 남기기 파일로 저장하기.
 + dbment-LOG 테이블 변경( 한눈에 파악하기 힘듬)

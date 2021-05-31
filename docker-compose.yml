@@ -2,16 +2,16 @@ version: '3.1'
 # Use postgres/example user/password credentials
 services:
 
-  api:
-    build: 
-      context: ./backend/api
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
-      - "5100:5100"
-    volumes: 
-      - ./backend/api:/go/src/app
-    command: gin --port 5100 --appPort 5000 run main.go 
+  # api:
+  #   build: 
+  #     context: ./backend/api
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5000:5000"
+  #     - "5100:5100"
+  #   volumes: 
+  #     - ./backend/api:/go/src/app
+  #   command: gin --port 5100 --appPort 5000 run main.go 
 
   # mongo:
   #   image: mongo
