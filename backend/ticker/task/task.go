@@ -68,7 +68,7 @@ func (o *Task) Run() {
 		o.Ticker = time.NewTicker(1 * time.Second)
 		o.TickerPlanCycle = time.Second * 10 //time.Hour * 24 //time.Second * 30
 	} else {
-		o.Ticker = time.NewTicker(30 * time.Minute)
+		o.Ticker = time.NewTicker(1 * time.Minute)
 		o.TickerPlanCycle = time.Hour * 24
 	}
 	o.init()
@@ -102,14 +102,15 @@ func (o *Task) GetExecTime() time.Time {
 		}
 		nextExecTime = runTime
 	}
+	if o.Debug {
+		waiting := nextExecTime.Sub(t)
+		text += "   now         :" + fmt.Sprint(t.Format(o.TimeFormat)) + "\n"
+		text += " lastExecTime  :" + fmt.Sprint(lastExecTime.Format(o.TimeFormat)) + "\n"
+		text += " nextExecTime  :" + fmt.Sprint(nextExecTime.Format(o.TimeFormat)) + "\n"
+		text += " waiting       :" + fmt.Sprintf("%v", waiting) + "\n"
 
-	waiting := nextExecTime.Sub(t)
-	text += "   now         :" + fmt.Sprint(t.Format(o.TimeFormat)) + "\n"
-	text += " lastExecTime  :" + fmt.Sprint(lastExecTime.Format(o.TimeFormat)) + "\n"
-	text += " nextExecTime  :" + fmt.Sprint(nextExecTime.Format(o.TimeFormat)) + "\n"
-	text += " waiting       :" + fmt.Sprintf("%v", waiting) + "\n"
-
-	o.log("\n" + text)
+		o.log("\n" + text)
+	}
 
 	return nextExecTime
 
