@@ -5,7 +5,7 @@ import (
 )
 
 const TimeFormat = "2006-01-02_15_04_05"
-const LogDir = "./logs/"
+const LogDir = "./logs-ticker/"
 
 func main() {
 	t := task.Task{}

@@ -89,14 +89,27 @@ func (o *Task) GetExecTime() time.Time {
 		lastExecTime = last.Value.(time.Time)
 	}
 
+	n_day := t.Weekday()
+	var weekday = n_day != 0 && n_day != 6
+
 	nextExecTime := lastExecTime.Add(o.TickerPlanCycle)
+	if !weekday {
+		runTime := time.Date(t.Year(), t.Month(), t.Day(), 15, 30, 0, 0, time.Local)
+		if n_day == 0 {
+			runTime.Add(1 * time.Hour * 24)
+		} else if n_day == 6 {
+			runTime.Add(2 * time.Hour * 24)
+		}
+		nextExecTime = runTime
+	}
+
 	waiting := nextExecTime.Sub(t)
 	text += "   now         :" + fmt.Sprint(t.Format(o.TimeFormat)) + "\n"
 	text += " lastExecTime  :" + fmt.Sprint(lastExecTime.Format(o.TimeFormat)) + "\n"
 	text += " nextExecTime  :" + fmt.Sprint(nextExecTime.Format(o.TimeFormat)) + "\n"
 	text += " waiting       :" + fmt.Sprintf("%v", waiting) + "\n"
 
-	o.log("GetExecTime: \n" + text)
+	o.log("\n" + text)
 
 	return nextExecTime
 
@@ -119,26 +132,18 @@ func (o *Task) ticker_exec() {
 
 				now := time.Now()
 
-				n_day := time.Now().Weekday()
+				if now.After(o.GetExecTime()) {
 
-				var weekday = n_day != 0 && n_day != 6
-				weekday = true
+					o.log("[디비작업 시작]]" + time.Now().String())
 
-				if weekday {
-					if now.After(o.GetExecTime()) {
-
-						o.log("[디비작업 시작]]" + time.Now().String())
-
-						if o.Debug {
-							execCmd_test()
-						} else {
-							execCmd()
-						}
-
-						o.log("[디비작업 종료]]" + time.Now().String())
-						o.TickerPlan.PushBack(time.Now())
-
+					if o.Debug {
+						execCmd_test()
+					} else {
+						execCmd()
 					}
+
+					o.log("[디비작업 종료]]" + time.Now().String())
+					o.TickerPlan.PushBack(time.Now())
 
 				}
 
