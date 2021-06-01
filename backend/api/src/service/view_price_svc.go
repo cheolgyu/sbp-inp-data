@@ -18,7 +18,7 @@ func GetViewPrice(req_id string, r *http.Request) []model.ViewPrice {
 	vpp := model.ViewPriceParms{}
 	vpp.SetPageRows(q.Get("page"), q.Get("rows"))
 	vpp.SetSortDesc(q.Get("sort"), q.Get("desc"))
-	vpp.SetEtc(q.Get("market"), q.Get("state_stop"), q.Get("search"))
+	vpp.SetEtc(q.Get("market"), q.Get("state"), q.Get("search"))
 
 	return dao.SqlViewPrice.Select(req_id, vpp)
 

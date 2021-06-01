@@ -36,7 +36,7 @@ type ViewPriceParms struct {
 	Sort   string
 	Desc   bool
 	Market []string
-	State  bool
+	State  string
 	Search string
 }
 
@@ -83,13 +83,9 @@ func (obj *ViewPriceParms) SetSortDesc(sort string, in_desc string) {
 
 }
 
-func (obj *ViewPriceParms) SetEtc(market string, state_stop string, search string) {
+func (obj *ViewPriceParms) SetEtc(market string, state string, search string) {
 
-	if state_stop == "true" {
-		obj.State = true
-	} else {
-		obj.State = false
-	}
+	obj.State = state
 
 	//var m_arr []string
 

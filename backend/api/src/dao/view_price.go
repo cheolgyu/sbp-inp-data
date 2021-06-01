@@ -2,6 +2,7 @@ package dao
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -34,10 +35,10 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []model.V
 		q += ` and  name like $1 `
 	}
 
-	if parms.State {
-		q += ` and  stop is true `
-	} else {
-		q += ` and  stop is false `
+	if parms.State != "" {
+		_q := ` and %s is true `
+
+		q += fmt.Sprintf(_q, parms.State)
 	}
 
 	if len(parms.Market) > 0 {
