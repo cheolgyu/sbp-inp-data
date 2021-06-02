@@ -3,37 +3,8 @@
 -- 테이블 생성: 최고가 저장용 일/주/월 
 --
 ---------------------------------
-DROP VIEW IF EXISTS "view_price_day";
-DROP TABLE IF EXISTS "high_point_day";
-CREATE TABLE "public"."high_point_day" (
-    "short_code" text  NOT NULL UNIQUE,
-    "high_date" integer  NULL,
-    "high_price" integer  NULL,
-    "last_date" integer NOT NULL,
-    "last_close_price" integer NOT NULL,
-    "contrast_price" integer  NULL,
-    "fluctuation_rate" numeric  NULL,
-    "day_count" integer  NULL,
-    "created_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updated_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
-) WITH (oids = false);
-
-DROP TABLE IF EXISTS "high_point_week";
-CREATE TABLE "public"."high_point_week" (
-    "short_code" text  NOT NULL UNIQUE,
-    "high_date" integer  NULL,
-    "high_price" integer  NULL,
-    "last_date" integer NOT NULL,
-    "last_close_price" integer NOT NULL,
-    "contrast_price" integer  NULL,
-    "fluctuation_rate" numeric  NULL,
-    "day_count" integer  NULL,
-    "created_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updated_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
-) WITH (oids = false);
-
-DROP TABLE IF EXISTS "high_point_month";
-CREATE TABLE "public"."high_point_month" (
+DROP TABLE IF EXISTS "high_point_price";
+CREATE TABLE "public"."high_point_price" (
     "short_code" text  NOT NULL UNIQUE,
     "high_date" integer  NULL,
     "high_price" integer  NULL,

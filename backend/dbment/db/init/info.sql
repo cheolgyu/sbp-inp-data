@@ -1,7 +1,11 @@
-CREATE SCHEMA "price_day";
-CREATE SCHEMA "price_week";
-CREATE SCHEMA "price_month";
-CREATE SCHEMA "market_day";
+--CREATE SCHEMA "price_day";
+--CREATE SCHEMA "price_week";
+--CREATE SCHEMA "price_month";
+--CREATE SCHEMA "market_day";
+--drop schema market CASCADE;
+
+CREATE SCHEMA "price";
+CREATE SCHEMA "market";
 
 DROP TABLE IF EXISTS "meta";
 
@@ -19,20 +23,14 @@ CREATE TABLE "public"."info" (
     VALUES 
     ('init_company', NULL, now())
     ,('init_company_state', NULL, now()) 
-    ,('init_price_day', NULL, now()) 
-    ,('init_price_week', NULL, now())
-    ,('init_price_month', NULL, now())
-    ,('init_market_day', NULL, now()) 
+    ,('init_price', NULL, now()) 
+    ,('init_market', NULL, now()) 
     ,('daily_company', NULL, now())
     ,('daily_company_state', NULL, now())
-    ,('daily_market_day', NULL, now())
-    ,('daily_price_day', NULL, now())
-    ,('daily_price_week', NULL, now())
-    ,('daily_price_month', NULL, now())
-    ,('daily_high_point_market_day', NULL, now())
-    ,('daily_high_point_day', NULL, now())
-    ,('daily_high_point_week', NULL, now())
-    ,('daily_high_point_month', NULL, now())
+    ,('daily_market', NULL, now())
+    ,('daily_price', NULL, now())
+    ,('daily_high_point_market', NULL, now())
+    ,('daily_high_point', NULL, now())
     ;
 
 -- 로그 테이블

@@ -3,18 +3,16 @@
 -- 테이블 생성: 최고가 저장용 일/주/월 
 --
 ---------------------------------
-DROP VIEW IF EXISTS "view_market_day";
-DROP TABLE IF EXISTS "high_point_market_day";
-CREATE TABLE "public"."high_point_market_day" (
-    "short_code" text  NOT NULL UNIQUE,
-    "high_date" numeric  NULL,
-    "high_price" numeric  NULL,
-    "last_date" integer NOT NULL,
-    "last_close_price" numeric NOT NULL,
-    "contrast_price" numeric  NULL,
-    "fluctuation_rate" numeric  NULL,
-    "day_count" integer  NULL,
-    "created_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+DROP TABLE IF EXISTS "high_point_market";
+CREATE TABLE "public"."high_point_market" (
+    "code" text  NOT NULL UNIQUE,
+    "x1" integer NOT NULL,
+    "y1" integer  NOT NULL,
+    "x2" numeric NOT NULL,
+    "y2" numeric NOT NULL,
+    "y_minus" numeric  NULL,
+    "percent" numeric  NULL,
+    "x_ticks" integer  NULL,
     "updated_date" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 ) WITH (oids = false);
 

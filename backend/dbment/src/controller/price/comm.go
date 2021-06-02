@@ -1,4 +1,4 @@
-package market
+package price
 
 import (
 	"github.com/cheolgyu/stock/backend/dbment/src"

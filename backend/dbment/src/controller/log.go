@@ -79,11 +79,11 @@ func init() {
 				"insert":   "저장",
 				"end":      "종료",
 			},
-			"price_day": {
+			"price": {
 				"start": "시작",
 				"end":   "종료",
 			},
-			"market_day": {
+			"market": {
 				"start": "시작",
 				"end":   "종료",
 			},
@@ -105,19 +105,19 @@ func init() {
 				"insert":   "저장",
 				"end":      "종료",
 			},
-			"price_day": {
+			"price": {
 				"start": "시작",
 				"end":   "종료",
 			},
-			"high_point_day": {
+			"high_point_price": {
 				"start": "시작",
 				"end":   "종료",
 			},
-			"high_point_market_day": {
+			"high_point_market": {
 				"start": "시작",
 				"end":   "종료",
 			},
-			"market_day": {
+			"market": {
 				"start": "시작",
 				"end":   "종료",
 			},

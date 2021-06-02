@@ -5,7 +5,6 @@ import (
 
 	"os"
 
-	"github.com/cheolgyu/stock/backend/dbment/src"
 	"github.com/cheolgyu/stock/backend/dbment/src/model"
 )
 
@@ -51,75 +50,6 @@ func Write_Comm_file_listed_company_state(f *os.File, item model.CompanyState) {
 				"updated_date" = now()
 				;
 				`)
-	}
-
-}
-
-func Write_Init_file_price(f *os.File, schema_type string, item model.NaverChart) {
-
-	var seednm = src.Info["seed"]["name"]["price-init"]
-
-	var schema_nm = item.GetSchemaName(schema_type)
-	var tb_nm = item.GetTableName()
-
-	Write(f, "-- name: "+seednm)
-
-	Write(f, `
-		DROP TABLE IF EXISTS "`+schema_nm+`"."`+tb_nm+`";
-		CREATE TABLE "`+schema_nm+`"."`+tb_nm+`" (
-			"Date" integer NOT NULL UNIQUE ,
-			"OpenPrice" integer,
-			"HighPrice" integer,
-			"LowPrice" integer,
-			"ClosePrice" integer,
-			"Volume" integer,
-			"ForeignerBurnoutRate" double precision
-		);
-		INSERT INTO "`+schema_nm+`"."`+tb_nm+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
-		VALUES 
-		`)
-
-	for j_index, j := range item.DayList {
-		Write(f, fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate))
-		if j_index+1 == len(item.DayList) {
-			Write(f, " ; ")
-		} else {
-			Write(f, " , ")
-		}
-	}
-
-}
-
-func Write_Init_file_market(f *os.File, schema_type string, item model.NaverChartMarket) {
-
-	var seednm = src.Info["seed"]["name"]["market-init"]
-
-	var schema_nm = item.GetSchemaName(schema_type)
-	var tb_nm = item.GetTableName()
-
-	Write(f, "-- name: "+seednm)
-	Write(f, `
-		DROP TABLE IF EXISTS "`+schema_nm+`"."`+tb_nm+`";
-		CREATE TABLE "`+schema_nm+`"."`+tb_nm+`" (
-			"Date" integer NOT NULL UNIQUE ,
-			"OpenPrice" double precision,
-			"HighPrice" double precision,
-			"LowPrice" double precision,
-			"ClosePrice" double precision,
-			"Volume" integer,
-			"ForeignerBurnoutRate" double precision
-		);
-		INSERT INTO "`+schema_nm+`"."`+tb_nm+`" ("Date", "OpenPrice", "HighPrice", "LowPrice", "ClosePrice", "Volume", "ForeignerBurnoutRate")
-		VALUES 
-		`)
-
-	for j_index, j := range item.List {
-		Write(f, fmt.Sprintf("(%v, %v, %v, %v, %v, %v,%v) ", j.Date, j.OpenPrice, j.HighPrice, j.LowPrice, j.ClosePrice, j.Volume, j.ForeignerBurnoutRate))
-		if j_index+1 == len(item.List) {
-			Write(f, " ; ")
-		} else {
-			Write(f, " , ")
-		}
 	}
 
 }

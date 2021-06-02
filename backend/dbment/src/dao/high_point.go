@@ -16,11 +16,11 @@ func init() {
 	}
 }
 
-func (obj HighPoint) Update(schema_type string) {
+func (obj HighPoint) Update() {
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	query := ` select loop_price_to_high_point('` + schema_type + `') `
+	query := ` select loop_price_to_high_point() `
 	_, err := db.Exec(query)
 	if err != nil {
 		panic(err)
@@ -28,11 +28,11 @@ func (obj HighPoint) Update(schema_type string) {
 
 }
 
-func (obj HighPoint) Update_Market(schema_type string) {
+func (obj HighPoint) Update_Market() {
 	var db = obj.DB.Conn()
 	defer db.Close()
 
-	query := ` select loop_market_to_high_point('` + schema_type + `') `
+	query := ` select loop_market_to_high_point() `
 	_, err := db.Exec(query)
 	if err != nil {
 		panic(err)

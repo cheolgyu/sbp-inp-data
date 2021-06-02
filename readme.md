@@ -220,9 +220,7 @@ trading.avg_month 로 할까?
 ---
 
 ## 보류
-+ dbment
-+ + sql price init/daily 함수 생성 (insert 내용이 배열로 있는경우)
-+ ?
+
 
 + dbment 실행 시간 날짜별로 로그 파일 생성하기. ==> db에  넣는데?
 ```
@@ -237,6 +235,8 @@ redis와 api 연결지어 출력하기
 ## 작업한 기능
 <details markdown="1">
 <summary>펼치기</summary>
+
+
 
 + front
   + ui 개선
@@ -261,11 +261,22 @@ redis와 api 연결지어 출력하기
 + + 즐겨찾기 기능. localstoreage에 저장
 
 + dbment
-+ + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.
-
-+ export.sql 생성
-+ + export.sql로 select 
-+ + 후 data.json 만들어 ec2 upload 기능 (보류)
+  + 코드 정리 
+    + 코드에서 일별,주별,월별 제거
+    + price,market
+      + 컨트롤러 하나로
+      + insert_or_update sql function 추가
+    + high_point 
+      + 컨트롤러 하나로 price,market 
+      + table 칼럽명 수정
+      + high_point 찾는 sql 함수 golang으로?
+    + 
+  + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.
+  + sql price init/daily 함수 생성 (insert 내용이 배열로 있는경우)
+  
+  + export.sql 생성
+  + export.sql로 select 
+  + 후 data.json 만들어 ec2 upload 기능 (보류)
 
 + listed_company 기준으로 가격 조회하는데 listed_company은 업데이트 안하는중; 신규 회사 없음; < 추가함.
 + 고루틴 적용 + init daily 테스트 완료. + 서비스 따로 뺴고  price,company,state,market 폴더에서  네이버차트,data_krx 폴더 별로 기능 묶어버림.

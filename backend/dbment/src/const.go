@@ -7,6 +7,8 @@ import (
 )
 
 var Info map[string]map[string]map[string]string
+var RunType string
+var Debug bool
 
 func init() {
 
@@ -17,6 +19,10 @@ func init() {
 				"dir":           "tmp/file/",
 				"company":       "tmp/file/listed_company.xlsx",
 				"company_state": "tmp/file/company_state.xlsx",
+				"price-init":    "tmp/price-init/",
+				"price-daily":   "tmp/price-daily/",
+				"market-init":   "tmp/market-init/",
+				"market-daily":  "tmp/market-daily/",
 			},
 			"url": {
 				"krx-company-code":       "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd",
@@ -37,7 +43,9 @@ func init() {
 			"path": {
 				"company-init":       "tmp/seed/company/seed.sql",
 				"company_state-init": "tmp/seed/company/seed_state.sql",
+				"price-init":         "tmp/seed/price/init.sql",
 				"price-daily":        "tmp/seed/price/daily.sql",
+				"market-init":        "tmp/seed/market/init.sql",
 				"market-daily":       "tmp/seed/market/daily.sql",
 				"market-dir":         "tmp/seed/market/seed",
 				"price-dir":          "tmp/seed/price/seed",
@@ -48,6 +56,10 @@ func init() {
 
 	var arr_mkDir = []string{
 		Info["download"]["path"]["dir"],
+		Info["download"]["path"]["price-init"],
+		Info["download"]["path"]["price-daily"],
+		Info["download"]["path"]["market-init"],
+		Info["download"]["path"]["market-daily"],
 		Info["seed"]["path"]["company-dir"],
 		Info["seed"]["path"]["market-dir"],
 		Info["seed"]["path"]["price-dir"],
@@ -57,6 +69,13 @@ func init() {
 		mkdirAll(item)
 	}
 
+}
+
+func SeedInfo(object string) (string, string) {
+	fnm := Info["seed"]["path"][object+"-"+RunType]
+	seednm := Info["seed"]["name"][object+"-"+RunType]
+
+	return fnm, seednm
 }
 
 func mkdirAll(path string) {
