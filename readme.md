@@ -147,6 +147,62 @@ $env:GOARCH = 'amd64'
 <details markdown="1">
 <summary>펼치기</summary>
 
++ aws rdb 사용량 줄이기
+  + ec2 내부이용
+    + mini db넣기
+      + 거기서 front 조회하기
+    + 그래프의 가격데이터는 잘 안쓰니
+      + <== 이부분에서 rdb 비용이 많이 청구됨.
+      + file로 ec2내부에 저장하기. 
+  + 미니db
+    + api통해서 view 테이블 조건 검색용
+  + ec2 내부 이용하려면?
+    + 미니db찾기
+    + 매일 가격,회사 다운로드
+      + dbment에서 high_point 까지 계산해주기
+        + 시작
+          1. 회사-상세 다운로드 -> row to struct -> 
+             1. go 가격조회 
+                1. go high_point 찾아서 어딘가에 저장에 놓고 view만들때 쓰기
+                2. go 가격파일 update or create
+          
+          2. 회사-상태 다운로드 -> row to struct -> []struct
+          3. 1과2가 완료되면 []company와 []company_state가 나와야되고
+             1. company code에 해당하는 code.[]price와 code.high_point가 있어야됨.
+                1. 이렇게 하려면?
+                   1. company loop 돌면서 stuct.view_price 추가하여 채워넣을까?
+                   2. 그럼 view_price가 바뀌어야됨.
+                      1. code | name | hp.* | {detail}| {state.*}
+                      
+            
+          4. 1.번과 2번이 완료된후
+             1. view_pric만들기
+                1. 
+                   
+              1. view_price,view_market seed파일 생성.
+              2. 미니 디비에 업데이트
+          5. 회사 file remove and create
+          6. 가격조회 시작 (회사-상세 code 기준으로 )
+             1. 회사전체 in loop => 회사전체의 가격데이터 
+               1.  go high_point 찾기
+             2. struct.(view_price_row) 에 추가 
+          7. view_price 완성, view_market 완성
+          8. 미니 디비 업데이트
+          9.  
+         
+
+
+      + 미니 디비 업데이트해주고
+        + view_market,view_price
+      + file
+        + remove and create
+          + 회사상세
+          + 회사상태
+        + create or update
+          + price/<code>
+      + 종료.
+
+ --- 
 
 + 매수
   + 이 종목이 7일간의 거래에서 4번의 반등이 있었는데 2번은 상승이 였고 2번은 하락이였습니다.
