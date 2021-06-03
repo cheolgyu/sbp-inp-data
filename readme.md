@@ -164,6 +164,7 @@ $env:GOARCH = 'amd64'
           1. 회사-상세 다운로드 -> row to struct -> 
              1. go 가격조회 
                 1. go high_point 찾아서 어딘가에 저장에 놓고 view만들때 쓰기
+                   1. high_point 찾을땐 이전 내역도 필요함. 이전 가격은 file에저장되 있음.
                 2. go 가격파일 update or create
           
           2. 회사-상태 다운로드 -> row to struct -> []struct
@@ -185,6 +186,7 @@ $env:GOARCH = 'amd64'
           6. 가격조회 시작 (회사-상세 code 기준으로 )
              1. 회사전체 in loop => 회사전체의 가격데이터 
                1.  go high_point 찾기
+                   1.  high_point 찾을땐 이전 내역도 필요함. 이전 가격은 file에저장되 있음.
              2. struct.(view_price_row) 에 추가 
           7. view_price 완성, view_market 완성
           8. 미니 디비 업데이트
