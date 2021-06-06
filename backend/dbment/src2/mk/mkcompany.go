@@ -182,11 +182,12 @@ func (o *MakeHihgPoint) Loop() {
 		println("=========res=============\n", len(res))
 		fmt.Printf("%v<--\n", res)
 		arr := string_to_price(res)
-
-		hp := o.FindHighPoint(arr)
+		hp := model.HighPoint{}
+		hp.Code = code
 		println("=========FindHighPoint=============\n")
-		log.Println(hp)
-		fmt.Printf("%#v<--\n", hp)
+		hp.Point = o.FindHighPoint(arr)
+		log.Println(hp.Point)
+		fmt.Printf("%#v<--\n", hp.Point)
 		//println(hp)
 	}
 }
@@ -345,17 +346,22 @@ func check(e error) {
 	}
 }
 func (o *MakeHihgPoint) FindHighPoint(arr []model.Price) model.Point {
+	var hp = model.Point{}
+
 	loop_cnt := len(arr)
 	keep_cnt := 0
+
+	hp.X2 = uint(arr[0].Date)
+	hp.Y2 = arr[0].ClosePrice
 
 	cur_p := arr[0].ClosePrice
 	ago_p := arr[0+1].ClosePrice
 	cur_g_way := graph_way(cur_p, ago_p)
-	var hp = model.Point{}
+
 	for i := 0; i < loop_cnt-1; i++ {
 
-		hp.X2 = uint(arr[i].Date)
-		hp.Y2 = arr[i].ClosePrice
+		hp.X1 = uint(arr[i].Date)
+		hp.Y1 = arr[i].ClosePrice
 		hp.X_tick = uint(keep_cnt)
 
 		cur_p := arr[i].ClosePrice
@@ -384,8 +390,10 @@ func (o *MakeHihgPoint) FindHighPoint(arr []model.Price) model.Point {
 		}
 		keep_cnt = keep_cnt + 1
 	}
+
+	hp.Y_minus = hp.Y2 - hp.Y1
+	hp.Y_Percent = float32(math.Round(float64(hp.Y2/hp.Y1*100*100)) / 100)
 	return hp
-	//hp.SetRate()
 }
 
 func graph_way(cur_price float32, ago_price float32) string {
