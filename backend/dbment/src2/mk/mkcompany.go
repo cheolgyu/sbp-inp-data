@@ -1,9 +1,9 @@
 package mk
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
+	"log"
 	"math"
 	"os"
 	"strconv"
@@ -181,6 +181,13 @@ func (o *MakeHihgPoint) Loop() {
 
 		println("=========res=============\n", len(res))
 		fmt.Printf("%v<--\n", res)
+		arr := string_to_price(res)
+
+		hp := o.FindHighPoint(arr)
+		println("=========FindHighPoint=============\n")
+		log.Println(hp)
+		fmt.Printf("%#v<--\n", hp)
+		//println(hp)
 	}
 }
 
@@ -246,6 +253,7 @@ func (o *ReadFile) Loop() []string {
 			panic(o.InFile.Name())
 		} else {
 			str_out = strings.Replace(str_out, c.REPEAT_STR, "", -1)
+			str_out = strings.Replace(str_out, "\n", "", -1)
 			res = append(res, str_out)
 		}
 
@@ -295,138 +303,40 @@ func (o *ReadFile) SetFileInfo() {
 	o.total_page = int(math.Ceil(float64(o.total_rows) / float64(o.InRows)))
 }
 
-// func read_csv(page int, rowCnt int, f *os.File) []string {
-// 	res := []string{}
+func string_to_price(list []string) []model.Price {
+	res := []model.Price{}
 
-// 	fi, err := f.Stat()
-// 	if err != nil {
-// 		fmt.Printf("The file is %d bytes long", fi.Size())
-// 		panic(err)
-// 	}
-// 	row_buffer := c.REPEAT_CNT + 1
-// 	total_buffer := int(fi.Size())
-// 	total_rows := total_buffer / row_buffer
-// 	if total_buffer%row_buffer != 0 {
-// 		panic("파일 내용 확인필요.")
-// 	}
-// 	total_page := math.Ceil(float64(total_rows) / float64(rowCnt))
+	for i := len(list) - 1; i >= 0; i-- {
+		var row model.Price
+		str := string(list[i])
 
-// 	fmt.Printf("file-total_page		: %v \n", total_page)
-// 	fmt.Printf("file-total_rows		: %d \n", total_rows)
-
-// 	rb := ReadBuffer{
-// 		Start: (page - 1) * row_buffer * rowCnt,
-// 		End:   (page-1)*row_buffer*rowCnt + row_buffer*rowCnt,
-// 		Size:  (page-1)*row_buffer*rowCnt + row_buffer*rowCnt,
-// 	}
-
-// 	seek_offset := int64(rb.Size) * -1
-
-// 	fmt.Printf("total_buffer		: %d \n", total_buffer)
-// 	fmt.Printf("total_rows		: %d \n", total_rows)
-// 	fmt.Printf("read_buffer_start: %d \n", rb.Start)
-// 	fmt.Printf("read_buffer_end: %d \n", rb.End)
-
-// 	if int(total_page) < page {
-// 		return res
-// 	} else if int(total_page) == page {
-
-// 		rb.End = total_buffer //read_buffer_start + (total_buffer-read_buffer_start)/row_buffer
-// 		rb.Size = total_buffer - rb.Start
-// 		seek_offset = int64(rb.End) * -1
-// 		rowCnt = (total_buffer - rb.Start) / row_buffer
-// 	} else {
-
-// 	}
-// 	fmt.Printf("========= \n")
-// 	fmt.Printf("row     : %d \n", rowCnt)
-// 	fmt.Printf("read_buffer_size: %d \n", rb.Size)
-// 	fmt.Printf("read_buffer_end: %d \n", rb.End)
-// 	fmt.Printf("seek_offset: %d \n", seek_offset)
-
-// 	_, err = f.Seek(seek_offset, 2)
-// 	if err != nil {
-// 		println(err)
-// 	}
-// 	check(err)
-// 	b2 := make([]byte, rb.Size)
-// 	_, err = f.Read(b2)
-// 	check(err)
-
-// 	arr := b2
-// 	idx := 0
-// 	for {
-// 		in := new(bytes.Buffer)
-// 		in.WriteString(string(arr))
-// 		out := new(bytes.Buffer)
-// 		x, err := in.ReadBytes('\n')
-
-// 		out.Write(x)
-// 		str_out := out.String()
-// 		fmt.Printf("str_out:%s \n", str_out)
-// 		if !strings.Contains(str_out, c.REPEAT_STR) {
-
-// 			fmt.Printf("처리할 문자열에 %s 가 없음.\n", c.REPEAT_STR)
-// 			fmt.Printf("처리할 문자열:%s \n", str_out)
-// 			fmt.Printf("파일명:%s \n", fi.Name())
-// 			panic(fi.Name())
-// 		} else {
-// 			str_out = strings.Replace(str_out, c.REPEAT_STR, "", -1)
-// 			res = append(res, str_out)
-// 		}
-
-// 		arr = arr[len(x):]
-
-// 		if err != nil {
-// 			check(err)
-// 			break
-// 		}
-// 		idx++
-// 		if idx >= rowCnt {
-// 			break
-// 		}
-// 	}
-
-// 	return res
-// }
-
-func read(f *os.File, list []model.Point) {
-	idx := 0
-	for {
-		idx++
-		reader := bufio.NewReader(f)
-		line, isPrefix, err := reader.ReadLine()
-		if isPrefix || err != nil || idx > 100 {
-			break
-		}
-
-		str := string(line)
 		arr := strings.Split(str, ",")
-		p := model.Point{}
-
 		d, _ := strconv.ParseUint(arr[0], 0, 32)
-		p.X1 = uint(d)
+		row.Date = uint32(d)
 
 		op, _ := strconv.ParseFloat(arr[1], 32)
-		p.Y1 = float32(op)
+		row.OpenPrice = float32(op)
 
-		hp, _ := strconv.ParseUint(arr[2], 0, 32)
-		p.X2 = uint(hp)
+		hp, _ := strconv.ParseFloat(arr[2], 32)
+		row.HighPrice = float32(hp)
 
 		lp, _ := strconv.ParseFloat(arr[3], 32)
-		p.Y2 = float32(lp)
+		row.LowPrice = float32(lp)
 
 		cp, _ := strconv.ParseFloat(arr[4], 32)
-		p.Y_minus = float32(cp)
+		row.ClosePrice = float32(cp)
 
-		v, _ := strconv.ParseFloat(arr[5], 32)
-		p.Y_Percent = float32(v)
+		v, _ := strconv.ParseUint(arr[5], 0, 32)
+		row.Volume = uint32(v)
 
-		fr, _ := strconv.ParseUint(arr[6], 0, 32)
-		p.X_tick = uint(fr)
+		str_fr := strings.Replace(arr[6], ",", "", -1)
+		fr, _ := strconv.ParseFloat(str_fr, 32)
+		row.ForeignerBurnoutRate = float32(fr)
 
-		list = append(list, p)
+		res = append(res, row)
 	}
+
+	return res
 }
 
 func check(e error) {
@@ -434,12 +344,62 @@ func check(e error) {
 		panic(e)
 	}
 }
-func (o *MakeHihgPoint) FindHighPoint() {
-	// price/code 파일 열어서
-	// 100줄씩 읽기.
-	//     파일내용  배열로 만들고
-	//     배열 목록을 loop 돌려
-	//     high_point  찾기
+func (o *MakeHihgPoint) FindHighPoint(arr []model.Price) model.Point {
+	loop_cnt := len(arr)
+	keep_cnt := 0
+
+	cur_p := arr[0].ClosePrice
+	ago_p := arr[0+1].ClosePrice
+	cur_g_way := graph_way(cur_p, ago_p)
+	var hp = model.Point{}
+	for i := 0; i < loop_cnt-1; i++ {
+
+		hp.X2 = uint(arr[i].Date)
+		hp.Y2 = arr[i].ClosePrice
+		hp.X_tick = uint(keep_cnt)
+
+		cur_p := arr[i].ClosePrice
+		ago_p := arr[i+1].ClosePrice
+		switch cur_g_way {
+		case "eq":
+			if cur_p > ago_p {
+				cur_g_way = "down"
+				keep_cnt = 0
+			} else if cur_p < ago_p {
+				cur_g_way = "up"
+				keep_cnt = 0
+			}
+
+		}
+
+		exit1 := cur_g_way == "down" && cur_p > ago_p
+		exit2 := cur_g_way == "up" && cur_p < ago_p
+		exit3 := i > loop_cnt
+
+		if exit1 || exit2 || exit3 {
+			// log.Println("exit1=", exit1)
+			// log.Println("exit2=", exit2)
+			// log.Println("exit3=", exit3)
+			break
+		}
+		keep_cnt = keep_cnt + 1
+	}
+	return hp
+	//hp.SetRate()
+}
+
+func graph_way(cur_price float32, ago_price float32) string {
+	g_way := ""
+	if cur_price > ago_price {
+		g_way = "up"
+	} else if cur_price < ago_price {
+		g_way = "down"
+	} else if cur_price == ago_price {
+		g_way = "eq"
+	} else {
+		panic("머냐")
+	}
+	return g_way
 }
 
 type MakeView struct {
