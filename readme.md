@@ -150,59 +150,99 @@ $env:GOARCH = 'amd64'
 + aws rdb 사용량 줄이기
   + ec2 내부이용
     + mini db넣기
-      + 거기서 front 조회하기
-    + 그래프의 가격데이터는 잘 안쓰니
-      + <== 이부분에서 rdb 비용이 많이 청구됨.
-      + file로 ec2내부에 저장하기. 
-  + 미니db
-    + api통해서 view 테이블 조건 검색용
-  + ec2 내부 이용하려면?
-    + 미니db찾기
-    + 매일 가격,회사 다운로드
-      + dbment에서 high_point 까지 계산해주기
-        + 시작
-          1. 회사-상세 다운로드 -> row to struct -> 
-             1. go 가격조회 
-                1. go high_point 찾아서 어딘가에 저장에 놓고 view만들때 쓰기
-                   1. high_point 찾을땐 이전 내역도 필요함. 이전 가격은 file에저장되 있음.
-                2. go 가격파일 update or create
-          
-          2. 회사-상태 다운로드 -> row to struct -> []struct
-          3. 1과2가 완료되면 []company와 []company_state가 나와야되고
-             1. company code에 해당하는 code.[]price와 code.high_point가 있어야됨.
-                1. 이렇게 하려면?
-                   1. company loop 돌면서 stuct.view_price 추가하여 채워넣을까?
-                   2. 그럼 view_price가 바뀌어야됨.
-                      1. code | name | hp.* | {detail}| {state.*}
-                      
+   ```
+   /*
+      // (price_startdate string, price_enddate string)
+
+         data/company_detail/<code>.csv
+         data/company_state/<code>.csv
+         data/price/<code>.csv
+         data/market/<code>.csv
+         data/high_point/price/<code>.csv
+         data/high_point/market/<code>.csv
+
+         api-server는 읽기모드로 파일오픈 오류시 업데이트중 잠시후 오류 처리, 패닉뺴기
+         dbment-server는 쓰기모드로 ㄱㄱ
+      */
+      //
+      /*
+         // 엑셀파일 다운로드
+         download company_detail.xlsx
+
+         row loop
+         go row_parse
+            print_csv()
+               detail 저장
             
-          4. 1.번과 2번이 완료된후
-             1. view_pric만들기
-                1. 
-                   
-              1. view_price,view_market seed파일 생성.
-              2. 미니 디비에 업데이트
-          5. 회사 file remove and create
-          6. 가격조회 시작 (회사-상세 code 기준으로 )
-             1. 회사전체 in loop => 회사전체의 가격데이터 
-               1.  go high_point 찾기
-                   1.  high_point 찾을땐 이전 내역도 필요함. 이전 가격은 file에저장되 있음.
-             2. struct.(view_price_row) 에 추가 
-          7. view_price 완성, view_market 완성
-          8. 미니 디비 업데이트
-          9.  
-         
+      */
+
+      mk_price
+         load_download_excel 파일 
+         row range loop
+            price(code,start,end) download
+               price_parse
+               print_csv()
+                  price 저장
+                  create or update
+
+      /*
+         // 엑셀파일 다운로드
+         download company_state.xlsx
+         row loop
+            go row_parse
+               print_csv()
+                  state 저장
+      */
+
+      /*
+         market_arr loop
+            go price(code,start,end) download
+               parse_price()
+               print_csv()
+                  market 저장
+      */
+      /*
+         //high_point 계산
+         data/price/code loop
+            go highpoint(code)
+               open data/price/code.csv
+                  100줄 읽고 닫기
+                  없으면 다음 100줄 읽고 닫기
+                  없으면 다음 100줄 읽고 닫기
+                  없으면 다음 100줄 읽고 닫기
+                  없으면  null처리
+                  print()
+                     highpoint 저장
+
+         data/market/code loop
+         high_point view_market loop
+            go highpoint(code)
+               open data/market/code.csv
+                  100줄 읽고 닫기
+                  없으면 다음 100줄 읽고 닫기
+                  없으면 다음 100줄 읽고 닫기
+                  없으면 다음 100줄 읽고 닫기
+                  없으면  null처리
+                  print()
+                     highpoint 저장
 
 
-      + 미니 디비 업데이트해주고
-        + view_market,view_price
-      + file
-        + remove and create
-          + 회사상세
-          + 회사상태
-        + create or update
-          + price/<code>
-      + 종료.
+      */
+      /*
+         create_view
+         data/price/code loop
+            code에 해당하는 high_point 데이터 꺼내고
+            code에 해당하는 state 데이터 꺼내고
+            insert문 만들기
+
+         data/market/code loop
+            code에 해당하는 high_point 데이터 꺼내고
+            code에 해당하는 state 데이터 꺼내고
+            insert문 만들기
+
+         price,market insert문 실행.
+      */
+   ```
 
  --- 
 
