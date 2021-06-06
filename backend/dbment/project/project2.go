@@ -21,7 +21,7 @@ func (p *Project2) Run(arg string) {
 	}
 	comp.Processing()
 	price_run()
-	//high_point_run()
+	high_point_run()
 }
 
 func high_point_run() {

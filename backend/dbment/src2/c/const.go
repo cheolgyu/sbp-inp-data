@@ -30,6 +30,9 @@ const MARKET = "market"
 const COMPANY_DETAIL = "company_detail"
 const COMPANY_STATE = "company_state"
 
+const REPEAT_CNT = 60
+const REPEAT_STR = "-"
+
 var DownloadCompany bool
 var DownloadPrice bool
 
