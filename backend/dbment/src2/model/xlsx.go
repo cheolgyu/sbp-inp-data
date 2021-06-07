@@ -32,32 +32,35 @@ func RowGet(row *xlsx.Row) (string, string) {
 	return row.GetCell(1).String(), str
 }
 
-// func (o *CompanyState) Set(row *xlsx.Row) {
-// 	txt_replace := strings.NewReplacer("'", " ")
+func String_to_company_state(str string) CompanyState {
+	o := CompanyState{}
+	arr := strings.Split(str, ",")
 
-// 	o.Code = txt_replace.Replace(row.GetCell(0).String())
-// 	o.Name = txt_replace.Replace(row.GetCell(1).String())
-// 	o.Stop = ox(row.GetCell(2).String())
-// 	o.Clear = ox(row.GetCell(3).String())
-// 	o.Managed = ox(row.GetCell(4).String())
+	txt_replace := strings.NewReplacer("'", " ")
 
-// 	o.Ventilation = ox(row.GetCell(5).String())
-// 	o.Unfaithful = ox(row.GetCell(6).String())
-// 	o.Lack_listed = ox(row.GetCell(7).String())
-// 	o.Overheated = ox(row.GetCell(8).String())
+	o.Code = txt_replace.Replace(arr[0])
+	o.Name = txt_replace.Replace(arr[1])
+	o.Stop = ox(arr[2])
+	o.Clear = ox(arr[3])
+	o.Managed = ox(arr[4])
 
-// 	o.Caution = ox(row.GetCell(9).String())
-// 	o.Warning = ox(row.GetCell(10).String())
-// 	o.Risk = ox(row.GetCell(11).String())
+	o.Ventilation = ox(arr[5])
+	o.Unfaithful = ox(arr[6])
+	o.Lack_listed = ox(arr[7])
+	o.Overheated = ox(arr[8])
 
-// }
+	o.Caution = ox(arr[9])
+	o.Warning = ox(arr[10])
+	o.Risk = ox(arr[11])
+	return o
+}
 
-// func ox(ox string) bool {
+func ox(ox string) bool {
 
-// 	if ox == "X" {
-// 		return false
-// 	} else {
-// 		return true
-// 	}
+	if ox == "X" {
+		return false
+	} else {
+		return true
+	}
 
-// }
+}

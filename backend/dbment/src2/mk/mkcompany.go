@@ -2,8 +2,8 @@ package mk
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"log"
 	"math"
 	"os"
 	"strconv"
@@ -17,6 +17,27 @@ import (
 )
 
 var CodeArr []string
+
+type DataView struct {
+	ViewPrice map[string]model.ViewPrice
+}
+
+func set_point(code string, inp model.Point) {
+	map_v_p := data_view.ViewPrice[code]
+	map_v_p.Point = inp
+	data_view.ViewPrice[code] = map_v_p
+}
+
+func (o *DataView) set_state(code string, inp model.CompanyState) {
+	vp := o.ViewPrice[code]
+	vp.State = inp
+}
+
+var data_view DataView
+
+func init() {
+	data_view.ViewPrice = make(map[string]model.ViewPrice)
+}
 
 type MakeCompany struct {
 	Object    string
@@ -66,6 +87,8 @@ func (o *MakeCompany) SetArray() {
 		code, content := model.RowGet(row)
 		if o.Object == c.COMPANY_DETAIL {
 			CodeArr = append(CodeArr, code)
+		} else if o.Object == c.COMPANY_STATE {
+			data_view.set_state(code, model.String_to_company_state(content))
 		}
 		f.Write(wf, content)
 	}
@@ -163,14 +186,13 @@ func (o *MakeHihgPoint) Loop() {
 	list := CodeArr[1:2]
 
 	for _, code := range list {
-
 		fnm := o.writeDir + code
 		f, e := os.Open(fnm)
 		//defer f.Close()
-		fmt.Printf("FNM: ./%s\n", fnm)
+		//fmt.Printf("FNM: ./%s\n", fnm)
 		check(e)
 		p := 1
-		r := 20
+		r := 30
 
 		rf := ReadFile{
 			InPage: p,
@@ -178,17 +200,8 @@ func (o *MakeHihgPoint) Loop() {
 			InFile: f,
 		}
 		res := rf.GetRead()
-
-		println("=========res=============\n", len(res))
-		fmt.Printf("%v<--\n", res)
 		arr := string_to_price(res)
-		hp := model.HighPoint{}
-		hp.Code = code
-		println("=========FindHighPoint=============\n")
-		hp.Point = o.FindHighPoint(arr)
-		log.Println(hp.Point)
-		fmt.Printf("%#v<--\n", hp.Point)
-		//println(hp)
+		set_point(code, o.FindHighPoint(arr))
 	}
 }
 
@@ -245,7 +258,7 @@ func (o *ReadFile) Loop() []string {
 		}
 		out.Write(x)
 		str_out := out.String()
-		fmt.Printf("str_out:%s \n", str_out)
+		//fmt.Printf("str_out:%s \n", str_out)
 		if !strings.Contains(str_out, c.REPEAT_STR) {
 
 			fmt.Printf("처리할 문자열에 %s 가 없음.\n", c.REPEAT_STR)
@@ -411,14 +424,47 @@ func graph_way(cur_price float32, ago_price float32) string {
 }
 
 type MakeView struct {
+	Object   string
+	v_market []interface{}
+	v_price  []interface{}
 }
 
+func (o *MakeView) Processing() {
+	o.init()
+	o.Loop()
+}
+func (o *MakeView) init() {
+	for _, m := range model.MarketList {
+		vp := data_view.ViewPrice
+		view_price := vp[m]
+		view_price.Code = m
+		view_price.Name = m
+		//data, _ := json.MarshalIndent(view_price, "", "  ")
+		data, _ := json.Marshal(view_price)
+		o.v_market = append(o.v_market, string(data))
+		delete(data_view.ViewPrice, m)
+	}
+
+	for _, vp := range data_view.ViewPrice {
+		//fmt.Println(vp)
+
+		data, _ := json.MarshalIndent(vp, "", "  ")
+		//data, _ := json.Marshal(vp)
+		println(string(data))
+		o.v_price = append(o.v_price, string(data))
+	}
+
+}
 func (o *MakeView) SetArray() {
-	// GetCodeList((가격,마켓))
-	// loop 돌려면 high_point 찾고 state 찾고
+
 }
 
 func (o *MakeView) Loop() {
+	fmt.Println("==========MakeView===========")
+	fmt.Println((o.v_market))
+	fmt.Println("==========MakeView===========")
+	fmt.Println((o.v_price))
+
 	// sql 파일 만들고
 	// loop 돌려면
 	// 		high_point 찾고 state 찾고

@@ -1,14 +1,9 @@
 package model
 
 type ViewPrice struct {
-	Company Company
+	Code    string
+	Name    string
 	State   CompanyState
-	Point   Point
-	Updated string
-}
-
-type ViewMarket struct {
-	Company Company
 	Point   Point
 	Updated string
 }

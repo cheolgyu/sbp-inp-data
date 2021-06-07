@@ -22,6 +22,14 @@ func (p *Project2) Run(arg string) {
 	comp.Processing()
 	price_run()
 	high_point_run()
+	view_run()
+}
+
+func view_run() {
+	comp := mk.MakeView{
+		Object: c.PRICE,
+	}
+	comp.Processing()
 }
 
 func high_point_run() {
