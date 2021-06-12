@@ -433,6 +433,11 @@ func (o *MakeView) Processing() {
 	o.init()
 	o.Loop()
 }
+
+/*
+view용 데이터 변환.
+일반 변수(소트용), 포맷 적용 변수 나누기.
+*/
 func (o *MakeView) init() {
 	for _, m := range model.MarketList {
 		vp := data_view.ViewPrice
@@ -459,24 +464,24 @@ func (o *MakeView) SetArray() {
 
 }
 
+/*
+변환된 view용 변수를 db에 저장or update 시키기 위한 sql파일생성하기.
+*/
 func (o *MakeView) Loop() {
 	fmt.Println("==========MakeView===========")
 	fmt.Println((o.v_market))
 	fmt.Println("==========MakeView===========")
 	fmt.Println((o.v_price))
 
-	// sql 파일 만들고
-	// loop 돌려면
-	// 		high_point 찾고 state 찾고
-	// 		MakeSql()
-	// 		NewWriting()
-
 }
 
 func (o *MakeView) MakeSql() {
-	// 파일에 한줄씩 쓰고
+
 }
 
+/*
+생성된 sql파일 실행시키기.
+*/
 func (o *MakeView) Insert() {
-	// 디비 연결해서 파일 실행
+
 }
