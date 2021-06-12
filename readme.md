@@ -1,9 +1,9 @@
 # 프로적트 소개
 
-backend/dbment  :   데이터베이스를 업데이트    
-backend/ticker  :   dbment 실행 용   
-backend/api     :   frontend-app의 요청응답.   
-frontend/app    :   [site](https://stock.highserpot.com) , [code](https://github.com/cheolgyu/stock-write-app)
+stock-write  :   파일 업데이트
+stock-write-ticker  :   stock-write 실행 용   
+stock-read-http-api     :   web
+
 
 ---
 
@@ -11,35 +11,22 @@ frontend/app    :   [site](https://stock.highserpot.com) , [code](https://github
 
    | item   | lang     | dev    | prod    |
    | ------ | -------- | ------ | ------- |
-   | db     | postgres | docker | aws rds |
-   | dbment | golang   | local  | ec2.1   |
-   | ticker | golang   | local  | ec2.1   |
-   | api    | golang   | local  | ec2.1   |
-   | front  | vuejs    | local  | s3      |
+   | stock-write | golang   | local  | ec2.1   |
+   | stock-write-ticke | golang   | local  | ec2.1   |
+   | stock-read-http-api    | golang   | local  | ec2.1   |
+   | front  | vuejs    | local  | ec2.1      |
    
 ---
 ## 설치
-1. db 
-   1. 설치- docker-compose
-   2. db table,function 설치 (backend/dbment/db/init/*.sql)
-2. backend/dbment
-   1. cd backend/dbment
+stock-write
+   1. cd stock-write
    2. go run . -run=init  (오래걸림: 모든 종목 시세데이터 가져옴.)
     
-
 ---
 ## 실행
 1. dbment
-   1. cd backend/dbment
+   1. cd stock-write
    2. go run . -run=daily
-2. ticker
-   1. cd backend/ticker    
-   2. go run . 
-3. api
-   1. cd backend/api
-   2. gin -i --appPort 5001  --port 5000  run  main.go 
-4. site
-   1. npm run dev
 
 ---
 ## 빌드
@@ -51,7 +38,7 @@ $env:GOARCH = 'amd64'
     
 ```
 1. dbment
-   1. cd backend/dbment
+   1. cd stock-write
    2. go build -o bin/dbment main.go 
 2. ticker
    1. cd backend/ticker    
@@ -68,147 +55,39 @@ $env:GOARCH = 'amd64'
    1. ssh -i "highserpot_stock.pem" ec2-user@ec2-3-35-30-100.ap-northeast-2.compute.amazonaws.com
 ### 준비
     ```
-    chmod +x ticker
     chmod +x dbment 
-    chmod +x ./api
     ```
     ec2 업로드 전 기존 프로세스 kill -9 p_id 시키기.
 
 ### ec2 업로드
 1. cd C:\Users\cheolgyu\go\github.com\cheolgyu\stock\
    1. dbment
-      1. scp -i "highserpot_stock.pem" backend/dbment/.env.prod  ec2-user@3.35.30.100:~/.env.prod
-      2. scp -i "highserpot_stock.pem" backend/dbment/bin/dbment  ec2-user@3.35.30.100:~/dbment
-   2. ticker
-      1. scp -i "highserpot_stock.pem" backend/ticker/bin/ticker  ec2-user@3.35.30.100:~/ticker
-   3. api
-      1. scp -i "highserpot_stock.pem" backend/api/.env.prod  ec2-user@3.35.30.100:~/api/.env.prod
-      2. scp -i "highserpot_stock.pem" backend/api/bin/api  ec2-user@3.35.30.100:~/api/api
+      1. scp -i "highserpot_stock.pem" .env.prod  ec2-user@3.35.30.100:~/.env.prod
+      2. scp -i "highserpot_stock.pem" bin/dbment  ec2-user@3.35.30.100:~/dbment
+
 ### ec2 실행 명령어
 1. ssh 접속
    1. dbment
       1. ticker에서 실행시킴
       2. 수동 
          1. ./dbment -run=daily -prod
-   2. ticker
-      1. nohup ./ticker    > ticker.out &
-   3. api
-      1. nohup ./api -prod    > api.out &
 ---
 
-### postgres 백업
-1. export
-    ```
-    postgres container 
-    export
-    su - postgres
-    pg_dump  dev >> dumpFile.sql
-
-    window 
-    docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
-
-    ```
-2. import
-    ```
-    import
-    su - postgres
-    psql --dbname prod --host database-stock-1.czunxjjslnrd.ap-northeast-2.rds.amazonaws.com --port 5432 --username postgres < dumpFile.sql    
-
-    window 
-    docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
-
-    ```
-    
----
-### ticker  안될때
-> 
-    ``` 
-    // ‘Seoul’ 파일 확인
-    $ ls /usr/share/zoneinfo/Asia
-
-    // Localtime 심볼릭 링크 재설정
-    $ sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-
-    // 적용 확인
-    $ date
-    ```
----
 ### 참고 
-+ api
 + dbment
   + 다운로드 데이터 시작일
     + init 다운데이터 시작일 정의한 곳 src\const.go
     + daily 다운데이터 시작일 정의한 곳 src\dao\info.go
-+ ticker
-  + 1분 마다 체크함. 
+
 
 ---
 ## 다음 할것
 <details markdown="1">
 <summary>펼치기</summary>
 
-+ aws rdb 사용량 줄이기
-  + ec2 내부이용
-    + mini db넣기
-    + 미니 디비말고 ec2에서 매일 작업후에 데이터셋을 s3로 업로 시킨다. 프론트(s3)에서 데이터 요청을 s3로 한다. 프론트에서 데이터를 처리한다.
-      + 이 방법은 데이터셋(view) 2000종목을 한번에 다운로드한다. 
-      + 이 방법은 차트 데이터를 한번에 다운로드한다. 
-      + 이 방법을 쓸때 프론트에서 요청시 최신데이터 정보를 조회 후 최신정보가 있을 경우에만 요청을 보내야하고 받은 정보는 브라우저에 저장해 놔야한다.
-   + aws ec2,rdb,elb(ec2-https 용) 켜보니 rdb> elb> ec2 순이다.  rbs는 ec2의 2배의 비용 elb는 ec2의 1.5배 비용이 든다. 12 일 켜놓으니 총 (22달러)2만5천원 정도 든다. 켜놓는 비용만.^^
-   + ec2안에 db와 api와 ticker와 dbment 까지 다 넣고 https 인증서 수동으로 넣고 ec2만 사용한다고 가정하면
-      + ec2 dbment가 켜지는 순간 메모리 cpu 부족해 져서 멈출수도 있지만 db를 사용할수 있다는 장점이 있다.
-      + s3만 쓰다가 api서버를 붙인 이유가 데이터셋.json의 용량이 크니 줄여서 호출하려는 이유가 컸다.
-      + db가 필요한 이유가 머냐? 데이터를 부분 부분 넘겨주기 위해서 사용.
-   + 방안1. s3에 다 때려박고 특정시간에만 ec2 켜서 dbment 실행시켜서 s3에 데이터 업로드 하기.
-   + 방안2. s3+ec2(docker-container db, api, ticker+dbment ) 사용하기. 12일 기준 4.5달러 정도 비용청구됨. 
-      + 사용자 입장에서도 방안1. 보다는 방안2가 조금더 나을수 있으나 과연 t2.micro 성능으로?
-   + 지금 저가로 이득을 얻기보단 수평 수직적으로 활용 가능한 아키텍처로 만들자.
-      + rdb말고 다이나믹 db로 바꿀까 ? 
-      + api 는 증감이 있고 dbment는 고정적.
-      + s3 는 그대로  냅두고 
-      + api 람다와 AWS CloudFormation 및 AWS Instance Scheduler 로 ec2 실행시켜 dbment 실행시키기 
-      + ec2안에 mongo 두고 하루종일 키기와 dynamic or document 하루종일 키기 비교해보면?
-         + ec2 t2.mirco 하루종일 키면 한달에 기본 10.51 달러+ 저장소 비용.
-         + Amazon DynamoDB 는 킨 비용은 없고 쓰고 읽고 저장 비용이 있지만 저렴한편.
-      + api 람다와 CloudFormation스케줄링 dbment(dbment에서 s3 시세정보 업데이트하기)
-         + 프론트에서는 
-            + S3에 있는것 통으로 가져올까?
-            + 람다 API 통해서 aws dynamoDB API 통해서 VIEW_TABLE 가져올까?
-            + 데이터는 시세정보 데이터와 회사정보데이터와 가공한 반등지점 데이터가 있다.
-               + 회사정보와 시세정보 데이터는 상세보기페이지에서 차트와 회사정보 보여주는 용도.
-               + 반등지점 데이터가 주로 사용하는 데이터이다.
-               + 시세정보는 잘안쓰는데 용량이 크다. 
-               + 반등지점은 자주 쓰고 용량이 작다.
-                  + API에서 반등지점 처리는 내부 메모리에 저장 후 페이징, 조건검색, 소트 처리, DBMENT에서 요청하면 S3에서 읽어서 반등데이터 갱신하기.
-                  + API에서 시세정보 처리는 외부 S3에 있는것 페이징해서 응답해주기
-                  + API에서 회사정보 처리는 외부 S3에 있는것 응답해주기.
-                  + S3가 PUT, COPY, POST, LIST 요청 1천개당 0.0045 USD 인데 하루에 3천개 종목을 갱신하면 0.0135 이고 30일하면 0.405 달러이네.
-      + 시세데이터 저장소 비교
-         + EC2 (EBS) VS S3
-            + S3: GB당 0.025 USD
-            + EBS(GP2):  0.11 USD
-            + DYNAMODB: 월별 GB당 0.27075 USD (인덱스 포함.)
-      + 저장소 이용 비교
-         + S3 1기가 하루에 3천번 한달이면 0.405 추가되니 EBS가 더낫네.
-      + EBS 시세정보+회사정보 1기가 로 생성하기.
-      + EC2 EBS 1기가에 회사정보,시세정보 넣기.
-      + EC2 TICKER,DBMENT,API,FRONT 넣기. 
-      + DBMENT는 DATA(가격,회사,반등포인트) 쓰기 작업이고 API는 파일 읽기 작업 및 FRONT보내주고.
-+ ec2 하나로 쓰기
-   + 저장소 ebs 파일로 관리하기.
-   + api 서버는 시세,회사는 파일에서 읽고 반등정보는 변수로 담았다가 dbment가 요청 보내면 업데이트하기.
-+ 프로젝트명 바꾸기.
-   + STOCK
-      + stock-write
-      + stock-write-ticker
-      + stock-read-http-api
-      + stock-read-http
+
 + 변수명 바꾸기
    + high_point => rebound_point
-
-
-
-
 
    ```
    /*
@@ -386,7 +265,7 @@ db => 몽고디비로 바꾸기.+ db함수 다 바꿔야됨 오래걸림
 dbment -> mongo 에 쓰고 
 mongo의 일별 데이터만 redis 에 넣고    
 redis와 api 연결지어 출력하기   
---> mongo 브랜치-backend/dbment/test/mongo.go 에 일부분 작성함.
+--> mongo 브랜치-stock-write/test/mongo.go 에 일부분 작성함.
 
 ```
 ---
@@ -394,8 +273,12 @@ redis와 api 연결지어 출력하기
 <details markdown="1">
 <summary>펼치기</summary>
 
-
-
++ 프로젝트명 바꾸기.
+   + STOCK
+      + stock-write
+      + stock-write-ticker
+      + stock-read-http-api
+      + stock-read-http
 + front
   + ui 개선
   + 조회 조건에 상태값 추가
@@ -582,5 +465,55 @@ listed_company_state 상장기업 지정내역
 price 가격
 ```
 
++ aws rdb 사용량 줄이기
+  + ec2 내부이용
+    + mini db넣기
+    + 미니 디비말고 ec2에서 매일 작업후에 데이터셋을 s3로 업로 시킨다. 프론트(s3)에서 데이터 요청을 s3로 한다. 프론트에서 데이터를 처리한다.
+      + 이 방법은 데이터셋(view) 2000종목을 한번에 다운로드한다. 
+      + 이 방법은 차트 데이터를 한번에 다운로드한다. 
+      + 이 방법을 쓸때 프론트에서 요청시 최신데이터 정보를 조회 후 최신정보가 있을 경우에만 요청을 보내야하고 받은 정보는 브라우저에 저장해 놔야한다.
+   + aws ec2,rdb,elb(ec2-https 용) 켜보니 rdb> elb> ec2 순이다.  rbs는 ec2의 2배의 비용 elb는 ec2의 1.5배 비용이 든다. 12 일 켜놓으니 총 (22달러)2만5천원 정도 든다. 켜놓는 비용만.^^
+   + ec2안에 db와 api와 ticker와 dbment 까지 다 넣고 https 인증서 수동으로 넣고 ec2만 사용한다고 가정하면
+      + ec2 dbment가 켜지는 순간 메모리 cpu 부족해 져서 멈출수도 있지만 db를 사용할수 있다는 장점이 있다.
+      + s3만 쓰다가 api서버를 붙인 이유가 데이터셋.json의 용량이 크니 줄여서 호출하려는 이유가 컸다.
+      + db가 필요한 이유가 머냐? 데이터를 부분 부분 넘겨주기 위해서 사용.
+   + 방안1. s3에 다 때려박고 특정시간에만 ec2 켜서 dbment 실행시켜서 s3에 데이터 업로드 하기.
+   + 방안2. s3+ec2(docker-container db, api, ticker+dbment ) 사용하기. 12일 기준 4.5달러 정도 비용청구됨. 
+      + 사용자 입장에서도 방안1. 보다는 방안2가 조금더 나을수 있으나 과연 t2.micro 성능으로?
+   + 지금 저가로 이득을 얻기보단 수평 수직적으로 활용 가능한 아키텍처로 만들자.
+      + rdb말고 다이나믹 db로 바꿀까 ? 
+      + api 는 증감이 있고 dbment는 고정적.
+      + s3 는 그대로  냅두고 
+      + api 람다와 AWS CloudFormation 및 AWS Instance Scheduler 로 ec2 실행시켜 dbment 실행시키기 
+      + ec2안에 mongo 두고 하루종일 키기와 dynamic or document 하루종일 키기 비교해보면?
+         + ec2 t2.mirco 하루종일 키면 한달에 기본 10.51 달러+ 저장소 비용.
+         + Amazon DynamoDB 는 킨 비용은 없고 쓰고 읽고 저장 비용이 있지만 저렴한편.
+      + api 람다와 CloudFormation스케줄링 dbment(dbment에서 s3 시세정보 업데이트하기)
+         + 프론트에서는 
+            + S3에 있는것 통으로 가져올까?
+            + 람다 API 통해서 aws dynamoDB API 통해서 VIEW_TABLE 가져올까?
+            + 데이터는 시세정보 데이터와 회사정보데이터와 가공한 반등지점 데이터가 있다.
+               + 회사정보와 시세정보 데이터는 상세보기페이지에서 차트와 회사정보 보여주는 용도.
+               + 반등지점 데이터가 주로 사용하는 데이터이다.
+               + 시세정보는 잘안쓰는데 용량이 크다. 
+               + 반등지점은 자주 쓰고 용량이 작다.
+                  + API에서 반등지점 처리는 내부 메모리에 저장 후 페이징, 조건검색, 소트 처리, DBMENT에서 요청하면 S3에서 읽어서 반등데이터 갱신하기.
+                  + API에서 시세정보 처리는 외부 S3에 있는것 페이징해서 응답해주기
+                  + API에서 회사정보 처리는 외부 S3에 있는것 응답해주기.
+                  + S3가 PUT, COPY, POST, LIST 요청 1천개당 0.0045 USD 인데 하루에 3천개 종목을 갱신하면 0.0135 이고 30일하면 0.405 달러이네.
+      + 시세데이터 저장소 비교
+         + EC2 (EBS) VS S3
+            + S3: GB당 0.025 USD
+            + EBS(GP2):  0.11 USD
+            + DYNAMODB: 월별 GB당 0.27075 USD (인덱스 포함.)
+      + 저장소 이용 비교
+         + S3 1기가 하루에 3천번 한달이면 0.405 추가되니 EBS가 더낫네.
+      + EBS 시세정보+회사정보 1기가 로 생성하기.
+      + EC2 EBS 1기가에 회사정보,시세정보 넣기.
+      + EC2 TICKER,DBMENT,API,FRONT 넣기. 
+      + DBMENT는 DATA(가격,회사,반등포인트) 쓰기 작업이고 API는 파일 읽기 작업 및 FRONT보내주고.
++ ec2 하나로 쓰기
+   + 저장소 ebs 파일로 관리하기.
+   + api 서버는 시세,회사는 파일에서 읽고 반등정보는 변수로 담았다가 dbment가 요청 보내면 업데이트하기.
 
 
