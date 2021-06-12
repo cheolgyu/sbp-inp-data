@@ -3,12 +3,12 @@ package naver_chart
 import (
 	"log"
 
-	"github.com/cheolgyu/stock/backend/dbment/src"
-	"github.com/cheolgyu/stock/backend/dbment/src/dao"
-	"github.com/cheolgyu/stock/backend/dbment/src/model"
-	"github.com/cheolgyu/stock/backend/dbment/src/model/naver"
-	"github.com/cheolgyu/stock/backend/dbment/src/utils/download/price/naver_chart"
-	"github.com/cheolgyu/stock/backend/dbment/src/utils/file"
+	"github.com/cheolgyu/stock-write/src"
+	"github.com/cheolgyu/stock-write/src/dao"
+	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/cheolgyu/stock-write/src/model/naver"
+	"github.com/cheolgyu/stock-write/src/utils/download/price/naver_chart"
+	"github.com/cheolgyu/stock-write/src/utils/file"
 )
 
 type ChartService struct {

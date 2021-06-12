@@ -5,7 +5,7 @@ import (
 
 	"os"
 
-	"github.com/cheolgyu/stock/backend/dbment/src/model"
+	"github.com/cheolgyu/stock-write/src/model"
 )
 
 func Write_Comm_file_listed_company(f *os.File, item model.Company) {

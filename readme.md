@@ -3,7 +3,7 @@
 backend/dbment  :   데이터베이스를 업데이트    
 backend/ticker  :   dbment 실행 용   
 backend/api     :   frontend-app의 요청응답.   
-frontend/app    :   [site](https://stock.highserpot.com) , [code](https://github.com/cheolgyu/stock-app)
+frontend/app    :   [site](https://stock.highserpot.com) , [code](https://github.com/cheolgyu/stock-write-app)
 
 ---
 

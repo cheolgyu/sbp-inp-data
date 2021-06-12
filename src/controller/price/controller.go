@@ -1,10 +1,10 @@
 package price
 
 import (
-	"github.com/cheolgyu/stock/backend/dbment/src"
-	"github.com/cheolgyu/stock/backend/dbment/src/controller"
-	"github.com/cheolgyu/stock/backend/dbment/src/model"
-	"github.com/cheolgyu/stock/backend/dbment/src/service/naver_chart"
+	"github.com/cheolgyu/stock-write/src"
+	"github.com/cheolgyu/stock-write/src/controller"
+	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/cheolgyu/stock-write/src/service/naver_chart"
 )
 
 type PriceController struct {

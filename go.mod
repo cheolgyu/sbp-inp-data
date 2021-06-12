@@ -1,4 +1,4 @@
-module github.com/cheolgyu/stock/backend/dbment
+module github.com/cheolgyu/stock-write
 
 go 1.16
 

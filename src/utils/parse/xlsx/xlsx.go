@@ -3,7 +3,7 @@ package xlsx
 import (
 	"strings"
 
-	"github.com/cheolgyu/stock/backend/dbment/src/model"
+	"github.com/cheolgyu/stock-write/src/model"
 
 	"github.com/tealeg/xlsx"
 )

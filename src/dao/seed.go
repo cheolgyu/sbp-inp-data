@@ -3,7 +3,7 @@ package dao
 import (
 	"log"
 
-	"github.com/cheolgyu/stock/backend/dbment/db"
+	"github.com/cheolgyu/stock-write/db"
 
 	"github.com/gchaincl/dotsql"
 )

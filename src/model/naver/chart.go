@@ -3,7 +3,7 @@ package naver
 import (
 	"fmt"
 
-	"github.com/cheolgyu/stock/backend/dbment/src"
+	"github.com/cheolgyu/stock-write/src"
 )
 
 type Row struct {

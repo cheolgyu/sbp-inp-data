@@ -8,7 +8,7 @@ import (
 
 	"flag"
 
-	"github.com/cheolgyu/stock/backend/dbment/project"
+	"github.com/cheolgyu/stock-write/project"
 	"github.com/joho/godotenv"
 )
 

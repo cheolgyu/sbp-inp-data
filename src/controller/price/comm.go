@@ -1,8 +1,8 @@
 package price
 
 import (
-	"github.com/cheolgyu/stock/backend/dbment/src"
-	"github.com/cheolgyu/stock/backend/dbment/src/model"
+	"github.com/cheolgyu/stock-write/src"
+	"github.com/cheolgyu/stock-write/src/model"
 )
 
 func GetMarketList() []model.Company {

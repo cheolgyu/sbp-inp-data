@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cheolgyu/stock/backend/dbment/src2/c"
-	"github.com/cheolgyu/stock/backend/dbment/src2/mk"
-	"github.com/cheolgyu/stock/backend/dbment/src2/utils"
+	"github.com/cheolgyu/stock-write/src2/c"
+	"github.com/cheolgyu/stock-write/src2/mk"
+	"github.com/cheolgyu/stock-write/src2/utils"
 )
 
 type Project2 struct {

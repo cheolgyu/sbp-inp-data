@@ -6,12 +6,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cheolgyu/stock/backend/dbment/src"
-	"github.com/cheolgyu/stock/backend/dbment/src/controller"
-	"github.com/cheolgyu/stock/backend/dbment/src/controller/high_point"
-	"github.com/cheolgyu/stock/backend/dbment/src/controller/listed_company"
-	"github.com/cheolgyu/stock/backend/dbment/src/controller/price"
-	"github.com/cheolgyu/stock/backend/dbment/src/dao"
+	"github.com/cheolgyu/stock-write/src"
+	"github.com/cheolgyu/stock-write/src/controller"
+	"github.com/cheolgyu/stock-write/src/controller/high_point"
+	"github.com/cheolgyu/stock-write/src/controller/listed_company"
+	"github.com/cheolgyu/stock-write/src/controller/price"
+	"github.com/cheolgyu/stock-write/src/dao"
 )
 
 type Project struct {

@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cheolgyu/stock/backend/dbment/src2/c"
-	"github.com/cheolgyu/stock/backend/dbment/src2/model"
-	"github.com/cheolgyu/stock/backend/dbment/src2/utils"
-	"github.com/cheolgyu/stock/backend/dbment/src2/utils/download"
+	"github.com/cheolgyu/stock-write/src2/c"
+	"github.com/cheolgyu/stock-write/src2/model"
+	"github.com/cheolgyu/stock-write/src2/utils"
+	"github.com/cheolgyu/stock-write/src2/utils/download"
 	xlsx "github.com/tealeg/xlsx/v3"
 )
 

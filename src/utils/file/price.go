@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cheolgyu/stock/backend/dbment/src"
-	"github.com/cheolgyu/stock/backend/dbment/src/model/naver"
+	"github.com/cheolgyu/stock-write/src"
+	"github.com/cheolgyu/stock-write/src/model/naver"
 )
 
 func WritePriceQuery(f *os.File, object string, item naver.ChartData) {

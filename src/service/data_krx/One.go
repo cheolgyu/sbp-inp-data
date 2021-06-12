@@ -4,11 +4,11 @@ import (
 	"log"
 	"sync"
 
-	"github.com/cheolgyu/stock/backend/dbment/src/dao"
-	"github.com/cheolgyu/stock/backend/dbment/src/model"
-	"github.com/cheolgyu/stock/backend/dbment/src/utils/download/company/data_krx"
-	"github.com/cheolgyu/stock/backend/dbment/src/utils/file"
-	parse_xlsx "github.com/cheolgyu/stock/backend/dbment/src/utils/parse/xlsx"
+	"github.com/cheolgyu/stock-write/src/dao"
+	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/cheolgyu/stock-write/src/utils/download/company/data_krx"
+	"github.com/cheolgyu/stock-write/src/utils/file"
+	parse_xlsx "github.com/cheolgyu/stock-write/src/utils/parse/xlsx"
 
 	"github.com/tealeg/xlsx"
 )

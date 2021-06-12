@@ -8,7 +8,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/cheolgyu/stock/backend/dbment/src/dao"
+	"github.com/cheolgyu/stock-write/src/dao"
 
 	"golang.org/x/crypto/ssh"
 )
