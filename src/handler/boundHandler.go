@@ -84,6 +84,19 @@ func (o *BoundHandler) Loop() {
 		func(code string) {
 			//defer wg.Done()
 
+			// code에 해당하는 bound_point파일의 마지막 줄에서  일자 뽑기
+
+			// 고가, 저가, 종가 별 일자중 제일 작은 일자를 선택해
+			// 가격조회 시작일 선정하기
+
+			// 가격 조회: 시작일 기준  한번에 다하자 귀찮다.
+			// 시작일 부터 마지막일 까지 가격목록 생성
+			// 가격 목록을 find_high_point(code,<고가,저가,종가>)에 주기.
+			// find_high_point는 찾는경우 한줄씩 파일에 내용 추가하고.
+			// 종료.
+			// 결국 이 핸들러는 bound_point csv 만드는 함수.
+			// 이 데이터를 어떻게 쓸지는 고민해 봐야겠네.
+
 			// bound_point
 			f, e := os.Open(o.readDir + code)
 			check(e)
