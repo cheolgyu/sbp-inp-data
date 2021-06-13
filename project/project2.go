@@ -18,8 +18,8 @@ func (p *Project2) Run(arg string) {
 	uf.Init()
 	company_run()
 	price_run()
-	high_point_run()
-	view_run()
+	//high_point_run()
+	//view_run()
 }
 
 func company_run() {
@@ -60,4 +60,11 @@ func price_run() {
 		EndDate:   end,
 	}
 	price.Processing()
+
+	// market := handler.PriceHandler{
+	// 	Object:    c.MARKET,
+	// 	StartDate: start,
+	// 	EndDate:   end,
+	// }
+	// market.Processing()
 }

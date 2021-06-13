@@ -86,9 +86,13 @@ $env:GOARCH = 'amd64'
 <details markdown="1">
 <summary>펼치기</summary>
 
++ 현재 할것
+   1. price 이어쓰기
+   2. bound_point 이어쓰기
+   3. bound_point 누적데이터 만들고 마지막 누적 일자에서 부터 계산후 이어쓰기.
+   4. bound_point 가 종가 기준계산했는데 저가,고가,종가 별로 나누기.
 
-+ 변수명 바꾸기
-   + bound_point => bound_point
+
 
    ```
    /*
@@ -273,6 +277,9 @@ redis와 api 연결지어 출력하기
 ## 작업한 기능
 <details markdown="1">
 <summary>펼치기</summary>
+
++ 변수명 바꾸기
+   + bound_point => bound_point
 
 + 프로젝트명 바꾸기.
    + STOCK

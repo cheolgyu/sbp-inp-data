@@ -31,7 +31,7 @@ func (o *PriceHandler) Processing() {
 	o.SetArray()
 }
 func (o *PriceHandler) SetArray() {
-	list := model.CodeArr[1:2]
+	list := model.CodeArr[1:]
 
 	for _, code := range list {
 		nc := download.NaverChart{
@@ -45,6 +45,8 @@ func (o *PriceHandler) SetArray() {
 
 		nc.Run()
 
+		// 이어쓰기 필요.
+
 		cd := nc.ChartData
 		f := utils.File{}
 		wf := f.CreateFile(o.writeDir + code)
@@ -53,7 +55,7 @@ func (o *PriceHandler) SetArray() {
 		file, err := os.OpenFile(o.writeDir+code, os.O_RDWR|os.O_APPEND, 0644)
 		check(err)
 
-		for _, item := range cd.List[:15] {
+		for _, item := range cd.List {
 			f.Write(file, item.CSV())
 		}
 

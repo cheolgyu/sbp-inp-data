@@ -40,5 +40,5 @@ var DownloadPrice bool
 
 func init() {
 	DownloadCompany = false
-	DownloadPrice = false
+	DownloadPrice = true
 }
