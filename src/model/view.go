@@ -1,8 +1,46 @@
 package model
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
 
-var CodeArr []string
+	"github.com/cheolgyu/stock-write/src/c"
+)
+
+var CodeArr CodeInfo = CodeInfo{
+	List: []string{},
+}
+
+type CodeInfo struct {
+	List []string
+}
+
+/*
+Load File c.DIR_COMPANY_DETAIL + c.DIR_FILENAME_COMPANY_DETAIL
+*/
+func (o *CodeInfo) Load() {
+	fnm := c.DIR_COMPANY_DETAIL + c.DIR_FILENAME_COMPANY_DETAIL
+	f, err := os.Open(fnm)
+	if err != nil {
+		panic(err)
+	}
+	reader := bufio.NewReader(f)
+	for {
+		line, isPrefix, err := reader.ReadLine()
+		if isPrefix || err != nil {
+			break
+		}
+		arr := strings.Split(string(line), ",")
+		code := arr[1]
+		o.List = append(o.List, code)
+
+	}
+	//제목 제외
+	o.List = o.List[1:]
+}
+
 var ViewInfo DataView
 
 func init() {

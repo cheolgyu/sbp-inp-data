@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"os"
+	"sync"
 
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/model"
@@ -27,38 +27,43 @@ func (o *PriceHandler) init() {
 	}
 }
 func (o *PriceHandler) Processing() {
+
 	o.init()
-	o.SetArray()
+	o.MakeCSV()
 }
-func (o *PriceHandler) SetArray() {
-	list := model.CodeArr[1:]
+func (o *PriceHandler) MakeCSV() {
+	list := model.CodeArr.List
 
+	wg := sync.WaitGroup{}
 	for _, code := range list {
-		nc := download.NaverChart{
-			StartDate: o.StartDate,
-			EndDate:   o.EndDate,
-			ChartData: download.ChartData{
-				Object: o.Object,
-				Code:   code,
-			},
+		wg.Add(1)
+		if code == "단축코드" {
+			panic("단축코드 발견")
 		}
+		go func(code string) {
+			defer wg.Done()
+			nc := download.NaverChart{
+				StartDate: o.StartDate,
+				EndDate:   o.EndDate,
+				ChartData: download.ChartData{
+					Object: o.Object,
+					Code:   code,
+				},
+			}
 
-		nc.Run()
+			nc.Run()
 
-		// 이어쓰기 필요.
+			uf := utils.File{}
+			//file := uf.CreateFile(o.writeDir + code)
+			file := uf.AppendFile(o.writeDir + code)
 
-		cd := nc.ChartData
-		f := utils.File{}
-		wf := f.CreateFile(o.writeDir + code)
-		wf.Close()
+			for _, item := range nc.ChartData.List {
+				uf.Write(file, item.CSV(o.Object))
+			}
 
-		file, err := os.OpenFile(o.writeDir+code, os.O_RDWR|os.O_APPEND, 0644)
-		check(err)
+			file.Close()
+		}(code)
 
-		for _, item := range cd.List {
-			f.Write(file, item.CSV())
-		}
-
-		wf.Close()
 	}
+	wg.Wait()
 }

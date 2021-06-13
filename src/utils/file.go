@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"os"
 
 	"github.com/cheolgyu/stock-write/src/c"
@@ -14,14 +15,23 @@ func (o *File) Write(f *os.File, text string) {
 	o.CheckError(err)
 }
 
+// 이어쓰기
+func (o *File) AppendFile(fileName string) *os.File {
+	file, err := os.OpenFile(fileName, c.FILE_FLAG_APPEND, 0644)
+	o.CheckError(err)
+	return file
+}
+
+// 새로쓰기
 func (o *File) CreateFile(fileName string) *os.File {
-	file, err := os.Create(fileName)
+	file, err := os.OpenFile(fileName, c.FILE_FLAG_TRUNC, 0644)
 	o.CheckError(err)
 	return file
 }
 
 func (o *File) CheckError(err error) {
 	if err != nil {
+		log.Fatalln(err)
 		panic(err)
 	}
 }

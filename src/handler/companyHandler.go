@@ -15,13 +15,12 @@ type CompanyHandler struct {
 }
 
 func (o *CompanyHandler) init() {
-	if c.DownloadCompany {
-		// 엑셀다운 (상세,상태)
-		download_data_krx := download.Data_krx{
-			Object: o.Object,
-		}
-		download_data_krx.Run()
+
+	// 엑셀다운 (상세,상태)
+	download_data_krx := download.Data_krx{
+		Object: o.Object,
 	}
+	download_data_krx.Run()
 	if o.Object == c.COMPANY_DETAIL {
 		o.downFile = c.DOWNLOAD_DIR_COMPANY_DETAIL + c.DOWNLOAD_FILENAME_COMPANY_DETAIL
 		o.writeFile = c.DIR_COMPANY_DETAIL + c.DIR_FILENAME_COMPANY_DETAIL
@@ -32,11 +31,18 @@ func (o *CompanyHandler) init() {
 }
 
 func (o *CompanyHandler) Processing() {
-	o.init()
-	o.SetArray()
+	if c.DownloadCompany {
+		o.init()
+		o.MakeCSV()
+	} else {
+		if o.Object == c.COMPANY_DETAIL {
+			model.CodeArr.Load()
+		}
+
+	}
 }
 
-func (o *CompanyHandler) SetArray() {
+func (o *CompanyHandler) MakeCSV() {
 
 	xlFile, err := xlsx.OpenFile(o.downFile)
 	if err != nil {
@@ -52,12 +58,14 @@ func (o *CompanyHandler) SetArray() {
 	for i := 0; i < sheet.MaxRow; i++ {
 		row, _ := sheet.Row(i)
 		code, content := model.RowGet(row)
-		if o.Object == c.COMPANY_DETAIL {
-			model.CodeArr = append(model.CodeArr, code)
-		} else if o.Object == c.COMPANY_STATE {
+		if o.Object == c.COMPANY_STATE {
 			model.ViewInfo.Set_state(code, model.String_to_company_state(content))
 		}
 		f.Write(wf, content)
+	}
+
+	if o.Object == c.COMPANY_DETAIL {
+		model.CodeArr.Load()
 	}
 
 }

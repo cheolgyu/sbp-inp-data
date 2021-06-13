@@ -50,12 +50,12 @@ func (o *ViewHandler) init() {
 */
 func (o *ViewHandler) Loop() {
 
-	f := utils.File{}
-	wf := f.CreateFile(o.writeFile)
-	defer wf.Close()
+	uf := utils.File{}
+	file := uf.AppendFile(o.writeFile)
+	defer file.Close()
 
 	for _, vp := range model.ViewInfo.List {
-		f.Write(wf, vp.Convert_csv())
+		uf.Write(file, vp.Convert_csv())
 	}
 
 }

@@ -1,5 +1,7 @@
 package c
 
+import "os"
+
 const DIR_COMPANY_DETAIL = "data/dataset/company_detail/"
 const DIR_COMPANY_STATE = "data/dataset/company_state/"
 const DIR_FILENAME_COMPANY_DETAIL = "company_detail.csv"
@@ -32,13 +34,16 @@ const MARKET = "market"
 const COMPANY_DETAIL = "company_detail"
 const COMPANY_STATE = "company_state"
 
-const REPEAT_CNT = 60
+const REPEAT_CNT = 80
 const REPEAT_STR = "-"
 
 var DownloadCompany bool
 var DownloadPrice bool
 
+const FILE_FLAG_APPEND = os.O_RDWR | os.O_CREATE | os.O_APPEND
+const FILE_FLAG_TRUNC = os.O_RDWR | os.O_CREATE | os.O_TRUNC
+
 func init() {
 	DownloadCompany = false
-	DownloadPrice = true
+	DownloadPrice = false
 }

@@ -17,8 +17,8 @@ func (p *Project2) Run(arg string) {
 	uf := utils.File{}
 	uf.Init()
 	company_run()
-	price_run()
-	//high_point_run()
+	//price_run()
+	high_point_run()
 	//view_run()
 }
 
