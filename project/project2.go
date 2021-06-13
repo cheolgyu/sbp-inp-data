@@ -16,13 +16,22 @@ func (p *Project2) Run(arg string) {
 
 	uf := utils.File{}
 	uf.Init()
+	company_run()
+	price_run()
+	high_point_run()
+	view_run()
+}
+
+func company_run() {
 	comp := handler.CompanyHandler{
 		Object: c.COMPANY_DETAIL,
 	}
 	comp.Processing()
-	price_run()
-	high_point_run()
-	view_run()
+
+	comp_state := handler.CompanyHandler{
+		Object: c.COMPANY_STATE,
+	}
+	comp_state.Processing()
 }
 
 func view_run() {
@@ -33,7 +42,7 @@ func view_run() {
 }
 
 func high_point_run() {
-	comp := handler.ReBoundHandler{
+	comp := handler.BoundHandler{
 		Object: c.PRICE,
 	}
 	comp.Processing()

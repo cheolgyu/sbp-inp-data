@@ -88,7 +88,7 @@ $env:GOARCH = 'amd64'
 
 
 + 변수명 바꾸기
-   + high_point => rebound_point
+   + bound_point => bound_point
 
    ```
    /*
@@ -98,8 +98,8 @@ $env:GOARCH = 'amd64'
          data/company_state/<code>.csv
          data/price/<code>.csv
          data/market/<code>.csv
-         data/high_point/price/<code>.csv
-         data/high_point/market/<code>.csv
+         data/bound_point/price/<code>.csv
+         data/bound_point/market/<code>.csv
 
          api-server는 읽기모드로 파일오픈 오류시 업데이트중 잠시후 오류 처리, 패닉뺴기
          dbment-server는 쓰기모드로 ㄱㄱ
@@ -142,7 +142,7 @@ $env:GOARCH = 'amd64'
                   market 저장
       */
       /*
-         //high_point 계산
+         //bound_point 계산
          data/price/code loop
             go highpoint(code)
                open data/price/code.csv
@@ -155,7 +155,7 @@ $env:GOARCH = 'amd64'
                      highpoint 저장
 
          data/market/code loop
-         high_point view_market loop
+         bound_point view_market loop
             go highpoint(code)
                open data/market/code.csv
                   100줄 읽고 닫기
@@ -171,12 +171,12 @@ $env:GOARCH = 'amd64'
       /*
          create_view
          data/price/code loop
-            code에 해당하는 high_point 데이터 꺼내고
+            code에 해당하는 bound_point 데이터 꺼내고
             code에 해당하는 state 데이터 꺼내고
             insert문 만들기
 
          data/market/code loop
-            code에 해당하는 high_point 데이터 꺼내고
+            code에 해당하는 bound_point 데이터 꺼내고
             code에 해당하는 state 데이터 꺼내고
             insert문 만들기
 
@@ -308,10 +308,10 @@ redis와 api 연결지어 출력하기
     + price,market
       + 컨트롤러 하나로
       + insert_or_update sql function 추가
-    + high_point 
+    + bound_point 
       + 컨트롤러 하나로 price,market 
       + table 칼럽명 수정
-      + high_point 찾는 sql 함수 golang으로?
+      + bound_point 찾는 sql 함수 golang으로?
     + 
   + data.json 과 info.json으로 나누기 (info.json) 먼저요청해서 updated_date 기준으로 다시요청하기.
   + sql price init/daily 함수 생성 (insert 내용이 배열로 있는경우)
@@ -429,7 +429,7 @@ naver_chart
 + 매수 매도 기능을 위한 예측선 구하기.
 
 ## 기타 아이디어
-+ 제목: 2차 거르기 방법: 1차로 걸러낸 high_point table의 하락 등락률 을 매일 내역에 저장한다. ( high_point_day_hist 내역 테이블 )  2차로 내역 테이블에서 많이 등장하는 종목명과 평균 하락률을 구하여 종목의 안정성을 평가한다.
++ 제목: 2차 거르기 방법: 1차로 걸러낸 bound_point table의 하락 등락률 을 매일 내역에 저장한다. ( high_point_day_hist 내역 테이블 )  2차로 내역 테이블에서 많이 등장하는 종목명과 평균 하락률을 구하여 종목의 안정성을 평가한다.
 + 제목: 지수(코스피, 코스닥, 나스닥, 기타 등등)에 따른 종목의 변동률 방법: 어제와 오늘의 종료시점의 변동률을 구하고 종목의 어제와 오늘의 변동률을 구한 다음 지수의 변동률 분해 종목의 변동률 * 100 을 하여 구하면 지수에 따른 종목의 변동률을 구한다.
 + 인터넷에 제무제표 보는 방법이 많다. 제무제표를 통해 기업의 안전성등을 수치로 계산할 수 있는데 그 계산식을 검색하여 적용해 보자.
 + 퍼센트가 높으면 수직 상증 중인 종목인것이니깐 몇일간 몇 퍼센트 연속 상승중인  뱃지를 달아놓고 몇일간 지속되는 순으로 정렬해서 보여주자.

@@ -12,12 +12,12 @@ import (
 	"github.com/cheolgyu/stock-write/src/model"
 )
 
-type ReBoundHandler struct {
+type BoundHandler struct {
 	Object   string
 	writeDir string
 }
 
-func (o *ReBoundHandler) init() {
+func (o *BoundHandler) init() {
 	if o.Object == c.PRICE {
 		o.writeDir = c.DIR_PRICE
 	} else if o.Object == c.MARKET {
@@ -25,13 +25,13 @@ func (o *ReBoundHandler) init() {
 	}
 }
 
-func (o *ReBoundHandler) Processing() {
+func (o *BoundHandler) Processing() {
 	o.init()
 	o.Loop()
 }
 
-func (o *ReBoundHandler) Loop() {
-	list := CodeArr[1:2]
+func (o *BoundHandler) Loop() {
+	list := model.CodeArr[1:2]
 
 	for _, code := range list {
 		fnm := o.writeDir + code
@@ -49,7 +49,7 @@ func (o *ReBoundHandler) Loop() {
 		}
 		res := rf.GetRead()
 		arr := string_to_price(res)
-		set_point(code, o.FindHighPoint(arr))
+		model.Set_point(code, o.FindHighPoint(arr))
 	}
 }
 
@@ -206,14 +206,14 @@ func check(e error) {
 		panic(e)
 	}
 }
-func (o *ReBoundHandler) FindHighPoint(arr []model.Price) model.Point {
-	var hp = model.Point{}
+func (o *BoundHandler) FindHighPoint(arr []model.Price) model.Point {
+	var bp = model.Point{}
 
 	loop_cnt := len(arr)
 	keep_cnt := 0
 
-	hp.X2 = uint(arr[0].Date)
-	hp.Y2 = arr[0].ClosePrice
+	bp.X2 = uint(arr[0].Date)
+	bp.Y2 = arr[0].ClosePrice
 
 	cur_p := arr[0].ClosePrice
 	ago_p := arr[0+1].ClosePrice
@@ -221,9 +221,9 @@ func (o *ReBoundHandler) FindHighPoint(arr []model.Price) model.Point {
 
 	for i := 0; i < loop_cnt-1; i++ {
 
-		hp.X1 = uint(arr[i].Date)
-		hp.Y1 = arr[i].ClosePrice
-		hp.X_tick = uint(keep_cnt)
+		bp.X1 = uint(arr[i].Date)
+		bp.Y1 = arr[i].ClosePrice
+		bp.X_tick = uint(keep_cnt)
 
 		cur_p := arr[i].ClosePrice
 		ago_p := arr[i+1].ClosePrice
@@ -252,9 +252,9 @@ func (o *ReBoundHandler) FindHighPoint(arr []model.Price) model.Point {
 		keep_cnt = keep_cnt + 1
 	}
 
-	hp.Y_minus = hp.Y2 - hp.Y1
-	hp.Y_Percent = float32(math.Round(float64(hp.Y2/hp.Y1*100*100)) / 100)
-	return hp
+	bp.Y_minus = bp.Y2 - bp.Y1
+	bp.Y_Percent = float32(math.Round(float64(bp.Y2/bp.Y1*100*100)) / 100)
+	return bp
 }
 
 func graph_way(cur_price float32, ago_price float32) string {

@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/cheolgyu/stock-write/src/utils"
@@ -19,10 +17,10 @@ type CompanyHandler struct {
 func (o *CompanyHandler) init() {
 	if c.DownloadCompany {
 		// 엑셀다운 (상세,상태)
-		company := download.Data_krx{
+		download_data_krx := download.Data_krx{
 			Object: o.Object,
 		}
-		company.Run()
+		download_data_krx.Run()
 	}
 	if o.Object == c.COMPANY_DETAIL {
 		o.downFile = c.DOWNLOAD_DIR_COMPANY_DETAIL + c.DOWNLOAD_FILENAME_COMPANY_DETAIL
@@ -51,16 +49,15 @@ func (o *CompanyHandler) SetArray() {
 
 	sheet := xlFile.Sheets[0]
 
-	fmt.Println("Max row is", sheet.MaxRow)
-
 	for i := 0; i < sheet.MaxRow; i++ {
 		row, _ := sheet.Row(i)
 		code, content := model.RowGet(row)
 		if o.Object == c.COMPANY_DETAIL {
-			CodeArr = append(CodeArr, code)
+			model.CodeArr = append(model.CodeArr, code)
 		} else if o.Object == c.COMPANY_STATE {
-			data_view.set_state(code, model.String_to_company_state(content))
+			model.ViewInfo.Set_state(code, model.String_to_company_state(content))
 		}
 		f.Write(wf, content)
 	}
+
 }

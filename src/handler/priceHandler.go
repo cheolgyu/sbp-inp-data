@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"fmt"
 	"os"
-	"strings"
 
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/model"
@@ -33,7 +31,7 @@ func (o *PriceHandler) Processing() {
 	o.SetArray()
 }
 func (o *PriceHandler) SetArray() {
-	list := CodeArr[1:2]
+	list := model.CodeArr[1:2]
 
 	for _, code := range list {
 		nc := download.NaverChart{
@@ -56,27 +54,9 @@ func (o *PriceHandler) SetArray() {
 		check(err)
 
 		for _, item := range cd.List[:15] {
-			f.Write(file, CSV(item))
+			f.Write(file, item.CSV())
 		}
 
 		wf.Close()
 	}
-}
-
-func CSV(p model.Price) string {
-	v := fmt.Sprintf("%v,%v,%v,%v,%v,%v,%v",
-		p.Date,
-		p.OpenPrice,
-		p.HighPrice,
-		p.LowPrice,
-		p.ClosePrice,
-		p.Volume,
-		p.ForeignerBurnoutRate,
-	)
-
-	if len(v) < c.REPEAT_CNT {
-		v += strings.Repeat(c.REPEAT_STR, c.REPEAT_CNT-len(v))
-	}
-
-	return v
 }

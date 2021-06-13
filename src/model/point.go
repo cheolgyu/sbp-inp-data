@@ -5,7 +5,7 @@ type HighPoint struct {
 	Point Point
 }
 
-// x1,y1 좌표가 high_point
+// x1,y1 좌표가 bound_point
 //x2,y2 는 현재 계산일
 type Point struct {
 	X1        uint
