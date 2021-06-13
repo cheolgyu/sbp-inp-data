@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cheolgyu/stock-write/src2/c"
-	"github.com/cheolgyu/stock-write/src2/mk"
-	"github.com/cheolgyu/stock-write/src2/utils"
+	"github.com/cheolgyu/stock-write/src/c"
+	"github.com/cheolgyu/stock-write/src/handler"
+	"github.com/cheolgyu/stock-write/src/utils"
 )
 
 type Project2 struct {
@@ -16,7 +16,7 @@ func (p *Project2) Run(arg string) {
 
 	uf := utils.File{}
 	uf.Init()
-	comp := mk.MakeCompany{
+	comp := handler.CompanyHandler{
 		Object: c.COMPANY_DETAIL,
 	}
 	comp.Processing()
@@ -26,14 +26,14 @@ func (p *Project2) Run(arg string) {
 }
 
 func view_run() {
-	comp := mk.MakeView{
+	comp := handler.ViewHandler{
 		Object: c.PRICE,
 	}
 	comp.Processing()
 }
 
 func high_point_run() {
-	comp := mk.MakeHihgPoint{
+	comp := handler.ReBoundHandler{
 		Object: c.PRICE,
 	}
 	comp.Processing()
@@ -45,7 +45,7 @@ func price_run() {
 	st := t.Add(time.Hour * 24 * 3 * -1)
 	start := fmt.Sprintf("%d%02d%02d", 1990, st.Month(), st.Day())
 
-	price := mk.MakePrice{
+	price := handler.PriceHandler{
 		Object:    c.PRICE,
 		StartDate: start,
 		EndDate:   end,

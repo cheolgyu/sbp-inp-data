@@ -1,175 +1,23 @@
-package mk
+package handler
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"math"
 	"os"
 	"strconv"
 	"strings"
 
-	"github.com/cheolgyu/stock-write/src2/c"
-	"github.com/cheolgyu/stock-write/src2/model"
-	"github.com/cheolgyu/stock-write/src2/utils"
-	"github.com/cheolgyu/stock-write/src2/utils/download"
-	xlsx "github.com/tealeg/xlsx/v3"
+	"github.com/cheolgyu/stock-write/src/c"
+	"github.com/cheolgyu/stock-write/src/model"
 )
 
-var CodeArr []string
-
-type DataView struct {
-	ViewPrice map[string]model.ViewPrice
-}
-
-func set_point(code string, inp model.Point) {
-	map_v_p := data_view.ViewPrice[code]
-	map_v_p.Point = inp
-	data_view.ViewPrice[code] = map_v_p
-}
-
-func (o *DataView) set_state(code string, inp model.CompanyState) {
-	vp := o.ViewPrice[code]
-	vp.State = inp
-}
-
-var data_view DataView
-
-func init() {
-	data_view.ViewPrice = make(map[string]model.ViewPrice)
-}
-
-type MakeCompany struct {
-	Object    string
-	downFile  string
-	writeFile string
-}
-
-func (o *MakeCompany) init() {
-	if c.DownloadCompany {
-		// 엑셀다운 (상세,상태)
-		company := download.Data_krx{
-			Object: o.Object,
-		}
-		company.Run()
-	}
-	if o.Object == c.COMPANY_DETAIL {
-		o.downFile = c.DOWNLOAD_DIR_COMPANY_DETAIL + c.DOWNLOAD_FILENAME_COMPANY_DETAIL
-		o.writeFile = c.DIR_COMPANY_DETAIL + c.DIR_FILENAME_COMPANY_DETAIL
-	} else if o.Object == c.COMPANY_STATE {
-		o.downFile = c.DOWNLOAD_DIR_COMPANY_STATE + c.DOWNLOAD_FILENAME_COMPANY_STATE
-		o.writeFile = c.DIR_COMPANY_STATE + c.DIR_FILENAME_COMPANY_STATE
-	}
-}
-
-func (o *MakeCompany) Processing() {
-	o.init()
-	o.SetArray()
-}
-
-func (o *MakeCompany) SetArray() {
-
-	xlFile, err := xlsx.OpenFile(o.downFile)
-	if err != nil {
-		panic(err)
-	}
-
-	f := utils.File{}
-	wf := f.CreateFile(o.writeFile)
-	defer wf.Close()
-
-	sheet := xlFile.Sheets[0]
-
-	fmt.Println("Max row is", sheet.MaxRow)
-
-	for i := 0; i < sheet.MaxRow; i++ {
-		row, _ := sheet.Row(i)
-		code, content := model.RowGet(row)
-		if o.Object == c.COMPANY_DETAIL {
-			CodeArr = append(CodeArr, code)
-		} else if o.Object == c.COMPANY_STATE {
-			data_view.set_state(code, model.String_to_company_state(content))
-		}
-		f.Write(wf, content)
-	}
-}
-
-type MakePrice struct {
-	StartDate string
-	EndDate   string
-	Object    string
-	downDir   string
-	writeDir  string
-}
-
-func (o *MakePrice) init() {
-	if o.Object == c.PRICE {
-		o.downDir = c.DOWNLOAD_DIR_PRICE
-		o.writeDir = c.DIR_PRICE
-	} else if o.Object == c.MARKET {
-		o.downDir = c.DOWNLOAD_DIR_MARKET
-		o.writeDir = c.DIR_MARKET
-	}
-}
-func (o *MakePrice) Processing() {
-	o.init()
-	o.SetArray()
-}
-func (o *MakePrice) SetArray() {
-	list := CodeArr[1:2]
-
-	for _, code := range list {
-		nc := download.NaverChart{
-			StartDate: o.StartDate,
-			EndDate:   o.EndDate,
-			ChartData: download.ChartData{
-				Object: o.Object,
-				Code:   code,
-			},
-		}
-
-		nc.Run()
-
-		cd := nc.ChartData
-		f := utils.File{}
-		wf := f.CreateFile(o.writeDir + code)
-		wf.Close()
-
-		file, err := os.OpenFile(o.writeDir+code, os.O_RDWR|os.O_APPEND, 0644)
-		check(err)
-
-		for _, item := range cd.List[:15] {
-			f.Write(file, CSV(item))
-		}
-
-		wf.Close()
-	}
-}
-
-func CSV(p model.Price) string {
-	v := fmt.Sprintf("%v,%v,%v,%v,%v,%v,%v",
-		p.Date,
-		p.OpenPrice,
-		p.HighPrice,
-		p.LowPrice,
-		p.ClosePrice,
-		p.Volume,
-		p.ForeignerBurnoutRate,
-	)
-
-	if len(v) < c.REPEAT_CNT {
-		v += strings.Repeat(c.REPEAT_STR, c.REPEAT_CNT-len(v))
-	}
-
-	return v
-}
-
-type MakeHihgPoint struct {
+type ReBoundHandler struct {
 	Object   string
 	writeDir string
 }
 
-func (o *MakeHihgPoint) init() {
+func (o *ReBoundHandler) init() {
 	if o.Object == c.PRICE {
 		o.writeDir = c.DIR_PRICE
 	} else if o.Object == c.MARKET {
@@ -177,12 +25,12 @@ func (o *MakeHihgPoint) init() {
 	}
 }
 
-func (o *MakeHihgPoint) Processing() {
+func (o *ReBoundHandler) Processing() {
 	o.init()
 	o.Loop()
 }
 
-func (o *MakeHihgPoint) Loop() {
+func (o *ReBoundHandler) Loop() {
 	list := CodeArr[1:2]
 
 	for _, code := range list {
@@ -358,7 +206,7 @@ func check(e error) {
 		panic(e)
 	}
 }
-func (o *MakeHihgPoint) FindHighPoint(arr []model.Price) model.Point {
+func (o *ReBoundHandler) FindHighPoint(arr []model.Price) model.Point {
 	var hp = model.Point{}
 
 	loop_cnt := len(arr)
@@ -421,67 +269,4 @@ func graph_way(cur_price float32, ago_price float32) string {
 		panic("머냐")
 	}
 	return g_way
-}
-
-type MakeView struct {
-	Object   string
-	v_market []interface{}
-	v_price  []interface{}
-}
-
-func (o *MakeView) Processing() {
-	o.init()
-	o.Loop()
-}
-
-/*
-view용 데이터 변환.
-일반 변수(소트용), 포맷 적용 변수 나누기.
-*/
-func (o *MakeView) init() {
-	for _, m := range model.MarketList {
-		vp := data_view.ViewPrice
-		view_price := vp[m]
-		view_price.Code = m
-		view_price.Name = m
-		//data, _ := json.MarshalIndent(view_price, "", "  ")
-		data, _ := json.Marshal(view_price)
-		o.v_market = append(o.v_market, string(data))
-		delete(data_view.ViewPrice, m)
-	}
-
-	for _, vp := range data_view.ViewPrice {
-		//fmt.Println(vp)
-
-		data, _ := json.MarshalIndent(vp, "", "  ")
-		//data, _ := json.Marshal(vp)
-		println(string(data))
-		o.v_price = append(o.v_price, string(data))
-	}
-
-}
-func (o *MakeView) SetArray() {
-
-}
-
-/*
-변환된 view용 변수를 db에 저장or update 시키기 위한 sql파일생성하기.
-*/
-func (o *MakeView) Loop() {
-	fmt.Println("==========MakeView===========")
-	fmt.Println((o.v_market))
-	fmt.Println("==========MakeView===========")
-	fmt.Println((o.v_price))
-
-}
-
-func (o *MakeView) MakeSql() {
-
-}
-
-/*
-생성된 sql파일 실행시키기.
-*/
-func (o *MakeView) Insert() {
-
 }

@@ -3,7 +3,7 @@ package utils
 import (
 	"os"
 
-	"github.com/cheolgyu/stock-write/src2/c"
+	"github.com/cheolgyu/stock-write/src/c"
 )
 
 type File struct{}
