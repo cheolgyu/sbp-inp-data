@@ -22,9 +22,9 @@ view용 데이터 변환.
 */
 func (o *ViewHandler) init() {
 	if o.Object == c.PRICE {
-		o.writeFile = c.DIR_BOUND + c.DIR_BOUND_FILENAME_PRICE
+		o.writeFile = c.DIR_BOUND_PRICE
 	} else if o.Object == c.MARKET {
-		o.writeFile = c.DIR_BOUND + c.DIR_BOUND_FILENAME_MARKET
+		o.writeFile = c.DIR_BOUND_MARKET
 	}
 }
 

@@ -9,9 +9,9 @@ const DIR_FILENAME_COMPANY_STATE = "company_state.csv"
 const DIR_PRICE = "data/dataset/price/"
 const DIR_MARKET = "data/dataset/market/"
 const DIR_BOUND = "data/dataset/bound/"
+const DIR_BOUND_PRICE = DIR_BOUND + "price/"
+const DIR_BOUND_MARKET = DIR_BOUND + "market/"
 const DIR_BOUND_FILENAME_INFO = "info.csv"
-const DIR_BOUND_FILENAME_PRICE = "price.csv"
-const DIR_BOUND_FILENAME_MARKET = "market.csv"
 
 const DOWNLOAD_URL_COMPANY_DETAIL_CODE = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd"
 const DOWNLOAD_URL_COMPANY_DETAIL_DATA = "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd"
@@ -29,13 +29,17 @@ const DOWNLOAD_FILENAME_COMPANY_STATE = "company_state.xlsx"
 const DOWNLOAD_DIR_PRICE = "data/download/price/"
 const DOWNLOAD_DIR_MARKET = "data/download/market/"
 
+const BOUND = "bound"
 const PRICE = "price"
 const MARKET = "market"
 const COMPANY_DETAIL = "company_detail"
 const COMPANY_STATE = "company_state"
 
-const REPEAT_CNT = 80
-const REPEAT_STR = "-"
+const REPEAT_CNT_PRICE = 80
+const REPEAT_STR_PRICE = "-"
+
+const REPEAT_CNT_BOUND = 60
+const REPEAT_STR_BOUND = "-"
 
 var DownloadCompany bool
 var DownloadPrice bool
@@ -43,7 +47,20 @@ var DownloadPrice bool
 const FILE_FLAG_APPEND = os.O_RDWR | os.O_CREATE | os.O_APPEND
 const FILE_FLAG_TRUNC = os.O_RDWR | os.O_CREATE | os.O_TRUNC
 
+const G_TYPE_LOW = "low"
+const G_TYPE_HIGH = "high"
+const G_TYPE_CLOSE = "close"
+const G_TYPE_OPEN = "open"
+
+var G_TYPE map[string]string
+
 func init() {
 	DownloadCompany = false
 	DownloadPrice = false
+
+	G_TYPE = make(map[string]string)
+	G_TYPE[G_TYPE_LOW] = G_TYPE_LOW
+	G_TYPE[G_TYPE_HIGH] = G_TYPE_HIGH
+	G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
+	G_TYPE[G_TYPE_OPEN] = G_TYPE_OPEN
 }

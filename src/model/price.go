@@ -39,8 +39,8 @@ func (o *Price) CSV(object string) string {
 		o.ForeignerBurnoutRate,
 	)
 
-	if len(v) < c.REPEAT_CNT {
-		v += strings.Repeat(c.REPEAT_STR, c.REPEAT_CNT-len(v))
+	if len(v) < c.REPEAT_CNT_PRICE {
+		v += strings.Repeat(c.REPEAT_STR_PRICE, c.REPEAT_CNT_PRICE-len(v))
 	}
 
 	return v

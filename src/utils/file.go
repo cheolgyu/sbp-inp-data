@@ -3,11 +3,19 @@ package utils
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/cheolgyu/stock-write/src/c"
 )
 
 type File struct{}
+
+func (o *File) Open(fileName string) *os.File {
+	file, err := os.Open(fileName)
+
+	o.CheckError(err)
+	return file
+}
 
 func (o *File) Write(f *os.File, text string) {
 	_, err := f.WriteString(text + "\n")
@@ -17,7 +25,22 @@ func (o *File) Write(f *os.File, text string) {
 
 // 이어쓰기
 func (o *File) AppendFile(fileName string) *os.File {
+	log.Println("파일명 :", fileName)
 	file, err := os.OpenFile(fileName, c.FILE_FLAG_APPEND, 0644)
+	if os.IsNotExist(err) {
+		log.Println("파일이 없네 :", fileName)
+		arr := strings.Split(fileName, "/")
+		dir := ""
+		for i := 0; i < len(arr)-1; i++ {
+			dir = dir + arr[i] + "/"
+		}
+		if err := os.MkdirAll(dir, 0644); err != nil {
+			panic(err)
+		}
+		os.Create(fileName)
+
+		file, err = os.OpenFile(fileName, c.FILE_FLAG_APPEND, 0644)
+	}
 	o.CheckError(err)
 	return file
 }

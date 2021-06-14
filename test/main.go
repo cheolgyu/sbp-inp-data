@@ -11,8 +11,22 @@ var filename = "test/hello5.test"
 var file_flag = os.O_RDWR | os.O_CREATE | os.O_APPEND
 var file_flag2 = os.O_RDWR | os.O_CREATE | os.O_TRUNC
 
+func t3() {
+	fmt.Println("오브젝트 프로퍼티 동적 접근")
+	type aa struct {
+		A string
+		B string
+	}
+	abc := aa{}
+	abc.A = "에이"
+	abc.B = "비"
+	//abc["A"] = "A"
+	fmt.Println(abc.A)
+	fmt.Println(abc.B)
+}
+
 func t2() {
-	fmt.Println("Hello, playground")
+	fmt.Println(" float 포맷")
 	test := 1014285
 
 	tt := fmt.Sprintf("%v", test)
@@ -27,7 +41,7 @@ func t2() {
 	fmt.Println(tt2)
 }
 func main() {
-	t2()
+	t3()
 }
 func www() {
 

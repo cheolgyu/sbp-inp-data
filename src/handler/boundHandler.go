@@ -7,6 +7,7 @@ import (
 
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/cheolgyu/stock-write/src/utils"
 )
 
 /*
@@ -36,16 +37,22 @@ data/dataset/bound_point/<code>/종가
 
 */
 type BoundHandler struct {
-	Object  string
-	readDir string
+	Object string
+	// 종가, 저가,고가 low,high,close,open
+	G_type   string
+	readDir  string
+	boundDir string
 }
 
 func (o *BoundHandler) init() {
 	if o.Object == c.PRICE {
 		o.readDir = c.DIR_PRICE
+		o.boundDir = c.DIR_BOUND_PRICE
 	} else if o.Object == c.MARKET {
 		o.readDir = c.DIR_MARKET
+		o.boundDir = c.DIR_BOUND_MARKET
 	}
+
 }
 
 func (o *BoundHandler) Processing() {
@@ -79,42 +86,74 @@ func (o *BoundHandler) Processing() {
 func (o *BoundHandler) Loop() {
 	list := model.CodeArr.List
 	//	wg := sync.WaitGroup{}
-	for _, code := range list {
+	for _, code := range list[:1] {
 		//wg.Add(1)
 		func(code string) {
 			//defer wg.Done()
 
 			// code에 해당하는 bound_point파일의 마지막 줄에서  일자 뽑기
-
 			// 고가, 저가, 종가 별 일자중 제일 작은 일자를 선택해
 			// 가격조회 시작일 선정하기
+			start_date := 0
 
+			f_bound_gtype_arr := []*os.File{}
+			for k := range c.G_TYPE {
+				fnm := o.boundDir + code + "/" + k
+				uf := utils.File{}
+				f := uf.AppendFile(fnm)
+				f_bound_gtype_arr = append(f_bound_gtype_arr, f)
+			}
+			//find start_date for price file search
+			for _, f := range f_bound_gtype_arr {
+
+				rf := model.ReadFile{
+					Object: c.BOUND,
+					Whence: os.SEEK_END,
+					InFile: f,
+				}
+				arr := rf.GetLastLine()
+				if len(arr) > 0 {
+					p := model.StringToPoint(arr[0])
+					if int(p.X1) < start_date {
+						start_date = int(p.X1)
+					}
+				} else {
+					start_date = 0
+					break
+				}
+
+			}
 			// 가격 조회: 시작일 기준  한번에 다하자 귀찮다.
 			// 시작일 부터 마지막일 까지 가격목록 생성
+
+			//		start_date 이후 부터 가격 목록 조회.
+			uf := utils.File{}
+			f_price := uf.Open(o.readDir + code)
+			rf := model.ReadFile{
+				Object: c.PRICE,
+				Whence: os.SEEK_SET,
+				InFile: f_price,
+			}
+
+			res := rf.GetList(start_date)
+			arr := string_to_price(res)
+			log.Println(arr[:3])
+			log.Println("가격 시작일:", start_date, "가격목록수=", len(arr))
+			//		가격목록 가지고 bound_point파일 쓰기 시작.
+			MakeCSV(f_bound_gtype_arr, arr)
+
+			// 찾을 bound_point가 g_type별로 시작 위치가 다름.
+			// 최소 시작일 부터 가격목록을 가져왔지만
+			// find bound point에서는 gtype별로 시작을 부터 시작해야됨.
+			// 그래서  gtye 별 시작일, price목록, file 쓰기
+			// FindHighPoint(arr)
+
 			// 가격 목록을 find_high_point(code,<고가,저가,종가>)에 주기.
 			// find_high_point는 찾는경우 한줄씩 파일에 내용 추가하고.
 			// 종료.
 			// 결국 이 핸들러는 bound_point csv 만드는 함수.
 			// 이 데이터를 어떻게 쓸지는 고민해 봐야겠네.
 
-			// bound_point
-			f, e := os.Open(o.readDir + code)
-			check(e)
-			defer f.Close()
-			//fmt.Printf("FNM: ./%s\n", fnm)
-
-			p := 1
-			r := 30
-
-			rf := model.ReadFile{
-				InPage: p,
-				InRows: r,
-				InFile: f,
-			}
-			res := rf.GetRead()
-			arr := string_to_price(res)
-			log.Println(o.readDir + code)
-			model.Set_point(code, FindHighPoint(arr))
 		}(code)
 
 	}
@@ -124,10 +163,13 @@ func (o *BoundHandler) Loop() {
 func string_to_price(list []string) []model.Price {
 	res := []model.Price{}
 
-	for i := len(list) - 1; i >= 0; i-- {
-		res = append(res, model.StringToPrice(list[i]))
-	}
+	// for i := len(list) - 1; i >= 0; i-- {
+	// 	res = append(res, model.StringToPrice(list[i]))
+	// }
 
+	for _, p := range list {
+		res = append(res, model.StringToPrice(p))
+	}
 	return res
 }
 
@@ -135,6 +177,17 @@ func check(e error) {
 	if e != nil {
 		log.Fatalln(e)
 		panic(e)
+	}
+}
+
+func MakeCSV(f_arr []*os.File, arr []model.Price) {
+	for i := 0; i < len(f_arr); i++ {
+		f := f_arr[i]
+		fs, _ := f.Stat()
+		g_type := fs.Name()
+
+		FindHighPoint_out(g_type, arr, f)
+
 	}
 }
 func FindHighPoint(arr []model.Price) model.Point {
@@ -188,7 +241,94 @@ func FindHighPoint(arr []model.Price) model.Point {
 
 	bp.Y_minus = bp.Y2 - bp.Y1
 	bp.Y_Percent = float32(math.Round(float64(bp.Y2/bp.Y1*100*100)) / 100)
+
 	return bp
+}
+
+func SwitchPrice(g_type string, p model.Price) float32 {
+
+	switch g_type {
+	case c.G_TYPE_LOW:
+		return p.LowPrice
+	case c.G_TYPE_HIGH:
+		return p.HighPrice
+	case c.G_TYPE_CLOSE:
+		return p.ClosePrice
+	default:
+		//c.G_TYPE_OPEN
+		return p.OpenPrice
+
+	}
+}
+
+func FindHighPoint_out(g_type string, arr []model.Price, f *os.File) {
+	log.Println("FindHighPoint_out 시작", g_type)
+	loop_cnt := len(arr)
+	if loop_cnt <= 1 {
+		return
+	}
+
+	keep_cnt := 0
+	start_X1 := uint(arr[0].Date)
+	start_Y1 := SwitchPrice(g_type, arr[0])
+
+	cur_p := SwitchPrice(g_type, arr[0])
+	ago_p := SwitchPrice(g_type, arr[0+1])
+	cur_g_way := graph_way(cur_p, ago_p)
+
+	for i := 0; i < loop_cnt-1; i++ {
+		p_cur := SwitchPrice(g_type, arr[i])
+		p_age := SwitchPrice(g_type, arr[i+1])
+		res := FindHighPoint_in(p_cur, p_age, cur_g_way)
+		if res == false {
+			keep_cnt++
+		} else {
+			//bound 포인트 찾음.
+			var bp = model.Point{}
+			bp.X1 = start_X1
+			bp.Y1 = start_Y1
+
+			bp.X2 = uint(arr[i].Date)
+			bp.Y2 = SwitchPrice(g_type, arr[i])
+			bp.X_tick = uint(keep_cnt)
+			bp.Y_minus = bp.Y2 - bp.Y1
+			bp.Y_Percent = float32(math.Round(float64(bp.Y1/bp.Y2*100)) / 100)
+
+			// 파일쓰기.
+			uf := utils.File{}
+			uf.Write(f, bp.CSV())
+
+			// 이어쓰기 위해 갱신
+			start_X1 = uint(arr[i].Date)
+			start_Y1 = SwitchPrice(g_type, arr[i])
+			keep_cnt = 0
+			cur_p = SwitchPrice(g_type, arr[i])
+			ago_p = SwitchPrice(g_type, arr[i+1])
+			cur_g_way = graph_way(cur_p, ago_p)
+		}
+	}
+}
+
+func FindHighPoint_in(p_cur float32, p_age float32, cur_g_way string) bool {
+	switch cur_g_way {
+	case "eq":
+		if p_cur > p_age {
+			cur_g_way = "down"
+		} else if p_cur < p_age {
+			cur_g_way = "up"
+		}
+
+	}
+	exit1 := cur_g_way == "down" && p_cur > p_age
+	exit2 := cur_g_way == "up" && p_cur < p_age
+
+	if exit1 || exit2 {
+		// log.Println("exit1=", exit1)
+		// log.Println("exit2=", exit2)
+		// log.Println("exit3=", exit3)
+		return true
+	}
+	return false
 }
 
 func graph_way(cur_price float32, ago_price float32) string {
