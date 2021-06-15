@@ -65,7 +65,7 @@ func (o *ReadFile) GetList(startDate int) []string {
 	o.loadFileInfo()
 	o.SetSeekOffset_List(startDate)
 	//log.Println(fmt.Sprintf("SetSeekOffset_List: %#v \n", o))
-	res = o.Loop()
+	res = o.readLineLoop()
 	return res
 }
 
@@ -73,10 +73,11 @@ func (o *ReadFile) GetList(startDate int) []string {
 	마지막줄 조회
 */
 func (o *ReadFile) GetLastLine() []string {
+	o.Whence = os.SEEK_END
 	res := []string{}
 	o.loadFileInfo()
 	if o.SetBufferLastLine() {
-		res = o.Loop()
+		res = o.readLineLoop()
 	}
 	return res
 }
@@ -88,7 +89,7 @@ func (o *ReadFile) GetPaging() []string {
 	res := []string{}
 	o.loadFileInfo()
 	if o.SetBufferPaging() {
-		res = o.Loop()
+		res = o.readLineLoop()
 	}
 	return res
 }
@@ -103,7 +104,8 @@ func (o *ReadFile) setSeekOffset() []byte {
 	}
 	arr := make([]byte, o.readBuffer.read_size)
 	if _, err := o.InFile.Read(arr); err != nil {
-		log.Println("파일 읽기 실패: setSeekOffset: seek 부터 읽기 실패")
+		log.Println("파일 읽기 실패: setSeekOffset: seek ")
+		fmt.Printf("ReadFile : %#v \n", o)
 		check(err)
 	}
 
@@ -143,7 +145,10 @@ func (o *ReadFile) readLine(rbuf []byte) string {
 	return res
 }
 
-func (o *ReadFile) Loop() []string {
+/*
+	한줄 읽기 반복문
+*/
+func (o *ReadFile) readLineLoop() []string {
 	res := []string{}
 	arr := o.setSeekOffset()
 
@@ -159,7 +164,10 @@ func (o *ReadFile) Loop() []string {
 	return res
 }
 
-func (o *ReadFile) FindSeekOffset() int {
+/*
+	특정일 이후 목록 반환하기 위해 사용하는 부분함수
+*/
+func (o *ReadFile) SetSeekOffset_List_Get() int {
 
 	arr := o.setSeekOffset()
 	str := o.readLine(arr)
@@ -175,36 +183,62 @@ func (o *ReadFile) FindSeekOffset() int {
 */
 func (o *ReadFile) SetSeekOffset_List(start_date int) {
 
-	start := (o.total_rows / 2) * o.row_buffer
-	end := start + o.row_buffer
-	size := o.row_buffer
-	seek_offset := int64(o.total_buffer-start) * -1
 	if start_date != 0 {
-		log.Println(start_date, "가 어디에 있을까?")
+		p_start := 0
+		p_end := o.total_buffer
+		size := o.row_buffer
+		seek_offset := &o.readBuffer.seek_offset_point
+		offset := *seek_offset
+		offset = int64(o.total_rows * o.row_buffer * -1 / 2)
+		o.Whence = os.SEEK_END
+
+		//log.Println("??:", offset)
+		//log.Println(start_date, "가 어디에 있을까?")
+		idx := 0
 		for {
+			idx++
+			if o.total_buffer < idx {
+				log.Println("너무 많이 반복함.")
+				break
+			}
+			if offset%int64(o.row_buffer) != 0 {
+				log.Println("offset이 한줄이 안됨.")
+				break
+			}
+
 			o.readBuffer.set(
-				start,
-				end,
+				0,
+				0,
 				size,
-				seek_offset,
+				offset,
 			)
-			line0 := o.FindSeekOffset()
+			line0 := o.SetSeekOffset_List_Get()
+			//log.Println("찾는값:", start_date, ",찾은값", line0)
+			next_lines := offset / int64(o.row_buffer)
+			select_line := next_lines / 2
+
+			if p_end < p_start {
+				select_line = next_lines / 3
+			}
+			select_buffer := select_line * int64(o.row_buffer)
 
 			if line0 < start_date {
-				start = start - start/2
-				end = start + o.row_buffer
-				seek_offset = int64(o.total_buffer-start) * -1
+				p_start = int(offset * -1)
+				offset = int64(offset - select_buffer)
+
 			} else if line0 > start_date {
-				start = start + start/2
-				end = start + o.row_buffer
-				seek_offset = int64(o.total_buffer-start) * -1
-			} else {
-				end = o.total_buffer
+				p_end = int(offset * -1)
+				offset = int64(offset + select_buffer)
+
+			}
+
+			if start_date == line0 {
+				o.readBuffer.read_size = o.total_buffer + int(offset)
 				break
 			}
 		}
 	} else {
-
+		o.Whence = os.SEEK_SET
 		o.readBuffer.set(
 			0,
 			o.total_buffer,
@@ -212,7 +246,7 @@ func (o *ReadFile) SetSeekOffset_List(start_date int) {
 			0,
 		)
 
-		log.Println("전부조회네", o.readBuffer)
+		//log.Println("전부조회네", o.readBuffer)
 	}
 
 }
@@ -227,10 +261,10 @@ func (o *ReadFile) SetBufferLastLine() bool {
 	}
 
 	o.readBuffer.set(
-		o.total_buffer-o.row_buffer,
-		o.total_buffer,
+		0,
+		0,
 		o.row_buffer,
-		int64(o.total_buffer-o.row_buffer)*-1,
+		int64(o.row_buffer)*-1,
 	)
 
 	return true

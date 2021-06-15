@@ -41,8 +41,37 @@ func t2() {
 	fmt.Println(tt2)
 }
 func main() {
-	t3()
+	www2()
 }
+
+func www2() {
+
+	fmt.Println("마지막줄만 덮어쓰기 ")
+	f, err := os.OpenFile(filename, os.O_RDWR, 0644)
+	if err != nil {
+		fmt.Println("이어 쓰기 테스트 오류1")
+		log.Fatalln(err)
+	}
+	defer f.Close()
+	fs, _ := f.Stat()
+	fsize := fs.Size()
+
+	line_size := 6
+	offset := fsize - int64(line_size)
+	//seek := int64(line_size)
+	// if _, err = f.Seek(seek, os.SEEK_END); err != nil {
+	// 	fmt.Println(err)
+	// }
+	//fmt.Println(f)
+	str := "test6\n"
+	//Write(f, str)
+	if _, err := f.WriteAt([]byte(str), offset); err != nil {
+		panic(err)
+	}
+	//_, err = f.WriteString(str + "\n")
+	//check(err)
+}
+
 func www() {
 
 	fmt.Println("이어 쓰기 테스트 ")

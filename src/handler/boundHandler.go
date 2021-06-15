@@ -60,6 +60,15 @@ func (o *BoundHandler) Processing() {
 	o.Loop()
 }
 
+type GTYPE struct {
+	f         *os.File
+	fnm       string
+	code      string
+	price_dir string
+	G_TYPE    string
+	StartDate int
+}
+
 /*
 	1. bound_point 마지막 줄 읽기.
 
@@ -86,73 +95,42 @@ func (o *BoundHandler) Processing() {
 func (o *BoundHandler) Loop() {
 	list := model.CodeArr.List
 	//	wg := sync.WaitGroup{}
-	for _, code := range list[:1] {
+	for _, code := range list {
 		//wg.Add(1)
 		func(code string) {
 			//defer wg.Done()
 
 			// code에 해당하는 bound_point파일의 마지막 줄에서  일자 뽑기
 			// 고가, 저가, 종가 별 일자중 제일 작은 일자를 선택해
-			// 가격조회 시작일 선정하기
-			start_date := 0
 
-			f_bound_gtype_arr := []*os.File{}
+			f_bound_gtype_arr := []GTYPE{}
 			for k := range c.G_TYPE {
-				fnm := o.boundDir + code + "/" + k
+				g := GTYPE{}
+				g.code = code
+				g.price_dir = o.readDir + code
 				uf := utils.File{}
-				f := uf.AppendFile(fnm)
-				f_bound_gtype_arr = append(f_bound_gtype_arr, f)
+				g.fnm = o.boundDir + code + "/" + k
+				g.f = uf.AppendFile(g.fnm)
+				g.G_TYPE = k
+				f_bound_gtype_arr = append(f_bound_gtype_arr, g)
 			}
-			//find start_date for price file search
-			for _, f := range f_bound_gtype_arr {
-
+			// 가격 시작일자 찾기
+			for i := range f_bound_gtype_arr {
+				item := &f_bound_gtype_arr[i]
 				rf := model.ReadFile{
 					Object: c.BOUND,
-					Whence: os.SEEK_END,
-					InFile: f,
+					InFile: item.f,
 				}
 				arr := rf.GetLastLine()
+				//log.Println("마지막줄: ", arr)
 				if len(arr) > 0 {
 					p := model.StringToPoint(arr[0])
-					if int(p.X1) < start_date {
-						start_date = int(p.X1)
-					}
-				} else {
-					start_date = 0
-					break
+					item.StartDate = int(p.X1)
+					//log.Println("시작일: ", item.StartDate)
 				}
-
-			}
-			// 가격 조회: 시작일 기준  한번에 다하자 귀찮다.
-			// 시작일 부터 마지막일 까지 가격목록 생성
-
-			//		start_date 이후 부터 가격 목록 조회.
-			uf := utils.File{}
-			f_price := uf.Open(o.readDir + code)
-			rf := model.ReadFile{
-				Object: c.PRICE,
-				Whence: os.SEEK_SET,
-				InFile: f_price,
 			}
 
-			res := rf.GetList(start_date)
-			arr := string_to_price(res)
-			log.Println(arr[:3])
-			log.Println("가격 시작일:", start_date, "가격목록수=", len(arr))
-			//		가격목록 가지고 bound_point파일 쓰기 시작.
-			MakeCSV(f_bound_gtype_arr, arr)
-
-			// 찾을 bound_point가 g_type별로 시작 위치가 다름.
-			// 최소 시작일 부터 가격목록을 가져왔지만
-			// find bound point에서는 gtype별로 시작을 부터 시작해야됨.
-			// 그래서  gtye 별 시작일, price목록, file 쓰기
-			// FindHighPoint(arr)
-
-			// 가격 목록을 find_high_point(code,<고가,저가,종가>)에 주기.
-			// find_high_point는 찾는경우 한줄씩 파일에 내용 추가하고.
-			// 종료.
-			// 결국 이 핸들러는 bound_point csv 만드는 함수.
-			// 이 데이터를 어떻게 쓸지는 고민해 봐야겠네.
+			MakeCSV(f_bound_gtype_arr)
 
 		}(code)
 
@@ -180,14 +158,9 @@ func check(e error) {
 	}
 }
 
-func MakeCSV(f_arr []*os.File, arr []model.Price) {
-	for i := 0; i < len(f_arr); i++ {
-		f := f_arr[i]
-		fs, _ := f.Stat()
-		g_type := fs.Name()
-
-		FindHighPoint_out(g_type, arr, f)
-
+func MakeCSV(g_arr []GTYPE) {
+	for i := 0; i < len(g_arr); i++ {
+		FindHighPoint_out(g_arr[i])
 	}
 }
 func FindHighPoint(arr []model.Price) model.Point {
@@ -261,8 +234,25 @@ func SwitchPrice(g_type string, p model.Price) float32 {
 	}
 }
 
-func FindHighPoint_out(g_type string, arr []model.Price, f *os.File) {
-	log.Println("FindHighPoint_out 시작", g_type)
+func FindHighPoint_out(item GTYPE) {
+	fs, _ := item.f.Stat()
+	fsize := fs.Size()
+	uf := utils.File{}
+	f_price := uf.Open(item.price_dir)
+	//log.Println(item.price_dir)
+	rf := model.ReadFile{
+		Object: c.PRICE,
+		InFile: f_price,
+	}
+
+	res := rf.GetList(item.StartDate)
+	arr := string_to_price(res)
+	//log.Println("가격 시작일:", item.StartDate, "가격목록수=", len(arr))
+	//log.Println(arr)
+
+	g_type := item.G_TYPE
+
+	//log.Println("FindHighPoint_out 시작", g_type)
 	loop_cnt := len(arr)
 	if loop_cnt <= 1 {
 		return
@@ -276,13 +266,16 @@ func FindHighPoint_out(g_type string, arr []model.Price, f *os.File) {
 	ago_p := SwitchPrice(g_type, arr[0+1])
 	cur_g_way := graph_way(cur_p, ago_p)
 
+	write_cnt := 0
 	for i := 0; i < loop_cnt-1; i++ {
+
 		p_cur := SwitchPrice(g_type, arr[i])
 		p_age := SwitchPrice(g_type, arr[i+1])
 		res := FindHighPoint_in(p_cur, p_age, cur_g_way)
 		if res == false {
 			keep_cnt++
 		} else {
+
 			//bound 포인트 찾음.
 			var bp = model.Point{}
 			bp.X1 = start_X1
@@ -296,7 +289,12 @@ func FindHighPoint_out(g_type string, arr []model.Price, f *os.File) {
 
 			// 파일쓰기.
 			uf := utils.File{}
-			uf.Write(f, bp.CSV())
+			str := bp.CSV()
+			if fsize != 0 && write_cnt == 0 {
+				uf.LastLineWrite(item.fnm, c.REPEAT_CNT_BOUND, str+"\n")
+			} else {
+				uf.Write(item.f, str)
+			}
 
 			// 이어쓰기 위해 갱신
 			start_X1 = uint(arr[i].Date)
@@ -305,6 +303,8 @@ func FindHighPoint_out(g_type string, arr []model.Price, f *os.File) {
 			cur_p = SwitchPrice(g_type, arr[i])
 			ago_p = SwitchPrice(g_type, arr[i+1])
 			cur_g_way = graph_way(cur_p, ago_p)
+
+			write_cnt++
 		}
 	}
 }
