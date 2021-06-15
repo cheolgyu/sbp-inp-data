@@ -10,12 +10,12 @@ stock-read-pub-site :   web-site
 
 ## 기타
 
-   | item   | lang     | dev    | prod    |
-   | ------ | -------- | ------ | ------- |
-   | stock-write | golang   | local  | ec2.1   |
-   | stock-write-ticke | golang   | local  | ec2.1   |
-   | stock-read-pub-api    | golang   | local  | ec2.1   |
-   | stock-read-pub-site  | vuejs    | local  | ec2.1      |
+   | item                | lang   | dev   | prod  |
+   | ------------------- | ------ | ----- | ----- |
+   | stock-write         | golang | local | ec2.1 |
+   | stock-write-ticke   | golang | local | ec2.1 |
+   | stock-read-pub-api  | golang | local | ec2.1 |
+   | stock-read-pub-site | vuejs  | local | ec2.1 |
    
 ---
 ## 설치

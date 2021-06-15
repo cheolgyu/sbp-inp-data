@@ -1,16 +1,20 @@
 package project
 
 import (
+	"github.com/cheolgyu/stock-write/src/handler"
 	"github.com/cheolgyu/stock-write/src/utils"
 )
 
-type Project2 struct {
+type Project3 struct {
 }
 
-func (p *Project2) Run(arg string) {
+func (p *Project3) Run(arg string) {
 
 	uf := utils.File{}
 	uf.Init()
+	//handler.CompanyHandler()
+	handler.PriceHandler()
+
 	//company_run()
 	//price_run()
 	//high_point_run()

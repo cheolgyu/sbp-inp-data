@@ -1,6 +1,8 @@
 package c
 
-import "os"
+import (
+	"os"
+)
 
 const DIR_COMPANY_DETAIL = "data/dataset/company_detail/"
 const DIR_COMPANY_STATE = "data/dataset/company_state/"
@@ -53,6 +55,9 @@ const G_TYPE_CLOSE = "close"
 const G_TYPE_OPEN = "open"
 
 var G_TYPE map[string]string
+
+const PREFIX_TB_PRICE = PRICE + "_"
+const SCHEMA_NAME_PRICE = PRICE
 
 func init() {
 	DownloadCompany = false

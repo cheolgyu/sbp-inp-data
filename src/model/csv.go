@@ -4,7 +4,7 @@ type CSV interface {
 	String() string
 }
 
-func (o *Company) String() string {
+func (o *CompanyCode) String() string {
 	return o.String()
 }
 

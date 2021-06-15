@@ -1,0 +1,3 @@
+CREATE SCHEMA "price";
+
+CREATE SCHEMA "bound";
