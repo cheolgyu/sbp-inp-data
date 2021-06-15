@@ -1,6 +1,6 @@
 # 프로적트 소개
 
-stock-write  :   파일 업데이트
+stock-write  :   데이터베이스 업데이트
 stock-write-ticker  :   stock-write 실행 용   
 stock-read-pub-api     :   api
 stock-read-pub-site :   web-site
