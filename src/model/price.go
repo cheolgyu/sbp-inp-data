@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -49,26 +50,55 @@ func (o *Price) CSV(object string) string {
 func StringToPrice(str string) Price {
 	item := Price{}
 	arr := strings.Split(str, ",")
-	d, _ := strconv.ParseUint(arr[0], 0, 32)
+	d, err := strconv.ParseUint(arr[0], 0, 32)
+	if err != nil {
+		panic(err)
+	}
 	item.Date = uint32(d)
 
-	op, _ := strconv.ParseFloat(arr[1], 32)
+	op, err := strconv.ParseFloat(arr[1], 32)
+	if err != nil {
+		panic(err)
+	}
 	item.OpenPrice = float32(op)
 
-	hp, _ := strconv.ParseFloat(arr[2], 32)
+	hp, err := strconv.ParseFloat(arr[2], 32)
+	if err != nil {
+		panic(err)
+	}
 	item.HighPrice = float32(hp)
 
-	lp, _ := strconv.ParseFloat(arr[3], 32)
+	lp, err := strconv.ParseFloat(arr[3], 32)
+	if err != nil {
+		panic(err)
+	}
 	item.LowPrice = float32(lp)
 
-	cp, _ := strconv.ParseFloat(arr[4], 32)
+	cp, err := strconv.ParseFloat(arr[4], 32)
+	if err != nil {
+		panic(err)
+	}
 	item.ClosePrice = float32(cp)
 
-	v, _ := strconv.ParseUint(arr[5], 0, 32)
+	v, err := strconv.ParseUint(arr[5], 0, 32)
+	if err != nil {
+		panic(err)
+	}
 	item.Volume = uint32(v)
 
 	str_fr := strings.Replace(arr[6], ",", "", -1)
-	fr, _ := strconv.ParseFloat(str_fr, 32)
+	if str_fr == "" {
+		//대박. 오래된 주식데이터는 외국인 보유가 없음. 없음.
+		str_fr = "0"
+	}
+	fr, err := strconv.ParseFloat(str_fr, 32)
+	if err != nil {
+		log.Println("len=", len(arr))
+		log.Println("arr=", arr)
+		log.Println("str=", str)
+		log.Println("str_fr=", str_fr)
+		panic(err)
+	}
 	item.ForeignerBurnoutRate = float32(fr)
 	return item
 }

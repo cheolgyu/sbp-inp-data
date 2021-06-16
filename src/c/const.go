@@ -59,6 +59,11 @@ var G_TYPE map[string]string
 const PREFIX_TB_PRICE = PRICE + "_"
 const SCHEMA_NAME_PRICE = PRICE
 
+const PREFIX_TB_MARKET = MARKET + "_"
+const SCHEMA_NAME_MARKET = MARKET
+
+const SCHEMA_NAME_BOUND = BOUND
+
 func init() {
 	DownloadCompany = false
 	DownloadPrice = false

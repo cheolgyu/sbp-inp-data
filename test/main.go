@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/cheolgyu/stock-write/src/db"
 )
 
 var filename = "test/hello5.test"
@@ -41,7 +44,25 @@ func t2() {
 	fmt.Println(tt2)
 }
 func main() {
-	www2()
+	log.Println("===1111111111==")
+	client := db.Conn()
+	log.Println("===22222222222==")
+	ctx := context.Background()
+	log.Println("===3333333==")
+	var start string
+	client.QueryRowContext(ctx, "select to_char(now(), 'YYYYMMDD') as start from public.info ").Scan(&start)
+	log.Println("===44444==start:", start)
+	// switch {
+	// case err == sql.ErrNoRows:
+	// 	log.Printf("no user with id \n")
+	// case err != nil:
+	// 	log.Fatalf("query error: %v\n", err)
+	// default:
+	// 	log.Printf("username is %s\n", start)
+	// }
+	//ChkErr(err)
+	log.Println("===555555555==")
+	log.Println("11111111111==", start)
 }
 
 func www2() {

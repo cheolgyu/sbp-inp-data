@@ -5,6 +5,38 @@ stock-write-ticker  :   stock-write 실행 용
 stock-read-pub-api     :   api
 stock-read-pub-site :   web-site
 
+```
+1990년부터 가격 넣는데  [걸린시간] Elipsed Time: 23m34.11977s 노트북 cpu 100%   
+한것.
+일단 가격-가격,마켓        
+회사-코드,상태,상세       
+다음.
+info 
+   업데이트하기   
+BOUND 
+   bound 스키마 종목_GTYPE으로 생성.
+   종목 LOOP돌려서 GTYPE의 마지막 값 X1값 조회후. 
+   거기에 해당하는 가격 목록 조회하는데 X1값이 0이면 모두 조회.
+   모두 조회한것 리턴 받아서 BOUND_POINT배열에 하나씩 넣은다음.
+   BOUND_POINT INSERT 하면 됨.
+
+   종목별 계산 시간이 오래걸리니. 계산에 GO 걸고 
+   계산다된 LIST 로 DB넣고.
+
+   bound_point가 x1,y1 좌표와 x2,y2좌표와 계산 결과로 되어있는데.
+   x1,y1 테이블 생성 as p1  x2,y2 테이블 생성 p2 
+   아니지 p1 으로 다 커버 가능할것같은데.
+   bound.코드.row 
+      p1_id, p1_id,게산결과 이렇게 구조를 바꾸면.? 
+      p1_id 에 해당하는 집계에 더 좋지 않을까?
+      계산결과를 테이블에 저장해 놓고 외부키로 땡겨온다면?
+      검색할때 더 좋지 않을까? 
+      
+   
+   
+
+
+```
 
 ---
 

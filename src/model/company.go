@@ -12,19 +12,20 @@ type CompanyCode struct {
 	Name string
 }
 type CompanyDetail struct {
-	Full_code     string
-	Code          string
-	Full_name_kr  string
-	Name          string
-	Full_name_eng string
+	Name string
 
-	Listing_date              string
+	Code          string
+	Full_code     string
+	Full_name_kr  string
+	Full_name_eng string
+	Listing_date  string
+
 	Market                    string
 	Securities_classification string
 	Department                string
 	Stock_type                string
+	Face_value                string
 
-	Face_value    string
 	Listed_stocks string
 }
 
@@ -49,19 +50,20 @@ func StringToCompanyDetail(str string) CompanyDetail {
 }
 
 type CompanyState struct {
-	Code    string
-	Name    string
-	Stop    bool
-	Clear   bool
-	Managed bool
+	Name string
 
-	Ventilation   bool
+	Code        string
+	Stop        bool
+	Clear       bool
+	Managed     bool
+	Ventilation bool
+
 	Unfaithful    bool
 	Low_liquidity bool
 	Lack_listed   bool
 	Overheated    bool
+	Caution       bool
 
-	Caution bool
 	Warning bool
 	Risk    bool
 }
