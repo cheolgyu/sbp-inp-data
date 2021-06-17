@@ -14,8 +14,8 @@ import (
 
 func PriceHandler() {
 	// 종목가격
-	// cpd_price := CodePriceData{}
-	// cpd_price.Save(c.PRICE)
+	cpd_price := CodePriceData{}
+	cpd_price.Save(c.PRICE)
 
 	// 마켓가격
 	cpd_market := CodePriceData{}
@@ -129,7 +129,7 @@ func (o *CodePrice) Save(wg_db *sync.WaitGroup) {
 	client, tx := db.Begin()
 	defer tx.Rollback()
 
-	if _, err := tx.Exec("select price.create_table_price( $1 ,$2 )", schema_nm, tb_nm); err != nil {
+	if _, err := tx.Exec("select price.create_table( $1 ,$2 )", schema_nm, tb_nm); err != nil {
 		log.Println("테이블 생성 오류: ", schema_nm, tb_nm)
 		log.Println("테이블 생성 오류: ", err)
 		db.RollBack(tx)

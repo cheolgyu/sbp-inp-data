@@ -6,10 +6,10 @@ CREATE SCHEMA "price";
 ---------------------------------
 --
 -- price.tb_<code> 테이블 생성용
--- select  price.create_table_price('price','remove');
+-- select  price.create_table('price','remove');
 ---------------------------------
 CREATE
-OR REPLACE FUNCTION price.create_table_price(schema_nm text, tb_nm text) RETURNS VOID AS $$
+OR REPLACE FUNCTION price.create_table(schema_nm text, tb_nm text) RETURNS VOID AS $$
 DECLARE
     BEGIN
         EXECUTE format(

@@ -6,7 +6,11 @@ stock-read-pub-api     :   api
 stock-read-pub-site :   web-site
 
 ```
-1990년부터 가격 넣는데  [걸린시간] Elipsed Time: 23m34.11977s 노트북 cpu 100%   
+1990년부터 가격 넣는데  
+노트북 cpu 100%  
+   [걸린시간] Elipsed Time: 23m34.11977s 
+데스크탑 절전모드  
+   2021/06/17 17:13:49 [걸린시간] Elipsed Time: 35m28.4860863s
 한것.
 일단 가격-가격,마켓        
 회사-코드,상태,상세       

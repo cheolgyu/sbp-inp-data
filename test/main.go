@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 
@@ -44,6 +45,18 @@ func t2() {
 	fmt.Println(tt2)
 }
 func main() {
+	/*
+			lp
+		p_date	op	hp	lp	cp	vol	fb_rate
+		20090625	9870.000	10060.000	9830.000	9860.000	40896	2.250
+		20090717	0.000	0.000	0.000	9900.000	0	2.370
+	*/
+	Y1 := 9830.000
+	Y2 := 0.000
+	test := float32(math.Round(float64(Y1 / Y2 * 100)))
+	println(test)
+}
+func dbccc() {
 	log.Println("===1111111111==")
 	client := db.Conn()
 	log.Println("===22222222222==")
@@ -64,7 +77,6 @@ func main() {
 	log.Println("===555555555==")
 	log.Println("11111111111==", start)
 }
-
 func www2() {
 
 	fmt.Println("마지막줄만 덮어쓰기 ")

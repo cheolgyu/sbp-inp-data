@@ -3,17 +3,16 @@ CREATE SCHEMA "bound";
 ---------------------------------
 --
 -- price.tb_<code> 테이블 생성용
--- select  bound.create_table_bound('price','remove');
+-- select  bound.create_table('price','remove');
 ---------------------------------
 CREATE
-OR REPLACE FUNCTION BOUND .create_table_bound(schema_nm text, tb_nm text) RETURNS VOID AS $$
+OR REPLACE FUNCTION bound.create_table(schema_nm text, tb_nm text) RETURNS VOID AS $$
 DECLARE
     BEGIN
         EXECUTE format(
             'CREATE TABLE IF NOT EXISTS %I.%I (
-                "idx" serial NOT NULL,
-                PRIMARY KEY ("index"),
 				"x1" numeric(8,0),
+                PRIMARY KEY ("x1"),
 				"y1" numeric(20,3),
 				"x2" numeric(8,0),
 				"y2" numeric(20,3),
