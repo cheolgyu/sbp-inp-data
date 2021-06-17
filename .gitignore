@@ -9,4 +9,4 @@ test/*.sql
 *.tar
 .env.prod
 bin/
-download/
+data/download/
