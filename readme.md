@@ -1,48 +1,22 @@
 # 프로적트 소개
 
-stock-write  :   데이터베이스 업데이트
-stock-write-ticker  :   stock-write 실행 용   
-stock-read-pub-api     :   api
-stock-read-pub-site :   web-site
-
-```
-1990년부터 가격 넣는데  
-노트북 cpu 100%  
-   [걸린시간] Elipsed Time: 23m34.11977s 
-데스크탑 절전모드  
-   2021/06/17 17:13:49 [걸린시간] Elipsed Time: 35m28.4860863s
-한것.
-일단 가격-가격,마켓        
-회사-코드,상태,상세       
-다음.
-info 
-   업데이트하기   
-BOUND 
-   bound 스키마 종목_GTYPE으로 생성.
-   종목 LOOP돌려서 GTYPE의 마지막 값 X1값 조회후. 
-   거기에 해당하는 가격 목록 조회하는데 X1값이 0이면 모두 조회.
-   모두 조회한것 리턴 받아서 BOUND_POINT배열에 하나씩 넣은다음.
-   BOUND_POINT INSERT 하면 됨.
-
-   종목별 계산 시간이 오래걸리니. 계산에 GO 걸고 
-   계산다된 LIST 로 DB넣고.
-
-   bound_point가 x1,y1 좌표와 x2,y2좌표와 계산 결과로 되어있는데.
-   x1,y1 테이블 생성 as p1  x2,y2 테이블 생성 p2 
-   아니지 p1 으로 다 커버 가능할것같은데.
-   bound.코드.row 
-      p1_id, p1_id,게산결과 이렇게 구조를 바꾸면.? 
-      p1_id 에 해당하는 집계에 더 좋지 않을까?
-      계산결과를 테이블에 저장해 놓고 외부키로 땡겨온다면?
-      검색할때 더 좋지 않을까? 
-   2021/06/17 21:30:33 [걸린시간] Elipsed Time: 48m31.9645068s
-   
-      
-   
-   
+| item                | desc                  |
+| ------------------- | --------------------- |
+| stock-write         | 데이터베이스 업데이트 |
+| stock-write-ticke   | stock-write 실행 용   |
+| stock-read-pub-api  | api                   |
+| stock-read-pub-site | web-site              |
 
 
-```
+---
+todo
+
+- [ ] info
+  - [ ] 업데이트하기
+- [ ] view
+  - [ ] 7일간 g_type별 top 100
+  - [ ] 최근 1건에 대한 g_type별 top100
+  - [ ] 최근 10건에 대한 g_type별 top100
 
 ---
 
@@ -52,9 +26,17 @@ BOUND
    | ------------------- | ------ | ----- | ----- |
    | stock-write         | golang | local | ec2.1 |
    | stock-write-ticke   | golang | local | ec2.1 |
+   | database            | pg     | local | ec2.1 |
    | stock-read-pub-api  | golang | local | ec2.1 |
    | stock-read-pub-site | vuejs  | local | ec2.1 |
-   
+
+---   
+## 시간
+
+   | 일자       | 종류  | 걸린시간       | 시작일     | 비고             |
+   | ---------- | ----- | -------------- | ---------- | ---------------- |
+   | 2021/06/17 | bound | 48m31.9645068s | 1990년부터 | 데스크탑 절전 전 |
+   | 2021/06/17 | price | 23m34.11977s   | 1990년부터 | 노트북 cpu 100%  |
 ---
 ## 설치
 stock-write
@@ -72,7 +54,6 @@ stock-write
 1. export
     ```
     postgres container 
-    export
     su - postgres
     pg_dump  dev  -n company >> company.dumpFile.sql
     pg_dump  dev  -n public >> public.dumpFile.sql
@@ -92,7 +73,6 @@ stock-write
     ```
 2. import
     ```
-    import
     su - postgres
     psql --dbname prod --host database-stock-1.czunxjjslnrd.ap-northeast-2.rds.amazonaws.com --port 5432 --username postgres < dumpFile.sql    
     psql --dbname dev  < ./data/dumpFile/2021-06-17/public.dumpFile.sql
@@ -164,131 +144,7 @@ $env:GOARCH = 'amd64'
 <details markdown="1">
 <summary>펼치기</summary>
 
-+ 그래프별(저가,고가,종가,시가) bound_point 데이터 생성중인데. 노트북 절전모드에서 2시간째 만들고 있음.
-   + 고루틴 필수로 있어야하고. 데이터 용량이 계속 커질듯.
-   + 저장 무료 저장소로 돌려야 할듯.
-   + 마이크로소프트 ondrive 돈내면 쓰고 있는것 있는데 ondrive 에서 저장하고 업데이트하고 하면될듯.
-   + 아니면 구글드라이브도 있고.
-   + 그럼 ec2에서 수신과 송신에 비용이 들어가는데 수신은 0원이고 송신시 비용이 들어감.
-   + ebs 저장 가격보다 쌀듯 
-   + 그럼 저장소를 ondrive로 바꾼다고 가정하면
-      + file열떄. 요청보내고 응답오는  시간 +  파일의 seek 사용못함 + 응답은 전체파일임. 
-      + 파일 수정하거나 새로만들기는?
-      + 파일 수정하기가 없음. 파일 다운후 다음줄 추가해서 ec2에서 송신시켜야됨. ebs 써야겠다.
-   + boundd 데이터만 3gb 되겠네.....................
-   + [걸린시간] Elipsed Time: 2h51m4.510385s
-   ------
-+ file을 버리는 이유: 조인 및 검색이 어려움 db 다시 ㄱㄱ.
-+ price다운로드후에 마지막줄 덮어쓰기 해야됨.
-+ viewhandler 종목별 종가 저가 고가 시가  반등데이터 파일 열어서 마지막줄 가져온다음.
-   + 잘 쌓아서 
-      +  오늘view 파일저장. 
-      +  project_info(최신 갱신날짜, 갱신 시간오래걸림: 시작, 작업중, 오늘끝 표현하기.) 파일로 저장.
 
-+ 현재 할것
-   1. price 이어쓰기
-   2. bound_point 이어쓰기
-   3. bound_point 누적데이터 만들고 마지막 누적 일자에서 부터 계산후 이어쓰기.
-   4. bound_point 가 종가 기준계산했는데 저가,고가,종가 별로 나누기.
-   5. 다운로드한것 지우기. 현재 데이터만 1.05GB
-
-
-
-   ```
-   /*
-      // (price_startdate string, price_enddate string)
-
-         data/company_detail/<code>.csv
-         data/company_state/<code>.csv
-         data/price/<code>.csv
-         data/market/<code>.csv
-         data/bound_point/price/<code>.csv
-         data/bound_point/market/<code>.csv
-
-         api-server는 읽기모드로 파일오픈 오류시 업데이트중 잠시후 오류 처리, 패닉뺴기
-         dbment-server는 쓰기모드로 ㄱㄱ
-      */
-      //
-      /*
-         // 엑셀파일 다운로드
-         download company_detail.xlsx
-
-         row loop
-         go row_parse
-            print_csv()
-               detail 저장
-            
-      */
-
-      mk_price
-         load_download_excel 파일 
-         row range loop
-            price(code,start,end) download
-               price_parse
-               print_csv()
-                  price 저장
-                  create or update
-
-      /*
-         // 엑셀파일 다운로드
-         download company_state.xlsx
-         row loop
-            go row_parse
-               print_csv()
-                  state 저장
-      */
-
-      /*
-         market_arr loop
-            go price(code,start,end) download
-               parse_price()
-               print_csv()
-                  market 저장
-      */
-      /*
-         //bound_point 계산
-         data/price/code loop
-            go highpoint(code)
-               open data/price/code.csv
-                  100줄 읽고 닫기
-                  없으면 다음 100줄 읽고 닫기
-                  없으면 다음 100줄 읽고 닫기
-                  없으면 다음 100줄 읽고 닫기
-                  없으면  null처리
-                  print()
-                     highpoint 저장
-
-         data/market/code loop
-         bound_point view_market loop
-            go highpoint(code)
-               open data/market/code.csv
-                  100줄 읽고 닫기
-                  없으면 다음 100줄 읽고 닫기
-                  없으면 다음 100줄 읽고 닫기
-                  없으면 다음 100줄 읽고 닫기
-                  없으면  null처리
-                  print()
-                     highpoint 저장
-
-
-      */
-      /*
-         create_view
-         data/price/code loop
-            code에 해당하는 bound_point 데이터 꺼내고
-            code에 해당하는 state 데이터 꺼내고
-            insert문 만들기
-
-         data/market/code loop
-            code에 해당하는 bound_point 데이터 꺼내고
-            code에 해당하는 state 데이터 꺼내고
-            insert문 만들기
-
-         price,market insert문 실행.
-      */
-   ```
-
- --- 
 
 + 매수
   + 이 종목이 7일간의 거래에서 4번의 반등이 있었는데 2번은 상승이 였고 2번은 하락이였습니다.
@@ -378,6 +234,134 @@ redis와 api 연결지어 출력하기
 <details markdown="1">
 <summary>펼치기</summary>
 
++ bound 계산 변경: db에서 golang으로
++ bound 계산 대상 변경: 종가 에서 G_TPYE(저가,고가,종가,시가)로  변경
+  + 그래프별(저가,고가,종가,시가) bound_point 데이터 생성중인데. 노트북 절전모드에서 2시간째 만들고 있음.
+     + 고루틴 필수로 있어야하고. 데이터 용량이 계속 커질듯.
+     + 저장 무료 저장소로 돌려야 할듯.
+     + 마이크로소프트 ondrive 돈내면 쓰고 있는것 있는데 ondrive 에서 저장하고 업데이트하고 하면될듯.
+     + 아니면 구글드라이브도 있고.
+     + 그럼 ec2에서 수신과 송신에 비용이 들어가는데 수신은 0원이고 송신시 비용이 들어감.
+     + ebs 저장 가격보다 쌀듯 
+     + 그럼 저장소를 ondrive로 바꾼다고 가정하면
+        + file열떄. 요청보내고 응답오는  시간 +  파일의 seek 사용못함 + 응답은 전체파일임. 
+        + 파일 수정하거나 새로만들기는?
+        + 파일 수정하기가 없음. 파일 다운후 다음줄 추가해서 ec2에서 송신시켜야됨. ebs 써야겠다.
+     + boundd 데이터만 3gb 되겠네.....................
+     + [걸린시간] Elipsed Time: 2h51m4.510385s
+     ------
+  + file을 버리는 이유: 조인 및 검색이 어려움 db 다시 ㄱㄱ.
+  + price다운로드후에 마지막줄 덮어쓰기 해야됨.
+  + viewhandler 종목별 종가 저가 고가 시가  반등데이터 파일 열어서 마지막줄 가져온다음.
+     + 잘 쌓아서 
+        +  오늘view 파일저장. 
+        +  project_info(최신 갱신날짜, 갱신 시간오래걸림: 시작, 작업중, 오늘끝 표현하기.) 파일로 저장.
+
+  + 현재 할것
+     1. price 이어쓰기
+     2. bound_point 이어쓰기
+     3. bound_point 누적데이터 만들고 마지막 누적 일자에서 부터 계산후 이어쓰기.
+     4. bound_point 가 종가 기준계산했는데 저가,고가,종가 별로 나누기.
+     5. 다운로드한것 지우기. 현재 데이터만 1.05GB
+
+
+
+     ```
+     /*
+        // (price_startdate string, price_enddate string)
+
+           data/company_detail/<code>.csv
+           data/company_state/<code>.csv
+           data/price/<code>.csv
+           data/market/<code>.csv
+           data/bound_point/price/<code>.csv
+           data/bound_point/market/<code>.csv
+
+           api-server는 읽기모드로 파일오픈 오류시 업데이트중 잠시후 오류 처리, 패닉뺴기
+           dbment-server는 쓰기모드로 ㄱㄱ
+        */
+        //
+        /*
+           // 엑셀파일 다운로드
+           download company_detail.xlsx
+
+           row loop
+           go row_parse
+              print_csv()
+                 detail 저장
+              
+        */
+
+        mk_price
+           load_download_excel 파일 
+           row range loop
+              price(code,start,end) download
+                 price_parse
+                 print_csv()
+                    price 저장
+                    create or update
+
+        /*
+           // 엑셀파일 다운로드
+           download company_state.xlsx
+           row loop
+              go row_parse
+                 print_csv()
+                    state 저장
+        */
+
+        /*
+           market_arr loop
+              go price(code,start,end) download
+                 parse_price()
+                 print_csv()
+                    market 저장
+        */
+        /*
+           //bound_point 계산
+           data/price/code loop
+              go highpoint(code)
+                 open data/price/code.csv
+                    100줄 읽고 닫기
+                    없으면 다음 100줄 읽고 닫기
+                    없으면 다음 100줄 읽고 닫기
+                    없으면 다음 100줄 읽고 닫기
+                    없으면  null처리
+                    print()
+                       highpoint 저장
+
+           data/market/code loop
+           bound_point view_market loop
+              go highpoint(code)
+                 open data/market/code.csv
+                    100줄 읽고 닫기
+                    없으면 다음 100줄 읽고 닫기
+                    없으면 다음 100줄 읽고 닫기
+                    없으면 다음 100줄 읽고 닫기
+                    없으면  null처리
+                    print()
+                       highpoint 저장
+
+
+        */
+        /*
+           create_view
+           data/price/code loop
+              code에 해당하는 bound_point 데이터 꺼내고
+              code에 해당하는 state 데이터 꺼내고
+              insert문 만들기
+
+           data/market/code loop
+              code에 해당하는 bound_point 데이터 꺼내고
+              code에 해당하는 state 데이터 꺼내고
+              insert문 만들기
+
+           price,market insert문 실행.
+        */
+     ```
+
+   --- 
+   
 + 변수명 바꾸기
    + bound_point => bound_point
 
@@ -536,6 +520,16 @@ naver_chart
 + 매수 매도 기능을 위한 예측선 구하기.
 
 ## 기타 아이디어
+
++ bound 구조:
+   bound_point가 x1,y1 좌표와 x2,y2좌표와 계산 결과로 되어있는데.
+   x1,y1 테이블 생성 as p1  x2,y2 테이블 생성 p2 
+   아니지 p1 으로 다 커버 가능할것같은데.
+   bound.코드.row 
+      p1_id, p1_id,게산결과 이렇게 구조를 바꾸면.? 
+      p1_id 에 해당하는 집계에 더 좋지 않을까?
+      계산결과를 테이블에 저장해 놓고 외부키로 땡겨온다면?
+      검색할때 더 좋지 않을까? 
 + 제목: 2차 거르기 방법: 1차로 걸러낸 bound_point table의 하락 등락률 을 매일 내역에 저장한다. ( high_point_day_hist 내역 테이블 )  2차로 내역 테이블에서 많이 등장하는 종목명과 평균 하락률을 구하여 종목의 안정성을 평가한다.
 + 제목: 지수(코스피, 코스닥, 나스닥, 기타 등등)에 따른 종목의 변동률 방법: 어제와 오늘의 종료시점의 변동률을 구하고 종목의 어제와 오늘의 변동률을 구한 다음 지수의 변동률 분해 종목의 변동률 * 100 을 하여 구하면 지수에 따른 종목의 변동률을 구한다.
 + 인터넷에 제무제표 보는 방법이 많다. 제무제표를 통해 기업의 안전성등을 수치로 계산할 수 있는데 그 계산식을 검색하여 적용해 보자.
