@@ -5,11 +5,15 @@ services:
     image: postgres
     restart: always
     command: postgres -c 'max_connections=100'
+    volumes:
+      - C:\\Users\\cheolgyu\\postgresql:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: example
       POSTGRES_USER: postgres
       POSTGRES_DB: dev
       TZ: Asia/Seoul
+      # 이어서 시작할때 필요함. 기존데이터로 시작함.
+      POSTGRES_CONFIG_hot_standby: "on"
     ports:
       - 5432:5432
 

@@ -95,8 +95,16 @@ stock-write
     import
     su - postgres
     psql --dbname prod --host database-stock-1.czunxjjslnrd.ap-northeast-2.rds.amazonaws.com --port 5432 --username postgres < dumpFile.sql    
+    psql --dbname dev  < ./data/dumpFile/2021-06-17/public.dumpFile.sql
+    psql --dbname dev  < ./data/dumpFile/2021-06-17/company.dumpFile.sql
+    psql --dbname dev  < ./data/dumpFile/2021-06-17/utils.dumpFile.sql
+    psql --dbname dev  < ./data/dumpFile/2021-06-17/market.dumpFile.sql
+    psql --dbname dev  < ./data/dumpFile/2021-06-17/price.dumpFile.sql
+    psql --dbname dev  < ./data/dumpFile/2021-06-17/bound.dumpFile.sql
+    
+
     window 
-    docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
+ 
     ```
 
 ---
