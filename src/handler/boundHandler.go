@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"sync"
 
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/db"
@@ -25,18 +26,26 @@ func (o *Bound) Save() {
 	cl := CodeList{}
 	cl.SelectAll()
 
+	wg := sync.WaitGroup{}
+	wg_db := sync.WaitGroup{}
+	done := make(chan bool)
+
 	for i := range cl.List {
 		cc := cl.List[i]
 		log.Println("==", i, "==", cc.Code, "시작")
 		//가격목록 가져왔다.
 		bc := BoundCode{Code: cc.Code}
-		bc.Load()
-		bc.GetPoint()
-		// 가격목록 돌려서 bound_point 만들고
-
-		// 다만들어지면 디비 저장.
-
+		wg.Add(1)
+		go bc.Load(&wg, done)
+		<-done
+		wg_db.Add(1)
+		go bc.GetPoint(&wg_db)
+		if i%10 == 0 {
+			wg_db.Wait()
+		}
 	}
+	wg_db.Wait()
+	wg.Wait()
 
 }
 
@@ -46,7 +55,8 @@ type BoundCode struct {
 }
 
 // BOUND_POINT구하기.
-func (o *BoundCode) GetPoint() {
+func (o *BoundCode) GetPoint(wg_db *sync.WaitGroup) {
+	defer wg_db.Done()
 	for i := range o.BoundCodeGtype {
 		log.Println("===========GetPoint==", o.Code, "==시작==")
 		bcg := o.BoundCodeGtype[i]
@@ -58,7 +68,8 @@ func (o *BoundCode) GetPoint() {
 }
 
 // CODE에 해당하는 가격목록 조회.
-func (o *BoundCode) Load() {
+func (o *BoundCode) Load(wg *sync.WaitGroup, done chan bool) {
+	defer wg.Done()
 	for i := range c.G_TYPE {
 		g := c.G_TYPE[i]
 		log.Println("Load===========,", o.Code, ",G_TYPE:", g)
@@ -69,6 +80,7 @@ func (o *BoundCode) Load() {
 		o.BoundCodeGtype = append(o.BoundCodeGtype, gcg)
 		log.Println("Load===========,", o.Code, ",G_TYPE:", g, "==>가격목록수:", len(gcg.PriceList))
 	}
+	done <- true
 }
 
 type BoundCodeGtype struct {

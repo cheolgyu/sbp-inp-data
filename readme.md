@@ -68,6 +68,38 @@ stock-write
    2. go run . -run=daily
 
 ---
+### postgres 백업
+1. export
+    ```
+    postgres container 
+    export
+    su - postgres
+    pg_dump  dev  -n company >> company.dumpFile.sql
+    pg_dump  dev  -n public >> public.dumpFile.sql
+    pg_dump  dev  -n utils >> utils.dumpFile.sql
+    pg_dump  dev  -n price >> price.dumpFile.sql
+    pg_dump  dev  -n market >> market.dumpFile.sql
+    pg_dump  dev  -n bound >> bound.dumpFile.sql
+
+    window 
+    docker cp stock-write_db_1:/var/lib/postgresql/public.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//public.dumpFile.sql
+    docker cp stock-write_db_1:/var/lib/postgresql/company.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//company.dumpFile.sql
+    docker cp stock-write_db_1:/var/lib/postgresql/utils.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//utils.dumpFile.sql
+    docker cp stock-write_db_1:/var/lib/postgresql/price.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//price.dumpFile.sql
+    docker cp stock-write_db_1:/var/lib/postgresql/market.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//market.dumpFile.sql
+    docker cp stock-write_db_1:/var/lib/postgresql/bound.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//bound.dumpFile.sql
+
+    ```
+2. import
+    ```
+    import
+    su - postgres
+    psql --dbname prod --host database-stock-1.czunxjjslnrd.ap-northeast-2.rds.amazonaws.com --port 5432 --username postgres < dumpFile.sql    
+    window 
+    docker cp corplist_db_1:/var/lib/postgresql/dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-05-27.sql
+    ```
+
+---
 ## 빌드
 ```
 golang 환경변수 설정 (powershell)
