@@ -42,7 +42,14 @@ todo
          지금또 rdbs -> mongo  
 
          이번에 몽고 써서 얻는 이점은?
+
+         company.code
+         company.state
+         company.detail
+         price.code
+         bound.code_gtype
          
+
          
             
 
