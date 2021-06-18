@@ -31,6 +31,10 @@ const DOWNLOAD_FILENAME_COMPANY_STATE = "company_state.xlsx"
 const DOWNLOAD_DIR_PRICE = "data/download/price/"
 const DOWNLOAD_DIR_MARKET = "data/download/market/"
 
+const COLL_CODE = "code"
+const COLL_COMPANY_DETAIL = "company.detail"
+const COLL_COMPANY_STATE = "company.state"
+
 const BOUND = "bound"
 const PRICE = "price"
 const MARKET = "market"

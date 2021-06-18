@@ -4,6 +4,8 @@ services:
   mongo:
     image: mongo:latest
     restart: always
+    ports:
+      - 27017:27017
     environment:
       TZ: Asia/Seoul 
       MONGO_INITDB_ROOT_USERNAME: root

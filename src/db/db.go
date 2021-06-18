@@ -1,56 +1,32 @@
 package db
 
 import (
-	"database/sql"
+	"context"
 	"log"
-	"os"
 
-	_ "github.com/lib/pq"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-type PQ struct {
-}
-
-func Conn() *sql.DB {
-	pq := PQ{}
-	return pq.conn()
-}
-
-func Begin() (*sql.DB, *sql.Tx) {
-	pq := PQ{}
-	return pq.begin()
-}
-
-func RollBack(tx *sql.Tx) {
-	log.Fatalf("롤백 시작.")
-	if rollbackErr := tx.Rollback(); rollbackErr != nil {
-		log.Fatalf("롤백오류 발생.: %v", rollbackErr)
-		log.Fatalf("update drivers: unable to rollback: %v", rollbackErr)
+func Conn() (*context.Context, *mongo.Client) {
+	credential := options.Credential{
+		Username: "root",
+		Password: "example",
 	}
-}
-func (o *PQ) conn() *sql.DB {
+	//mongodb://root:example@localhost:27017/
+	clientOpts := options.Client().ApplyURI("mongodb://localhost:27017").SetAuth(credential)
 
-	db, err := sql.Open("postgres", os.Getenv("DB_URL"))
+	ctx := context.Background()
+
+	//defer cancel()
+	client, err := mongo.Connect(ctx, clientOpts)
 	if err != nil {
-		log.Println("커넥션 오류:")
-		panic(err)
+		log.Panicln(err)
 	}
-	return db
-}
-
-func (o *PQ) begin() (*sql.DB, *sql.Tx) {
-
-	db, err := sql.Open("postgres", os.Getenv("DB_URL"))
-	db.SetMaxOpenConns(99)
+	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
-		log.Println("커넥션:begin-Open 오류:")
-		panic(err)
+		log.Panicln(err)
 	}
-	tx, err := db.Begin()
-	if err != nil {
-		log.Println("커넥션:begin-tx 오류:")
-		log.Fatal(err)
-		panic(err)
-	}
-	return db, tx
+	return &ctx, client
 }

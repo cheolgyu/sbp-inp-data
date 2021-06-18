@@ -10,14 +10,13 @@ import (
 )
 
 type Price struct {
-	Date       uint32
-	OpenPrice  float32
-	HighPrice  float32
-	LowPrice   float32
-	ClosePrice float32
-
-	Volume               uint32
-	ForeignerBurnoutRate float32
+	Date                 uint32  `bson:"p_date"`
+	OpenPrice            float32 `bson:"op"`
+	HighPrice            float32 `bson:"hp"`
+	LowPrice             float32 `bson:"lp"`
+	ClosePrice           float32 `bson:"cp"`
+	Volume               uint32  `bson:"vol"`
+	ForeignerBurnoutRate float32 `bson:"f_rate"`
 }
 
 func format(object string) string {
