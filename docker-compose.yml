@@ -18,7 +18,11 @@ services:
       - 5432:5432
 
   adminer:
-    image: adminer
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=my@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=PassW@rd!!
     restart: always
     ports:
-      - 8080:8080
+      - 8080:80
