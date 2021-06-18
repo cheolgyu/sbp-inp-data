@@ -8,7 +8,7 @@ import (
 	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/cheolgyu/stock-write/src/utils/download"
-	xlsx "github.com/tealeg/xlsx/v3"
+	"github.com/tealeg/xlsx"
 )
 
 func CompanyHandler() {
@@ -41,7 +41,7 @@ func (o *Company) Load() {
 
 	sheet := xlFile.Sheets[0]
 	for i := 1; i < sheet.MaxRow; i++ {
-		row, _ := sheet.Row(i)
+		row := sheet.Row(i)
 		_, content := model.RowGet(row)
 		detail := model.StringToCompanyDetail(content)
 
@@ -213,7 +213,7 @@ func (o *StateList) Load() {
 
 	sheet := xlFile.Sheets[0]
 	for i := 1; i < sheet.MaxRow; i++ {
-		row, _ := sheet.Row(i)
+		row := sheet.Row(i)
 		_, content := model.RowGet(row)
 		state := model.StringToCompanyState(content)
 

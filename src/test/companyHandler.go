@@ -5,7 +5,7 @@ import (
 	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/cheolgyu/stock-write/src/utils"
 	"github.com/cheolgyu/stock-write/src/utils/download"
-	xlsx "github.com/tealeg/xlsx/v3"
+	"github.com/tealeg/xlsx"
 )
 
 type CompanyHandler struct {
@@ -56,7 +56,7 @@ func (o *CompanyHandler) MakeCSV() {
 	sheet := xlFile.Sheets[0]
 
 	for i := 0; i < sheet.MaxRow; i++ {
-		row, _ := sheet.Row(i)
+		row := sheet.Row(i)
 		code, content := model.RowGet(row)
 		if o.Object == c.COMPANY_STATE {
 			model.ViewInfo.Set_state(code, model.StringToCompanyState(content))
