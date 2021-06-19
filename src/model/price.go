@@ -10,7 +10,7 @@ import (
 )
 
 type Price struct {
-	Date                 uint32  `bson:"p_date"`
+	Date                 uint32  `bson:"_id"`
 	OpenPrice            float32 `bson:"op"`
 	HighPrice            float32 `bson:"hp"`
 	LowPrice             float32 `bson:"lp"`

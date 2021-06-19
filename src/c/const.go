@@ -34,6 +34,7 @@ const DOWNLOAD_DIR_MARKET = "data/download/market/"
 const COLL_CODE = "code"
 const COLL_COMPANY_DETAIL = "company.detail"
 const COLL_COMPANY_STATE = "company.state"
+const COLL_INFO = "info"
 
 const BOUND = "bound"
 const PRICE = "price"
@@ -67,6 +68,11 @@ const PREFIX_TB_MARKET = MARKET + "_"
 const SCHEMA_NAME_MARKET = MARKET
 
 const SCHEMA_NAME_BOUND = BOUND
+
+var DB = "stock_dev"
+var DB_PRICE = "stock_" + PRICE
+var DB_MARKET = "stock_" + MARKET
+var DB_BOUND = "stock_" + BOUND
 
 func init() {
 	DownloadCompany = false

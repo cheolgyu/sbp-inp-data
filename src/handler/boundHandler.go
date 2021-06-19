@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"sync"
 
 	"github.com/cheolgyu/stock-write/src/c"
-	"github.com/cheolgyu/stock-write/src/db"
+	"github.com/cheolgyu/stock-write/src/dao"
 	"github.com/cheolgyu/stock-write/src/model"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func BoundHandler() {
@@ -23,29 +23,18 @@ type Bound struct {
 func (o *Bound) Save() {
 
 	//코드목록 조회
-	cl := CodeList{}
-	cl.SelectAll()
+	selectCode := dao.SelectCode{}
+	obj_list := selectCode.All()
 
-	wg := sync.WaitGroup{}
-	wg_db := sync.WaitGroup{}
-	done := make(chan bool)
-
-	for i := range cl.List {
-		cc := cl.List[i]
-		log.Println("==", i, "==", cc.Code, "시작")
+	for i := range obj_list {
+		cc := obj_list[i]
+		log.Println("시작:", i, "==>", cc.Code)
 		//가격목록 가져왔다.
 		bc := BoundCode{Code: cc.Code}
-		wg.Add(1)
-		go bc.Load(&wg, done)
-		<-done
-		wg_db.Add(1)
-		go bc.GetPoint(&wg_db)
-		if i%10 == 0 {
-			wg_db.Wait()
-		}
+		bc.Load()
+		bc.GetPoint()
+
 	}
-	wg_db.Wait()
-	wg.Wait()
 
 }
 
@@ -55,8 +44,7 @@ type BoundCode struct {
 }
 
 // BOUND_POINT구하기.
-func (o *BoundCode) GetPoint(wg_db *sync.WaitGroup) {
-	defer wg_db.Done()
+func (o *BoundCode) GetPoint() {
 	for i := range o.BoundCodeGtype {
 		log.Println("===========GetPoint==", o.Code, "==시작==")
 		bcg := o.BoundCodeGtype[i]
@@ -68,8 +56,7 @@ func (o *BoundCode) GetPoint(wg_db *sync.WaitGroup) {
 }
 
 // CODE에 해당하는 가격목록 조회.
-func (o *BoundCode) Load(wg *sync.WaitGroup, done chan bool) {
-	defer wg.Done()
+func (o *BoundCode) Load() {
 	for i := range c.G_TYPE {
 		g := c.G_TYPE[i]
 		log.Println("Load===========,", o.Code, ",G_TYPE:", g)
@@ -80,7 +67,6 @@ func (o *BoundCode) Load(wg *sync.WaitGroup, done chan bool) {
 		o.BoundCodeGtype = append(o.BoundCodeGtype, gcg)
 		log.Println("Load===========,", o.Code, ",G_TYPE:", g, "==>가격목록수:", len(gcg.PriceList))
 	}
-	done <- true
 }
 
 type BoundCodeGtype struct {
@@ -92,43 +78,16 @@ type BoundCodeGtype struct {
 // GTYPE별 각각의 가격 목록 조회.
 func (o *BoundCodeGtype) Load(code string) {
 
-	bound_schema_nm := c.SCHEMA_NAME_BOUND
-	bound_tb_nm := code + "_" + o.Gtype
-	price_schema_nm := c.SCHEMA_NAME_PRICE
-	price_tb_nm := c.PREFIX_TB_PRICE + code
-
-	conn := db.Conn()
-	defer conn.Close()
-
-	// 없으면 table 생성
-	if _, err := conn.Exec("select bound.create_table( $1 ,$2 )", bound_schema_nm, bound_tb_nm); err != nil {
-		log.Println("테이블 생성 오류: ", bound_schema_nm, bound_tb_nm)
-		log.Println("테이블 생성 오류: ", err)
-		panic(err)
+	bound_dao := dao.BoundDao{}
+	last_point := bound_dao.SelectLast()
+	start_price_date := 0
+	if last_point.X1 != 0 {
+		start_price_date = int(last_point.X1)
 	}
-	//코드에 해당하는 bound 테이블의 마지막 라인의 x1 조회.
-	// 없으면 가격 전체조회. 있으면 x1부터 조회.
-	query := fmt.Sprintf(`SELECT * FROM "%s"."%s" WHERE p_date >= 
-	( SELECT COALESCE(t.x1, 0) AS x1 FROM ( SELECT 1 tmp, ( SELECT x1 FROM "%s"."%s" ORDER BY x1 DESC LIMIT 1 ) ) t ) `,
-		price_schema_nm, price_tb_nm, bound_schema_nm, bound_tb_nm)
-	//log.Println(query)
-	rows, err := conn.Query(query)
-	ChkErr(err)
-	defer rows.Close()
 
-	for rows.Next() {
-		i := model.Price{}
-		if err := rows.Scan(&i.Date, &i.OpenPrice, &i.HighPrice, &i.LowPrice, &i.ClosePrice, &i.Volume, &i.ForeignerBurnoutRate); err != nil {
-			log.Fatal(err)
-			log.Fatal(err)
-			panic(err)
-		}
-		o.PriceList = append(o.PriceList, i)
-	}
-	// Check for errors from iterating over rows.
-	if err := rows.Err(); err != nil {
-		log.Fatal(err)
-	}
+	price_dao := dao.PriceDao{}
+	o.PriceList = price_dao.Find(code, start_price_date)
+
 }
 
 // GTYPE별 각각의 BOUND_POINT 구하기
@@ -240,48 +199,22 @@ func (o *BoundCodeGtype) SwitchPrice(i int) float32 {
 // GTYPE별 BOUND 저장.
 func (o *BoundCodeGtype) Save(code string) {
 
-	schema_nm := c.SCHEMA_NAME_BOUND
-	tb_nm := code + "_" + o.Gtype
-
-	client, tx := db.Begin()
-	defer tx.Rollback()
-	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s" (x1, y1, x2, y2, y_minus, y_percent, x_tick ) VALUES( $1, $2, $3, $4, $5, $6, $7 )`, schema_nm, tb_nm)
-	q_insert += fmt.Sprintf(`ON CONFLICT ("x1") DO UPDATE SET y1=$2 ,x2=$3 ,y2=$4 ,y_minus=$5 ,y_percent=$6 ,x_tick=$7`)
-
-	stmt, err := tx.Prepare(q_insert)
-	if err != nil {
-
-		log.Println("쿼리:Prepare 오류: ", schema_nm, tb_nm)
-		log.Fatal(err)
-		db.RollBack(tx)
-		panic(err)
-	}
-	defer stmt.Close()
-
-	txt := fmt.Sprintf(" %v.%v %v개 저장중.", schema_nm, tb_nm, len(o.PointList))
-	log.Println(txt)
+	docName := code + "_" + o.Gtype
+	relpace_dao := dao.Relpace{}
+	relpace_dao.SetColl(c.DB_BOUND, docName)
+	var filter []interface{}
+	var data []interface{}
 	for i := range o.PointList {
-		arr := o.SQLFormat(i)
-		_, err := stmt.Exec(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6])
-		if err != nil {
-
-			log.Println("쿼리:stmt.Exec 오류: ", schema_nm, tb_nm)
-			log.Println("쿼리:stmt.Exec 오류: ", o.PointList[i])
-			log.Fatal(err)
-			db.RollBack(tx)
-			panic(err)
-		}
+		filter = append(filter, bson.M{"_id": o.PointList[i].X1})
+		data = append(data, o.PointList[i])
 	}
+	relpace_dao.Data = data
+	relpace_dao.Filter = filter
 
-	if err := tx.Commit(); err != nil {
-		log.Println("쿼리:Commit 오류: ", schema_nm, tb_nm)
-		log.Fatal(err)
-	}
-	if err := client.Close(); err != nil {
-		log.Println("디비연결 종료 오류 발생.: ", err)
-		log.Fatal(err)
+	if err := relpace_dao.Run(); err != nil {
 		panic(err)
 	}
+
 }
 func (o *BoundCodeGtype) SQLFormat(idx int) [7]string {
 	i := o.PointList[idx]

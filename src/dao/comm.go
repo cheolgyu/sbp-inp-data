@@ -14,13 +14,16 @@ func ChkErr(err error) {
 	panic(err)
 }
 
-func RunBulkWrite(ctx *context.Context, Collection *mongo.Collection, operations []mongo.WriteModel) {
+func RunBulkWrite(ctx *context.Context, Collection *mongo.Collection, operations []mongo.WriteModel) error {
 	bulkOption := options.BulkWriteOptions{}
 	bulkOption.SetOrdered(true)
 
 	_, err := Collection.BulkWrite(*ctx, operations, &bulkOption)
 	if err != nil {
+		log.Println("RunBulkWrite err::::")
 		log.Fatal(err)
 		panic(err)
 	}
+
+	return err
 }

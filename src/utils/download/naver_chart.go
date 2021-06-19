@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 
 	"log"
 	"strings"
@@ -51,6 +52,7 @@ func (o *NaverChart) Parse() {
 	var list []model.Price
 	file, err := os.Open(o.fnm)
 	if err != nil {
+		log.Println("파일열기 에러")
 		log.Fatal(err)
 		panic(err)
 	}
@@ -84,13 +86,17 @@ func (o *NaverChart) Parse() {
 func (o *NaverChart) Download() {
 	req, err := http.NewRequest("GET", o.url, nil)
 	if err != nil {
+		log.Println("Download NewRequest 에러")
 		log.Fatal(err)
 		panic(err)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 3 * time.Minute,
+	}
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Println("Download Do 에러")
 		log.Fatal(err)
 		panic(err)
 	}
@@ -98,10 +104,16 @@ func (o *NaverChart) Download() {
 	defer resp.Body.Close()
 	out, err := os.Create(o.fnm)
 	if err != nil {
+		log.Println("Download os.Create 에러")
 		log.Fatal(err)
 		panic(err)
 	}
 	defer out.Close()
-	io.Copy(out, resp.Body)
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		log.Println("Download io.Copy 에러")
+		log.Fatal(err)
+		panic(err)
+	}
 
 }

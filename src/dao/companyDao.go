@@ -12,17 +12,18 @@ type Relpace struct {
 	Data   []interface{}
 }
 
-func (o *Relpace) SetColl(item string) {
-	o.DB = "dev"
+func (o *Relpace) SetColl(db string, item string) {
+	o.DB = db
 	o.Coll = item
 }
 
-func (o *Relpace) Run() {
+func (o *Relpace) Run() error {
 	var operations []mongo.WriteModel
 	ctx, client := db.Conn()
+
 	coll := client.Database(o.DB).Collection(o.Coll)
 
-	for i, _ := range o.Data {
+	for i := range o.Data {
 		operationA := mongo.NewReplaceOneModel()
 		operationA.SetFilter(o.Filter[i])
 		operationA.SetReplacement(o.Data[i])
@@ -30,5 +31,7 @@ func (o *Relpace) Run() {
 		operations = append(operations, operationA)
 	}
 
-	RunBulkWrite(ctx, coll, operations)
+	err := RunBulkWrite(ctx, coll, operations)
+	client.Disconnect(*ctx)
+	return err
 }

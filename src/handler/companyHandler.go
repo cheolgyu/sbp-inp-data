@@ -10,20 +10,20 @@ import (
 )
 
 func CompanyHandler() {
-	handler := Company{}
+	handler := CompanySave{}
 	handler.Load()
 	handler.Save()
 
 	//log.Println(handler)
 }
 
-type Company struct {
-	Code   CodeList
-	Detail DetailList
-	State  StateList
+type CompanySave struct {
+	Code   dao.Relpace
+	Detail dao.Relpace
+	State  StateSave
 }
 
-func (o *Company) Load() {
+func (o *CompanySave) Load() {
 	f_download := c.DOWNLOAD_DIR_COMPANY_DETAIL + c.DOWNLOAD_FILENAME_COMPANY_DETAIL
 	if c.DownloadCompany {
 		download_data_krx := download.Data_krx{
@@ -43,11 +43,11 @@ func (o *Company) Load() {
 		_, content := model.RowGet(row)
 		detail := model.StringToCompanyDetail(content)
 
-		o.Detail.Relpace.Filter = append(o.Detail.Relpace.Filter, bson.M{"_id": detail.Code})
-		o.Detail.Relpace.Data = append(o.Detail.Relpace.Data, detail)
+		o.Detail.Filter = append(o.Detail.Filter, bson.M{"_id": detail.Code})
+		o.Detail.Data = append(o.Detail.Data, detail)
 
-		o.Code.Relpace.Filter = append(o.Code.Relpace.Filter, bson.M{"_id": detail.Code})
-		o.Code.Relpace.Data = append(o.Code.Relpace.Data, model.CompanyCode{
+		o.Code.Filter = append(o.Code.Filter, bson.M{"_id": detail.Code})
+		o.Code.Data = append(o.Code.Data, model.CompanyCode{
 			Code: detail.Code,
 			Name: detail.Name,
 		})
@@ -55,41 +55,29 @@ func (o *Company) Load() {
 
 	o.State.Load()
 }
-func (o *Company) Save() {
-	o.Code.Save()
-	o.Detail.Save()
-	o.State.Save()
+func (o *CompanySave) Save() {
+	o.Code.SetColl(c.DB, c.COLL_CODE)
+	o.Code.Run()
+	info := dao.InsertInfo{}
+	info.Updated(c.COLL_CODE)
+
+	o.Detail.SetColl(c.DB, c.COLL_COMPANY_DETAIL)
+	o.Detail.Run()
+	info = dao.InsertInfo{}
+	info.Updated(c.COLL_COMPANY_DETAIL)
+
+	o.State.Relpace.SetColl(c.DB, c.COLL_COMPANY_STATE)
+	o.State.Relpace.Run()
+	info = dao.InsertInfo{}
+	info.Updated(c.COLL_COMPANY_STATE)
 
 }
 
-type CodeList struct {
+type StateSave struct {
 	Relpace dao.Relpace
 }
 
-//코드목록 조회
-func (o *CodeList) SelectAll() {
-
-}
-
-func (o *CodeList) Save() {
-	o.Relpace.SetColl(c.COLL_CODE)
-	o.Relpace.Run()
-}
-
-type DetailList struct {
-	Relpace dao.Relpace
-}
-
-func (o *DetailList) Save() {
-	o.Relpace.SetColl(c.COLL_COMPANY_DETAIL)
-	o.Relpace.Run()
-}
-
-type StateList struct {
-	Relpace dao.Relpace
-}
-
-func (o *StateList) Load() {
+func (o *StateSave) Load() {
 	f_download := c.DOWNLOAD_DIR_COMPANY_STATE + c.DOWNLOAD_FILENAME_COMPANY_STATE
 	if c.DownloadCompany {
 		download_data_krx := download.Data_krx{
@@ -114,7 +102,7 @@ func (o *StateList) Load() {
 
 	}
 }
-func (o *StateList) Save() {
-	o.Relpace.SetColl(c.COLL_COMPANY_STATE)
+func (o *StateSave) Save() {
+	o.Relpace.SetColl(c.DB, c.COLL_COMPANY_STATE)
 	o.Relpace.Run()
 }
