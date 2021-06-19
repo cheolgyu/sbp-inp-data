@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-func Conn() (*context.Context, *mongo.Client) {
+func Conn() *mongo.Client {
 	credential := options.Credential{
 		Username: "root",
 		Password: "example",
@@ -17,16 +17,15 @@ func Conn() (*context.Context, *mongo.Client) {
 	//mongodb://root:example@localhost:27017/
 	clientOpts := options.Client().ApplyURI("mongodb://localhost:27017").SetAuth(credential)
 
-	ctx := context.Background()
-
-	//defer cancel()
-	client, err := mongo.Connect(ctx, clientOpts)
+	client, err := mongo.Connect(context.Background(), clientOpts)
 	if err != nil {
 		log.Panicln(err)
+		panic(err)
 	}
-	err = client.Ping(ctx, readpref.Primary())
+	err = client.Ping(context.Background(), readpref.Primary())
 	if err != nil {
 		log.Panicln(err)
+		panic(err)
 	}
-	return &ctx, client
+	return client
 }

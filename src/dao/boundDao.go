@@ -1,8 +1,9 @@
 package dao
 
 import (
+	"context"
+
 	"github.com/cheolgyu/stock-write/src/c"
-	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,21 +13,19 @@ import (
 type BoundDao struct {
 }
 
-func (o *BoundDao) SelectLast() model.Point {
+func (o *BoundDao) SelectLast(code string) model.Point {
 	res := model.Point{}
-	ctx, client := db.Conn()
 	findOptions := options.FindOne()
 	findOptions.SetSort(bson.D{{"_id", -1}})
 
-	err := client.Database(c.DB).Collection(c.COLL_CODE).FindOne(*ctx, bson.D{}, findOptions).Decode(&res)
+	err := client.Database(c.DB_BOUND).Collection(code).FindOne(context.Background(), bson.D{}, findOptions).Decode(&res)
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return res
 		}
-		//panic(err)
-		return res
+		panic(err)
 	}
-	client.Disconnect(*ctx)
+
 	return res
 }

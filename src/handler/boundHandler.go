@@ -31,7 +31,7 @@ func (o *Bound) Save() {
 		log.Println("시작:", i, "==>", cc.Code)
 		//가격목록 가져왔다.
 		bc := BoundCode{Code: cc.Code}
-		bc.Load()
+		bc.LoadPrice()
 		bc.GetPoint()
 
 	}
@@ -46,20 +46,20 @@ type BoundCode struct {
 // BOUND_POINT구하기.
 func (o *BoundCode) GetPoint() {
 	for i := range o.BoundCodeGtype {
-		log.Println("===========GetPoint==", o.Code, "==시작==")
+		//log.Println("마지막 포인트 찾기:", o.Code)
 		bcg := o.BoundCodeGtype[i]
-		log.Println("===========GetPoint==", o.Code, "price목록수:", len(bcg.PriceList))
+		//log.Println("마지막 포인트 찾기:", o.Code, "price목록수:", len(bcg.PriceList))
 		bcg.GetPointGTYPE()
-		log.Println("===========GetPoint==", o.Code, "bound목록수:", len(bcg.PointList))
+		//log.Println("마지막 포인트 찾기:", o.Code, "bound목록수:", len(bcg.PointList))
 		bcg.Save(o.Code)
 	}
 }
 
 // CODE에 해당하는 가격목록 조회.
-func (o *BoundCode) Load() {
+func (o *BoundCode) LoadPrice() {
 	for i := range c.G_TYPE {
 		g := c.G_TYPE[i]
-		log.Println("Load===========,", o.Code, ",G_TYPE:", g)
+		//log.Println("Load===========,", o.Code, ",G_TYPE:", g)
 		gcg := BoundCodeGtype{
 			Gtype: g,
 		}
@@ -79,11 +79,13 @@ type BoundCodeGtype struct {
 func (o *BoundCodeGtype) Load(code string) {
 
 	bound_dao := dao.BoundDao{}
-	last_point := bound_dao.SelectLast()
+	last_point := bound_dao.SelectLast(code + "_" + o.Gtype)
 	start_price_date := 0
 	if last_point.X1 != 0 {
 		start_price_date = int(last_point.X1)
 	}
+
+	log.Println("가격조회 시작일:", start_price_date, last_point)
 
 	price_dao := dao.PriceDao{}
 	o.PriceList = price_dao.Find(code, start_price_date)
@@ -210,9 +212,10 @@ func (o *BoundCodeGtype) Save(code string) {
 	}
 	relpace_dao.Data = data
 	relpace_dao.Filter = filter
-
-	if err := relpace_dao.Run(); err != nil {
-		panic(err)
+	if len(relpace_dao.Data) > 1 {
+		if err := relpace_dao.Run(); err != nil {
+			panic(err)
+		}
 	}
 
 }

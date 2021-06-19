@@ -1,11 +1,11 @@
 package dao
 
 import (
+	"context"
 	"log"
 	"time"
 
 	"github.com/cheolgyu/stock-write/src/c"
-	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,11 +32,9 @@ type SelectInfo struct {
 }
 
 func (o *SelectInfo) One(name string) model.Info {
-	ctx, client := db.Conn()
-	defer client.Disconnect(*ctx)
 
 	info := model.Info{}
-	err := client.Database(c.DB).Collection(c.COLL_INFO).FindOne(*ctx, bson.M{"_id": name}).Decode(&info)
+	err := client.Database(c.DB).Collection(c.COLL_INFO).FindOne(context.Background(), bson.M{"_id": name}).Decode(&info)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return info

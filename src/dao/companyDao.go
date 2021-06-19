@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"github.com/cheolgyu/stock-write/src/db"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -19,7 +18,6 @@ func (o *Relpace) SetColl(db string, item string) {
 
 func (o *Relpace) Run() error {
 	var operations []mongo.WriteModel
-	ctx, client := db.Conn()
 
 	coll := client.Database(o.DB).Collection(o.Coll)
 
@@ -31,7 +29,6 @@ func (o *Relpace) Run() error {
 		operations = append(operations, operationA)
 	}
 
-	err := RunBulkWrite(ctx, coll, operations)
-	client.Disconnect(*ctx)
+	err := RunBulkWrite(coll, operations)
 	return err
 }
