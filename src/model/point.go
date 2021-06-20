@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/cheolgyu/stock-write/src/c"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // type HighPoint struct {
@@ -23,6 +24,11 @@ type Point struct {
 	X_tick    uint    `bson:"x_tick"`
 	Y_minus   float32 `bson:"y_minus"`
 	Y_Percent float32 `bson:"y_percent"`
+}
+
+func (o *Point) BsonA() bson.A {
+	return bson.A{
+		o.X1, o.Y1, o.X2, o.Y2, o.X_tick, o.Y_minus, o.Y_Percent}
 }
 
 func (o *Point) CSV() string {

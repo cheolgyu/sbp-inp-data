@@ -29,3 +29,26 @@ func (o *BoundDao) SelectLast(code string) model.Point {
 
 	return res
 }
+
+type BoundDaoInsert struct {
+	Coll   string
+	Filter []interface{}
+	Data   []interface{}
+}
+
+func (o *BoundDaoInsert) Run() error {
+	var operations []mongo.WriteModel
+
+	coll := client.Database(c.DB_PRICE).Collection(o.Coll)
+
+	for i := range o.Data {
+		operationA := mongo.NewUpdateOneModel()
+		operationA.SetFilter(o.Filter[i])
+		operationA.SetUpdate(o.Data[i])
+		operationA.SetUpsert(true)
+		operations = append(operations, operationA)
+	}
+
+	err := RunBulkWrite(coll, operations)
+	return err
+}

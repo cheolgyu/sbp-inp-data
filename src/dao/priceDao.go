@@ -21,15 +21,35 @@ func (o *PriceDao) Find(code string, x1 int) []model.Price {
 	cur, currErr := client.Database(c.DB_PRICE).Collection(code).Find(context.Background(), bson.M{"_id": bson.M{"$gte": x1}}, findOptions)
 
 	if currErr != nil {
-		log.Println("3333333333")
 		panic(currErr)
 	}
 	defer cur.Close(context.Background())
 
 	if err := cur.All(context.Background(), &res); err != nil {
-		log.Println("444444444")
 		panic(err)
 	}
 
 	return res
+}
+
+type PriceDaoInsert struct {
+	Coll        string
+	Filter      []interface{}
+	Data        interface{}
+	RemoveStart model.Price
+}
+
+func (o *PriceDaoInsert) Run(code string) {
+	opt := options.Update()
+	opt.SetUpsert(true)
+
+	coll := client.Database(c.DB_PRICE).Collection(o.Coll)
+	if o.RemoveStart.Date != 0 {
+		result, err := coll.UpdateOne(context.Background(), bson.M{"_id": code}, bson.M{"$pull": bson.M{"data": o.RemoveStart.BsonA()}})
+		ChkErr(err)
+		log.Println(result)
+	}
+	_, err := coll.UpdateOne(context.Background(), bson.M{"_id": code}, o.Data, opt)
+	ChkErr(err)
+
 }

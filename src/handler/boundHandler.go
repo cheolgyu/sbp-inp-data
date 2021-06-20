@@ -201,19 +201,18 @@ func (o *BoundCodeGtype) SwitchPrice(i int) float32 {
 // GTYPE별 BOUND 저장.
 func (o *BoundCodeGtype) Save(code string) {
 
-	docName := code + "_" + o.Gtype
-	relpace_dao := dao.Relpace{}
-	relpace_dao.SetColl(c.DB_BOUND, docName)
+	bound_dao_insert := dao.BoundDaoInsert{Coll: code}
+
 	var filter []interface{}
 	var data []interface{}
 	for i := range o.PointList {
-		filter = append(filter, bson.M{"_id": o.PointList[i].X1})
-		data = append(data, o.PointList[i])
+		filter = append(filter, bson.M{o.Gtype + ".0": o.PointList[i].X1})
+		data = append(data, o.PointList[i].BsonA())
 	}
-	relpace_dao.Data = data
-	relpace_dao.Filter = filter
-	if len(relpace_dao.Data) > 1 {
-		if err := relpace_dao.Run(); err != nil {
+	bound_dao_insert.Data = data
+	bound_dao_insert.Filter = filter
+	if len(bound_dao_insert.Data) > 1 {
+		if err := bound_dao_insert.Run(); err != nil {
 			panic(err)
 		}
 	}

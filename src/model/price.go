@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/cheolgyu/stock-write/src/c"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Price struct {
@@ -17,6 +18,11 @@ type Price struct {
 	ClosePrice           float32 `bson:"cp"`
 	Volume               uint32  `bson:"vol"`
 	ForeignerBurnoutRate float32 `bson:"f_rate"`
+}
+
+func (o *Price) BsonA() bson.A {
+	return bson.A{
+		o.Date, o.OpenPrice, o.HighPrice, o.LowPrice, o.ClosePrice, o.Volume, o.ForeignerBurnoutRate}
 }
 
 func format(object string) string {

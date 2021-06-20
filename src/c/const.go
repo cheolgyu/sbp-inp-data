@@ -35,6 +35,8 @@ const COLL_CODE = "code"
 const COLL_COMPANY_DETAIL = "company.detail"
 const COLL_COMPANY_STATE = "company.state"
 const COLL_INFO = "info"
+const COLL_PRICE = PRICE
+const COLL_MARKET = MARKET
 
 const BOUND = "bound"
 const PRICE = "price"
