@@ -26,13 +26,13 @@ func (o *Bound) Save() {
 	selectCode := dao.SelectCode{}
 	obj_list := selectCode.All()
 
-	for i := range obj_list[:1] {
+	for i := range obj_list {
 		cc := obj_list[i]
 		log.Println("시작:", i, "==>", cc.Code)
 
 		bc := BoundCode{Code: cc.Code}
 		bc.LoadPrice()
-		//bc.GetPoint()
+		bc.GetPoint()
 
 	}
 
@@ -209,7 +209,7 @@ func (o *BoundCodeGtype) Save(code string) {
 	for i = range o.PointList {
 		data = append(data, o.PointList[i])
 	}
-	bound_dao_insert.Data = bson.M{"$push": bson.M{o.Gtype: bson.M{"$each": data}}}
+	bound_dao_insert.Data = bson.M{"$push": bson.M{o.Gtype: bson.M{"$each": data, "$sort": bson.M{"x1": 1}}}}
 	if i > 1 {
 		if err := bound_dao_insert.Run(); err != nil {
 			panic(err)

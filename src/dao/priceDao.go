@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/cheolgyu/stock-write/src/c"
@@ -14,6 +15,7 @@ type PriceDao struct {
 }
 
 type PriceDoc struct {
+	Code string        `bson:"_id"`
 	Data []model.Price `bson:"data"`
 }
 
@@ -33,54 +35,62 @@ func (o *PriceDao) Find(code string, x1 int) []model.Price {
 	type AA struct {
 		Data []model.Price `bson:"data"`
 	}
-	//coll := client.Database(c.DB_PRICE).Collection(c.COLL_PRICE)
-	coll := client.Database("remove").Collection("delete_me")
-	cursor, err := coll.Find(context.Background(), bson.D{
-		{"abc", "4"},
-		//{"data.p_date", 20210317},
-		{"data.p_date", bson.D{
-			{"$gte", 20210318},
-		}},
+	coll := client.Database(c.DB_PRICE).Collection(c.COLL_PRICE)
+	pipeline := `
+	[{
+		"$match": {
+		  "_id": "` + code + `"
+		}
+	  },
+	  {
+		"$project": {
+		  "data": {
+			"$filter": {
+			  "input": "$data",
+			  "cond": {
+				"$gte": [	
+				  "$$this.p_date",
+				  ` + fmt.Sprintf("%v", x1) + `
+				]
+			  }
+			}
+		  }
+		}
+	  }
+	  ]
+	`
+	opts := options.Aggregate()
+	cursor, err := coll.Aggregate(context.Background(), MongoPipeline(pipeline), opts)
 
-		// {"data.p_date", bson.D{
-		// 	{"$gte", 20210617},
-		// }},
-		// cursor, currErr := coll.Find(context.Background(), bson.M{
-		// 	"_id": code,
-		// 	"data.p_date": bson.M{
-		// 		"$gte": x1,
-		// 	},
-	}, findOptions)
 	if err != nil {
 		log.Fatal(err)
 		panic(err)
 	}
 
 	defer cursor.Close(context.Background())
-	i := 0
 
-	var res2 []interface{}
-
+	var result_doc_arr []PriceDoc
 	for cursor.Next(context.Background()) {
-		var result = model.Price{}
-		var result2 = bson.M{}
-		err := cursor.Decode(&result2)
+
+		var result_doc = PriceDoc{}
+		err := cursor.Decode(&result_doc)
 		if err != nil {
 			log.Fatal(err)
 			panic(err)
 		}
-		res2 = append(res2, result2)
-		i++
-		if result.Date != 0 {
-			res = append(res, result)
+		if result_doc.Code != "" {
+			result_doc_arr = append(result_doc_arr, result_doc)
 		}
+
 	}
 
-	log.Println("<=====", code, x1, "cnt:=", i)
 	if err := cursor.Err(); err != nil {
 		panic(err)
 	}
-	log.Println("<=====", code, x1, "cnt:=", res2)
+	if len(result_doc_arr) > 0 {
+		return result_doc_arr[0].Data
+	}
+
 	return res
 }
 

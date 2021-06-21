@@ -7,33 +7,64 @@ import (
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/model"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type BoundDao struct {
 }
+type LastPointDoc struct {
+	Code string      `bson:"_id"`
+	Data model.Point `bson:"data"`
+}
 
 func (o *BoundDao) LastGtypePoint(code string, g_type string) model.Point {
 	res := model.Point{}
-	findOptions := options.FindOne()
-	projection := bson.M{
-		g_type + ".$": 1,
-		// c.G_TYPE_LOW:         0,
-		// c.G_TYPE_LOW:         0,
-		// c.G_TYPE_LOW:         0,
-		"_id": 0,
-	}
-	findOptions.SetProjection(projection)
-	filter := bson.M{"_id": code, g_type: code}
 
-	err := client.Database(c.DB_BOUND).Collection(code).FindOne(context.Background(), filter, findOptions).Decode(&res)
+	coll := client.Database(c.DB_BOUND).Collection(code)
+	pipeline := `
+	[{
+		"$match": {
+		  "_id": "` + code + `"
+		}
+	  },
+	  {
+		"$project": {
+			"data": {"$arrayElemAt": [  "$` + g_type + `", -1 ] }
+		}
+	  }
+	  ]
+	`
+	opts := options.Aggregate()
+	cursor, err := coll.Aggregate(context.Background(), MongoPipeline(pipeline), opts)
 
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return res
-		}
+		log.Fatal(err)
 		panic(err)
+	}
+
+	defer cursor.Close(context.Background())
+
+	var result_doc_arr []LastPointDoc
+	for cursor.Next(context.Background()) {
+
+		var result_doc = LastPointDoc{}
+		err := cursor.Decode(&result_doc)
+		if err != nil {
+			log.Fatal(err)
+			panic(err)
+		}
+		if result_doc.Code != "" {
+			result_doc_arr = append(result_doc_arr, result_doc)
+		}
+
+	}
+
+	if err := cursor.Err(); err != nil {
+		panic(err)
+	}
+	if len(result_doc_arr) > 0 {
+		res := result_doc_arr[0]
+		return res.Data
 	}
 
 	return res
@@ -49,7 +80,7 @@ func (o *BoundDaoInsert) Run() error {
 	opt := options.Update()
 	opt.SetUpsert(true)
 
-	coll := client.Database(c.DB_PRICE).Collection(o.Code)
+	coll := client.Database(c.DB_BOUND).Collection(o.Code)
 	if o.RemoveStart.X1 != 0 {
 		result, err := coll.UpdateOne(context.Background(), bson.M{"_id": o.Code}, bson.M{"$pull": bson.M{"data": o.RemoveStart}})
 		ChkErr(err)

@@ -15,7 +15,7 @@ import (
 // x1,y1 좌표가 bound_point
 //x2,y2 는 현재 계산일
 type Point struct {
-	X1        uint    `bson:"_id"`
+	X1        uint    `bson:"x1"`
 	Y1        float32 `bson:"y1"`
 	X2        uint    `bson:"x2"`
 	Y2        float32 `bson:"y2"`

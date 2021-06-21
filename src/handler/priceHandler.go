@@ -126,7 +126,7 @@ func (o *CodePrice) Load(p codePriceDataParam) {
 		o.RemoveStart = o.List[0]
 	}
 
-	o.Data = bson.M{"$push": bson.M{"data": bson.M{"$each": ab}}}
+	o.Data = bson.M{"$push": bson.M{"data": bson.M{"$each": ab, "$sort": bson.M{"p_date": 1}}}}
 }
 func (o *CodePrice) Save(wg_db *sync.WaitGroup) {
 	defer wg_db.Done()
