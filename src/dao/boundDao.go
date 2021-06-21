@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"log"
 
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/model"
@@ -13,12 +14,20 @@ import (
 type BoundDao struct {
 }
 
-func (o *BoundDao) SelectLast(code string) model.Point {
+func (o *BoundDao) LastGtypePoint(code string, g_type string) model.Point {
 	res := model.Point{}
 	findOptions := options.FindOne()
-	findOptions.SetSort(bson.M{"_id": -1})
+	projection := bson.M{
+		g_type + ".$": 1,
+		// c.G_TYPE_LOW:         0,
+		// c.G_TYPE_LOW:         0,
+		// c.G_TYPE_LOW:         0,
+		"_id": 0,
+	}
+	findOptions.SetProjection(projection)
+	filter := bson.M{"_id": code, g_type: code}
 
-	err := client.Database(c.DB_BOUND).Collection(code).FindOne(context.Background(), bson.D{}, findOptions).Decode(&res)
+	err := client.Database(c.DB_BOUND).Collection(code).FindOne(context.Background(), filter, findOptions).Decode(&res)
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -31,24 +40,21 @@ func (o *BoundDao) SelectLast(code string) model.Point {
 }
 
 type BoundDaoInsert struct {
-	Coll   string
-	Filter []interface{}
-	Data   []interface{}
+	Code        string
+	Data        interface{}
+	RemoveStart model.Point
 }
 
 func (o *BoundDaoInsert) Run() error {
-	var operations []mongo.WriteModel
+	opt := options.Update()
+	opt.SetUpsert(true)
 
-	coll := client.Database(c.DB_PRICE).Collection(o.Coll)
-
-	for i := range o.Data {
-		operationA := mongo.NewUpdateOneModel()
-		operationA.SetFilter(o.Filter[i])
-		operationA.SetUpdate(o.Data[i])
-		operationA.SetUpsert(true)
-		operations = append(operations, operationA)
+	coll := client.Database(c.DB_PRICE).Collection(o.Code)
+	if o.RemoveStart.X1 != 0 {
+		result, err := coll.UpdateOne(context.Background(), bson.M{"_id": o.Code}, bson.M{"$pull": bson.M{"data": o.RemoveStart}})
+		ChkErr(err)
+		log.Println(result)
 	}
-
-	err := RunBulkWrite(coll, operations)
+	_, err := coll.UpdateOne(context.Background(), bson.M{"_id": o.Code}, o.Data, opt)
 	return err
 }

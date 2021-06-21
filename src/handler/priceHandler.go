@@ -60,30 +60,33 @@ func (o *CodePriceData) Save(object string) {
 		}
 	}
 
-	for i := range obj_list[:1] {
+	for i := range obj_list {
+		go func(i int) {
+			log.Println(i, "/", len(obj_list), "======code:", obj_list[i])
+			cp := CodePrice{}
+			p := codePriceDataParam{
+				object: object,
 
-		log.Println(i, "/", len(obj_list), "======code:", obj_list[i])
-		cp := CodePrice{}
-		p := codePriceDataParam{
-			object: object,
+				item:      obj_list[i],
+				idx:       i,
+				startDate: startDate,
+				endDate:   endDate,
 
-			item:      obj_list[i],
-			idx:       i,
-			startDate: startDate,
-			endDate:   endDate,
+				wg: &wg,
+			}
+			wg.Add(1)
+			cp.Load(p)
 
-			wg: &wg,
-		}
-		wg.Add(1)
-		cp.Load(p)
+			o.List = append(o.List, cp)
+			wg_db.Add(1)
+			cp.Save(&wg_db)
 
-		o.List = append(o.List, cp)
-		wg_db.Add(1)
-		cp.Save(&wg_db)
-		if i%10 == 0 {
-			wg.Wait()
-			wg_db.Wait()
-		}
+			if i%10 == 0 {
+				wg.Wait()
+				wg_db.Wait()
+			}
+
+		}(i)
 
 	}
 
@@ -116,17 +119,14 @@ func (o *CodePrice) Load(p codePriceDataParam) {
 
 	o.List = nc.ChartData.List
 	var ab []interface{}
-	for _, item := range o.List[:3] {
+	for _, item := range o.List {
 		ab = append(ab, item)
 	}
 	if len(o.List) > 0 {
 		o.RemoveStart = o.List[0]
 	}
-	//log.Println("remove:  o.RemoveStart.BsonA()", o.RemoveStart.BsonA())
 
 	o.Data = bson.M{"$push": bson.M{"data": bson.M{"$each": ab}}}
-	//o.Data = bson.M{"$pull": bson.M{"data": o.RemoveStart.BsonA()}}
-
 }
 func (o *CodePrice) Save(wg_db *sync.WaitGroup) {
 	defer wg_db.Done()
@@ -141,7 +141,8 @@ func (o *CodePrice) Save(wg_db *sync.WaitGroup) {
 
 	price_dao_insert.Data = o.Data
 	price_dao_insert.Filter = o.Filter
-	price_dao_insert.Run(o.Code)
+	err := price_dao_insert.Run(o.Code)
+	ChkErr(err)
 }
 
 func get_download_date() (string, string) {

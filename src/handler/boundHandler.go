@@ -26,13 +26,13 @@ func (o *Bound) Save() {
 	selectCode := dao.SelectCode{}
 	obj_list := selectCode.All()
 
-	for i := range obj_list {
+	for i := range obj_list[:1] {
 		cc := obj_list[i]
 		log.Println("시작:", i, "==>", cc.Code)
-		//가격목록 가져왔다.
+
 		bc := BoundCode{Code: cc.Code}
 		bc.LoadPrice()
-		bc.GetPoint()
+		//bc.GetPoint()
 
 	}
 
@@ -48,10 +48,11 @@ func (o *BoundCode) GetPoint() {
 	for i := range o.BoundCodeGtype {
 		//log.Println("마지막 포인트 찾기:", o.Code)
 		bcg := o.BoundCodeGtype[i]
-		//log.Println("마지막 포인트 찾기:", o.Code, "price목록수:", len(bcg.PriceList))
+		log.Println(o.Code, "price:", len(bcg.PriceList))
 		bcg.GetPointGTYPE()
-		//log.Println("마지막 포인트 찾기:", o.Code, "bound목록수:", len(bcg.PointList))
+		log.Println(o.Code, "bound:", len(bcg.PointList))
 		bcg.Save(o.Code)
+		log.Println(o.Code, "==================================:")
 	}
 }
 
@@ -65,7 +66,7 @@ func (o *BoundCode) LoadPrice() {
 		}
 		gcg.Load(o.Code)
 		o.BoundCodeGtype = append(o.BoundCodeGtype, gcg)
-		log.Println("Load===========,", o.Code, ",G_TYPE:", g, "==>가격목록수:", len(gcg.PriceList))
+		//log.Println("Load===========,", o.Code, ",G_TYPE:", g, "==>가격목록수:", len(gcg.PriceList))
 	}
 }
 
@@ -79,13 +80,13 @@ type BoundCodeGtype struct {
 func (o *BoundCodeGtype) Load(code string) {
 
 	bound_dao := dao.BoundDao{}
-	last_point := bound_dao.SelectLast(code + "_" + o.Gtype)
+	last_point := bound_dao.LastGtypePoint(code, o.Gtype)
 	start_price_date := 0
 	if last_point.X1 != 0 {
 		start_price_date = int(last_point.X1)
 	}
 
-	log.Println("가격조회 시작일:", start_price_date, last_point)
+	log.Println("가격조회 시작일:", start_price_date)
 
 	price_dao := dao.PriceDao{}
 	o.PriceList = price_dao.Find(code, start_price_date)
@@ -96,7 +97,7 @@ func (o *BoundCodeGtype) Load(code string) {
 func (o *BoundCodeGtype) GetPointGTYPE() {
 
 	loop_cnt := len(o.PriceList)
-	log.Println("GetPointGTYPE 시작, price목록수:", loop_cnt)
+	//log.Println("GetPointGTYPE 시작, price목록수:", loop_cnt)
 	if loop_cnt <= 1 {
 		return
 	}
@@ -201,17 +202,15 @@ func (o *BoundCodeGtype) SwitchPrice(i int) float32 {
 // GTYPE별 BOUND 저장.
 func (o *BoundCodeGtype) Save(code string) {
 
-	bound_dao_insert := dao.BoundDaoInsert{Coll: code}
+	bound_dao_insert := dao.BoundDaoInsert{Code: code}
 
-	var filter []interface{}
 	var data []interface{}
-	for i := range o.PointList {
-		filter = append(filter, bson.M{o.Gtype + ".0": o.PointList[i].X1})
-		data = append(data, o.PointList[i].BsonA())
+	i := 0
+	for i = range o.PointList {
+		data = append(data, o.PointList[i])
 	}
-	bound_dao_insert.Data = data
-	bound_dao_insert.Filter = filter
-	if len(bound_dao_insert.Data) > 1 {
+	bound_dao_insert.Data = bson.M{"$push": bson.M{o.Gtype: bson.M{"$each": data}}}
+	if i > 1 {
 		if err := bound_dao_insert.Run(); err != nil {
 			panic(err)
 		}
