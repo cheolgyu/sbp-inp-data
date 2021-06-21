@@ -16,7 +16,7 @@ type BoundDao struct {
 func (o *BoundDao) SelectLast(code string) model.Point {
 	res := model.Point{}
 	findOptions := options.FindOne()
-	findOptions.SetSort(bson.D{{"_id", -1}})
+	findOptions.SetSort(bson.M{"_id": -1})
 
 	err := client.Database(c.DB_BOUND).Collection(code).FindOne(context.Background(), bson.D{}, findOptions).Decode(&res)
 
