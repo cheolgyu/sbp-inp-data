@@ -20,7 +20,7 @@ type LastPointDoc struct {
 func (o *BoundDao) LastGtypePoint(code string, g_type string) model.Point {
 	res := model.Point{}
 
-	coll := client.Database(c.DB_BOUND).Collection(code)
+	coll := client.Database(c.DB_BOUND).Collection(c.COLL_BOUND)
 	pipeline := `
 	[{
 		"$match": {
@@ -80,7 +80,7 @@ func (o *BoundDaoInsert) Run() error {
 	opt := options.Update()
 	opt.SetUpsert(true)
 
-	coll := client.Database(c.DB_BOUND).Collection(o.Code)
+	coll := client.Database(c.DB_BOUND).Collection(c.COLL_BOUND)
 	if o.RemoveStart.X1 != 0 {
 		result, err := coll.UpdateOne(context.Background(), bson.M{"_id": o.Code}, bson.M{"$pull": bson.M{"data": o.RemoveStart}})
 		ChkErr(err)

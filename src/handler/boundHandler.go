@@ -217,18 +217,3 @@ func (o *BoundCodeGtype) Save(code string) {
 	}
 
 }
-func (o *BoundCodeGtype) SQLFormat(idx int) [7]string {
-	i := o.PointList[idx]
-
-	arr := [7]string{}
-	arr[0] = fmt.Sprintf("%d", i.X1)
-	arr[1] = fmt.Sprintf("%.3f", i.Y1)
-	arr[2] = fmt.Sprintf("%d", i.X2)
-	arr[3] = fmt.Sprintf("%.3f", i.Y2)
-	arr[4] = fmt.Sprintf("%.3f", i.Y_minus)
-	arr[5] = fmt.Sprintf("%.3f", i.Y_Percent)
-	arr[6] = fmt.Sprintf("%d", i.X_tick)
-
-	return arr
-	//fmt.Sprintf(format,		i.Date, i.OpenPrice, i.HighPrice, i.LowPrice, i.ClosePrice,		i.Volume, i.ForeignerBurnoutRate)
-}
