@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/cheolgyu/stock-write/src/utils"
@@ -27,6 +28,7 @@ func (p *Project3) Run(arg string) {
 
 func test() {
 	Find()
+	Find2()
 }
 func insert() {
 
@@ -56,33 +58,25 @@ func insert() {
 	coll.InsertMany(context.Background(), docs)
 
 }
-func Find() {
+func Find2() {
 
 	findOptions := options.Find()
-	// projection := bson.M{
-	// 	"data.$": 1,
-	// 	"_id":    0,
-	// }
+
 	projection := bson.D{
-		{"instock.$", 1},
+		{"_id", 0},
+		{"data.$", 1},
 	}
 	findOptions.SetProjection(projection)
 	type AA struct {
 		Data []model.Price `bson:"data"`
 	}
-	//coll := client.Database(c.DB_PRICE).Collection(c.COLL_PRICE)
-	coll := client.Database("remove").Collection("delete_me")
+	coll := client.Database(c.DB_PRICE).Collection(c.COLL_PRICE)
+	//coll := client.Database("remove").Collection("delete_me")
 	cursor, err := coll.Find(context.Background(),
 		bson.D{
-			//{"item", "journal"},
-			//{"data.p_date", 20210317},
-			// {"instock", bson.D{
-			// 	{"$elemMatch", bson.D{
-			// 		{"qty", 5},
-			// 	}},
-			// }},
-			{"instock.qty", bson.D{
-				{"$lt", 6},
+			{"_id", "950220"},
+			{"data.p_date", bson.D{
+				{"$gte", 20210615},
 			}},
 		}, findOptions)
 	if err != nil {
@@ -90,6 +84,70 @@ func Find() {
 		panic(err)
 	}
 
+	defer cursor.Close(context.Background())
+	i := 0
+
+	var res2 []interface{}
+
+	for cursor.Next(context.Background()) {
+		var result2 = bson.M{}
+		err := cursor.Decode(&result2)
+		if err != nil {
+			log.Fatal(err)
+			panic(err)
+		}
+		res2 = append(res2, result2)
+		i++
+
+	}
+
+	log.Println("<=====", "cnt:=", i)
+	if err := cursor.Err(); err != nil {
+		panic(err)
+	}
+	log.Println("<=====", "cnt:=", res2)
+}
+func Find() {
+
+	findOptions := options.Find()
+	// projection := bson.M{
+	// 	"data.$": 1,
+	// 	"_id":    0,
+	// }
+	projection := bson.M{
+		//{"instock", 10},
+		// {"instock.$", bson.D{
+		// 	{"$slice", 1},
+		// }},
+		//"instock": bson.M{"$elemMatch": bson.M{"qty": bson.M{"$gte": 15}}},
+		//"instock.qty": bson.M{"$gte": 15},
+		"instock": bson.M{"$elemMatch": bson.M{"qty": bson.M{"$gte": 15}}},
+	}
+	findOptions.SetProjection(projection)
+
+	//coll := client.Database(c.DB_PRICE).Collection(c.COLL_PRICE)
+	coll := client.Database("remove").Collection("delete_me")
+	cursor, err := coll.Find(context.Background(),
+		bson.M{
+			//{"item", "journal"},
+			//{"data.p_date", 20210317},
+			// {"instock", bson.D{
+			// 	{"$elemMatch", bson.D{
+			// 		{"qty", 5},
+			// 	}},
+			// }},
+
+			"instock.qty": bson.M{
+				"$gte": 15,
+			},
+		}, findOptions)
+	if err != nil {
+		log.Fatal(err)
+		panic(err)
+	}
+	type AA struct {
+		Data []model.Price `bson:"data"`
+	}
 	defer cursor.Close(context.Background())
 	i := 0
 
