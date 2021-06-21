@@ -2,6 +2,7 @@ package c
 
 import (
 	"os"
+	"time"
 )
 
 const DIR_COMPANY_DETAIL = "data/dataset/company_detail/"
@@ -71,10 +72,13 @@ const SCHEMA_NAME_MARKET = MARKET
 
 const SCHEMA_NAME_BOUND = BOUND
 
-var DB = "stock_dev"
+var DB = "stock"
 var DB_PRICE = "stock_" + PRICE
 var DB_MARKET = "stock_" + MARKET
 var DB_BOUND = "stock_" + BOUND
+
+var PRICE_DATE_FORMAT = "20060102"
+var PRICE_DEFAULT_START_DATE = ""
 
 func init() {
 	DownloadCompany = false
@@ -85,4 +89,6 @@ func init() {
 	G_TYPE[G_TYPE_HIGH] = G_TYPE_HIGH
 	G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
 	G_TYPE[G_TYPE_OPEN] = G_TYPE_OPEN
+	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
+
 }

@@ -14,8 +14,8 @@ import (
 
 func PriceHandler() {
 	// 종목가격
-	// cpd_price := CodePriceData{}
-	// cpd_price.Save(c.PRICE)
+	cpd_price := CodePriceData{}
+	cpd_price.Save(c.PRICE)
 	info := dao.InsertInfo{}
 	info.Updated(c.DB_PRICE)
 
@@ -60,7 +60,7 @@ func (o *CodePriceData) Save(object string) {
 		}
 	}
 
-	for i := range obj_list[:2] {
+	for i := range obj_list[:1] {
 
 		log.Println(i, "/", len(obj_list), "======code:", obj_list[i])
 		cp := CodePrice{}
@@ -116,8 +116,8 @@ func (o *CodePrice) Load(p codePriceDataParam) {
 
 	o.List = nc.ChartData.List
 	var ab []interface{}
-	for _, item := range o.List {
-		ab = append(ab, item.BsonA())
+	for _, item := range o.List[:3] {
+		ab = append(ab, item)
 	}
 	if len(o.List) > 0 {
 		o.RemoveStart = o.List[0]
@@ -152,7 +152,7 @@ func get_download_date() (string, string) {
 	start_date = info.Updated
 	end_date = time.Now().Format("20060102")
 	if start_date == "" {
-		start_date = "19900101"
+		start_date = c.PRICE_DEFAULT_START_DATE
 	}
 	log.Println("price_downlaod: startdate,enddate:", start_date, end_date)
 	return start_date, end_date

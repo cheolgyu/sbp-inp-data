@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -11,7 +10,7 @@ import (
 )
 
 type Price struct {
-	Date                 uint32  `bson:"_id"`
+	Date                 uint32  `bson:"p_date"`
 	OpenPrice            float32 `bson:"op"`
 	HighPrice            float32 `bson:"hp"`
 	LowPrice             float32 `bson:"lp"`
@@ -22,7 +21,7 @@ type Price struct {
 
 func (o *Price) BsonA() bson.A {
 	return bson.A{
-		o.Date, o.OpenPrice, o.HighPrice, o.LowPrice, o.ClosePrice, o.Volume, o.ForeignerBurnoutRate}
+		o.Date, o.OpenPrice, o.HighPrice, o.LowPrice, o.ClosePrice, o.Volume, int(o.ForeignerBurnoutRate*100) / 100}
 }
 
 func format(object string) string {
@@ -61,29 +60,10 @@ func StringToPrice(str string) Price {
 	}
 	item.Date = uint32(d)
 
-	op, err := strconv.ParseFloat(arr[1], 32)
-	if err != nil {
-		panic(err)
-	}
-	item.OpenPrice = float32(op)
-
-	hp, err := strconv.ParseFloat(arr[2], 32)
-	if err != nil {
-		panic(err)
-	}
-	item.HighPrice = float32(hp)
-
-	lp, err := strconv.ParseFloat(arr[3], 32)
-	if err != nil {
-		panic(err)
-	}
-	item.LowPrice = float32(lp)
-
-	cp, err := strconv.ParseFloat(arr[4], 32)
-	if err != nil {
-		panic(err)
-	}
-	item.ClosePrice = float32(cp)
+	item.OpenPrice = parse_float(arr[1])
+	item.HighPrice = parse_float(arr[2])
+	item.LowPrice = parse_float(arr[3])
+	item.ClosePrice = parse_float(arr[4])
 
 	v, err := strconv.ParseUint(arr[5], 0, 32)
 	if err != nil {
@@ -96,14 +76,14 @@ func StringToPrice(str string) Price {
 		//대박. 오래된 주식데이터는 외국인 보유가 없음. 없음.
 		str_fr = "0"
 	}
-	fr, err := strconv.ParseFloat(str_fr, 32)
+	item.ForeignerBurnoutRate = parse_float(str_fr)
+	return item
+}
+
+func parse_float(s string) float32 {
+	f_p, err := strconv.ParseFloat(s, 32)
 	if err != nil {
-		log.Println("len=", len(arr))
-		log.Println("arr=", arr)
-		log.Println("str=", str)
-		log.Println("str_fr=", str_fr)
 		panic(err)
 	}
-	item.ForeignerBurnoutRate = float32(fr)
-	return item
+	return float32(int(f_p*100)) / 100
 }

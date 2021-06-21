@@ -39,7 +39,8 @@ todo
       몽고 사용.
          기존에 rdbs -> mongo 
          다시 mongo -> rdbs 
-         지금또 rdbs -> mongo  
+         지금또 rdbs -> mongo 
+         다시 mongo -> rdbs  장난하냐? 이유:  
 
          이번에 몽고 써서 얻는 이점은?
 
@@ -98,7 +99,7 @@ todo
 
                
 
-
+데이터 3년치만 하자 너무 느리다.
 
 
 
