@@ -97,8 +97,7 @@ func (o *BoundCodeGtype) Load(code string) {
 	price_schema_nm := c.SCHEMA_NAME_PRICE
 	price_tb_nm := c.PREFIX_TB_PRICE + code
 
-	conn := db.Conn()
-	defer conn.Close()
+	conn := db.Conn
 
 	// 없으면 table 생성
 	if _, err := conn.Exec("select bound.create_table( $1 ,$2 )", bound_schema_nm, bound_tb_nm); err != nil {
@@ -225,14 +224,14 @@ func GetPointGTYPE_Get_Gway(cur_price float32, ago_price float32) string {
 func (o *BoundCodeGtype) SwitchPrice(i int) float32 {
 	switch o.Gtype {
 	case c.G_TYPE_LOW:
-		return o.PriceList[i].LowPrice
+		return float32(o.PriceList[i].LowPrice)
 	case c.G_TYPE_HIGH:
-		return o.PriceList[i].HighPrice
+		return float32(o.PriceList[i].HighPrice)
 	case c.G_TYPE_CLOSE:
-		return o.PriceList[i].ClosePrice
+		return float32(o.PriceList[i].ClosePrice)
 	default:
 		//c.G_TYPE_OPEN
-		return o.PriceList[i].OpenPrice
+		return float32(o.PriceList[i].OpenPrice)
 
 	}
 }
@@ -243,17 +242,15 @@ func (o *BoundCodeGtype) Save(code string) {
 	schema_nm := c.SCHEMA_NAME_BOUND
 	tb_nm := code + "_" + o.Gtype
 
-	client, tx := db.Begin()
-	defer tx.Rollback()
+	client := db.Conn
 	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s" (x1, y1, x2, y2, y_minus, y_percent, x_tick ) VALUES( $1, $2, $3, $4, $5, $6, $7 )`, schema_nm, tb_nm)
 	q_insert += fmt.Sprintf(`ON CONFLICT ("x1") DO UPDATE SET y1=$2 ,x2=$3 ,y2=$4 ,y_minus=$5 ,y_percent=$6 ,x_tick=$7`)
 
-	stmt, err := tx.Prepare(q_insert)
+	stmt, err := client.Prepare(q_insert)
 	if err != nil {
 
 		log.Println("쿼리:Prepare 오류: ", schema_nm, tb_nm)
 		log.Fatal(err)
-		db.RollBack(tx)
 		panic(err)
 	}
 	defer stmt.Close()
@@ -268,20 +265,10 @@ func (o *BoundCodeGtype) Save(code string) {
 			log.Println("쿼리:stmt.Exec 오류: ", schema_nm, tb_nm)
 			log.Println("쿼리:stmt.Exec 오류: ", o.PointList[i])
 			log.Fatal(err)
-			db.RollBack(tx)
 			panic(err)
 		}
 	}
 
-	if err := tx.Commit(); err != nil {
-		log.Println("쿼리:Commit 오류: ", schema_nm, tb_nm)
-		log.Fatal(err)
-	}
-	if err := client.Close(); err != nil {
-		log.Println("디비연결 종료 오류 발생.: ", err)
-		log.Fatal(err)
-		panic(err)
-	}
 }
 func (o *BoundCodeGtype) SQLFormat(idx int) [7]string {
 	i := o.PointList[idx]

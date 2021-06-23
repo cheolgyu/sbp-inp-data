@@ -15,6 +15,30 @@ DECLARE
         EXECUTE format(
             'CREATE TABLE IF NOT EXISTS %I.%I (
 				"p_date" numeric(8,0) PRIMARY KEY ,
+				"op" numeric(20,0),
+				"hp" numeric(20,0),
+				"lp" numeric(20,0),
+				"cp" numeric(20,0),
+				"vol" numeric(20,0),
+				"fb_rate" numeric(20,2)
+			); ',
+            schema_nm,
+            tb_nm
+        );
+END;
+$$ LANGUAGE plpgsql;
+---------------------------------
+--
+-- price.tb_<code> 테이블 생성용
+-- select  price.create_table_market('price','remove');
+---------------------------------
+CREATE
+OR REPLACE FUNCTION price.create_table_market(schema_nm text, tb_nm text) RETURNS VOID AS $$
+DECLARE
+    BEGIN
+        EXECUTE format(
+            'CREATE TABLE IF NOT EXISTS %I.%I (
+				"p_date" numeric(8,0) PRIMARY KEY ,
 				"op" numeric(20,3),
 				"hp" numeric(20,3),
 				"lp" numeric(20,3),

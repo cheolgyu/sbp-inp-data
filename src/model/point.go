@@ -1,11 +1,8 @@
 package model
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/cheolgyu/stock-write/src/c"
 )
 
 type HighPoint struct {
@@ -23,26 +20,6 @@ type Point struct {
 	Y_minus   float32
 	Y_Percent float32
 	X_tick    uint
-}
-
-func (o *Point) CSV() string {
-	object := c.PRICE
-
-	v := fmt.Sprintf("%v,%v,%v,%v,%v,%v,%v",
-		o.X1,
-		fmt.Sprintf(format(object), o.Y1),
-		o.X2,
-		fmt.Sprintf(format(object), o.Y2),
-		o.Y_minus,
-		o.Y_Percent,
-		o.X_tick,
-	)
-
-	if len(v) < c.REPEAT_CNT_BOUND {
-		v += strings.Repeat(c.REPEAT_STR_BOUND, c.REPEAT_CNT_BOUND-len(v))
-	}
-
-	return v
 }
 
 func StringToPoint(str string) Point {

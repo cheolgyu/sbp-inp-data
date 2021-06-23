@@ -68,8 +68,7 @@ type CodeList struct {
 
 //코드목록 조회
 func (o *CodeList) SelectAll() {
-	conn := db.Conn()
-	defer conn.Close()
+	conn := db.Conn
 	rows, err := conn.Query("select code,name from company.code order by code asc ")
 	ChkErr(err)
 	defer rows.Close()
@@ -95,17 +94,15 @@ func (o *CodeList) SelectAll() {
 }
 
 func (o *CodeList) Save() {
-	client, tx := db.Begin()
-	defer tx.Rollback()
+	client := db.Conn
 	schema_nm := "company"
 	tb_nm := "code"
 	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s"("code", "name") VALUES( $1, $2 )`, schema_nm, tb_nm)
 	q_insert += fmt.Sprintf(`ON CONFLICT ("code") DO UPDATE SET name=$2 `)
-	stmt, err := tx.Prepare(q_insert)
+	stmt, err := client.Prepare(q_insert)
 	if err != nil {
 		log.Println("쿼리:Prepare 오류: ", schema_nm, tb_nm)
 		log.Fatal(err)
-		db.RollBack(tx)
 		panic(err)
 	}
 	defer stmt.Close()
@@ -116,19 +113,8 @@ func (o *CodeList) Save() {
 			log.Println("쿼리:stmt.Exec 오류: ", schema_nm, tb_nm)
 			log.Println("쿼리:stmt.Exec 오류: ", o.List[i])
 			log.Fatal(err)
-			db.RollBack(tx)
 			panic(err)
 		}
-	}
-
-	if err := tx.Commit(); err != nil {
-		log.Println("쿼리:Commit 오류: ", schema_nm, tb_nm)
-		log.Fatal(err)
-	}
-	if err := client.Close(); err != nil {
-		log.Println("디비연결 종료 오류 발생.: ", err)
-		log.Fatal(err)
-		panic(err)
 	}
 
 }
@@ -143,8 +129,7 @@ type DetailList struct {
 
 func (o *DetailList) Save() {
 
-	client, tx := db.Begin()
-	defer tx.Rollback()
+	client := db.Conn
 	schema_nm := "company"
 	tb_nm := "detail"
 	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s"(
@@ -156,11 +141,10 @@ func (o *DetailList) Save() {
 	full_code=$2 ,full_name_kr=$3 ,full_name_eng=$4 ,listing_date=$5 
 	,market=$6 ,securities_classification=$7 ,department=$8 ,stock_type=$9 ,face_value=$10 
 	,listed_stocks=$11   `)
-	stmt, err := tx.Prepare(q_insert)
+	stmt, err := client.Prepare(q_insert)
 	if err != nil {
 		log.Println("쿼리:Prepare 오류: ", schema_nm, tb_nm)
 		log.Fatal(err)
-		db.RollBack(tx)
 		panic(err)
 	}
 	defer stmt.Close()
@@ -176,19 +160,8 @@ func (o *DetailList) Save() {
 			log.Println("쿼리:stmt.Exec 오류: ", schema_nm, tb_nm)
 			log.Println("쿼리:stmt.Exec 오류: ", item)
 			log.Fatal(err)
-			db.RollBack(tx)
 			panic(err)
 		}
-	}
-
-	if err := tx.Commit(); err != nil {
-		log.Println("쿼리:Commit 오류: ", schema_nm, tb_nm)
-		log.Fatal(err)
-	}
-	if err := client.Close(); err != nil {
-		log.Println("디비연결 종료 오류 발생.: ", err)
-		log.Fatal(err)
-		panic(err)
 	}
 
 }
@@ -222,8 +195,7 @@ func (o *StateList) Load() {
 	}
 }
 func (o *StateList) Save() {
-	client, tx := db.Begin()
-	defer tx.Rollback()
+	client := db.Conn
 	schema_nm := "company"
 	tb_nm := "state"
 	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s" 
@@ -235,11 +207,10 @@ func (o *StateList) Save() {
 	stop=$2 ,clear=$3 ,managed=$4 ,ventilation=$5 
 	,unfaithful=$6 ,low_liquidity=$7 ,lack_listed=$8 ,overheated=$9 ,caution=$10 
 	,warning=$11 ,risk=$12   `)
-	stmt, err := tx.Prepare(q_insert)
+	stmt, err := client.Prepare(q_insert)
 	if err != nil {
 		log.Println("쿼리:Prepare 오류: ", schema_nm, tb_nm)
 		log.Fatal(err)
-		db.RollBack(tx)
 		panic(err)
 	}
 	defer stmt.Close()
@@ -256,19 +227,8 @@ func (o *StateList) Save() {
 			log.Println("쿼리:stmt.Exec 오류: ", schema_nm, tb_nm)
 			log.Println("쿼리:stmt.Exec 오류: ", o.List[i])
 			log.Fatal(err)
-			db.RollBack(tx)
 			panic(err)
 		}
-	}
-
-	if err := tx.Commit(); err != nil {
-		log.Println("쿼리:Commit 오류: ", schema_nm, tb_nm)
-		log.Fatal(err)
-	}
-	if err := client.Close(); err != nil {
-		log.Println("디비연결 종료 오류 발생.: ", err)
-		log.Fatal(err)
-		panic(err)
 	}
 
 }

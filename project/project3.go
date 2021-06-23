@@ -13,8 +13,8 @@ func (p *Project3) Run(arg string) {
 	uf := utils.File{}
 	uf.Init()
 	//handler.CompanyHandler()
-	//handler.PriceHandler()
-	handler.BoundHandler()
+	handler.PriceHandler()
+	//handler.BoundHandler()
 
 	//company_run()
 	//price_run()
