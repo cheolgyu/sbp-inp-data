@@ -14,7 +14,7 @@ func (p *Project3) Run(arg string) {
 	uf.Init()
 	//handler.CompanyHandler()
 	//handler.PriceHandler()
-	handler.BoundPointHandler()
+	handler.BoundHandler()
 
 	//company_run()
 	//price_run()

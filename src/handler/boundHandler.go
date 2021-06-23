@@ -11,7 +11,7 @@ import (
 	"github.com/cheolgyu/stock-write/src/model"
 )
 
-func BoundPointHandler() {
+func BoundHandler() {
 	b := Bound{}
 	b.Save()
 }
