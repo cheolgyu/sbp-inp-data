@@ -71,7 +71,8 @@ hist.price
 2021/06/23 23:03:43 [걸린시간] Elipsed Time: 8m2.7183269s
 hist.bound 30conn , powerful mod
 2021/06/24 00:06:39 [걸린시간] Elipsed Time: 17m0.5710731s
-
+hist.bound 30conn + upsert=f, insert public.bound , powerful mod
+2021/06/24 01:15:02 [걸린시간] Elipsed Time: 20m17.6985163s
 DB MAX CONN 30으로 설정 : const.go
 
 DB 구조 변경후

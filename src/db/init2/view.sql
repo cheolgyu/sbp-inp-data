@@ -1,72 +1,40 @@
+DROP VIEW IF EXISTS "public.daily";
 
-
-
+CREATE VIEW public.daily AS
 SELECT C.*,
-	P.*
+	B.CP_X1,
+	B.CP_Y1,
+	B.CP_X2,
+	B.CP_Y2,
+	B.CP_X_TICK,
+	B.CP_Y_MINUS,
+	B.CP_Y_PERCENT,
+	B.OP_X1,
+	B.OP_Y1,
+	B.OP_X2,
+	B.OP_Y2,
+	B.OP_X_TICK,
+	B.OP_Y_MINUS,
+	B.OP_Y_PERCENT,
+	B.LP_X1,
+	B.LP_Y1,
+	B.LP_X2,
+	B.LP_Y2,
+	B.LP_X_TICK,
+	B.LP_Y_MINUS,
+	B.LP_Y_PERCENT,
+	B.HP_X1,
+	B.HP_Y1,
+	B.HP_X2,
+	B.HP_Y2,
+	B.HP_X_TICK,
+	B.HP_Y_MINUS,
+	B.HP_Y_PERCENT,
+	ARRAY_AGG(S.*)
 FROM COMPANY.CODE C
-LEFT JOIN
-	(SELECT BP.*
-		FROM BOUND.POINT BP
-		RIGHT JOIN
-			(SELECT CODE,
-					G_TYPE,
-					MAX(X1) AS X1
-				FROM BOUND.POINT
-				GROUP BY CODE,
-					G_TYPE) T1 ON BP.CODE = T1.CODE
-		AND BP.G_TYPE = T1.G_TYPE
-		AND BP.X1 = T1.X1
-	) P ON C.CODE = P.CODE
-	where c.code = '000020'
-
-
-
-SELECT C.*,
-	P.*
-FROM COMPANY.CODE C
-LEFT JOIN
-	(SELECT BP.*
-		FROM BOUND.POINT BP
-		RIGHT JOIN
-			(SELECT CODE,
-					G_TYPE,
-					MAX(X1) AS X1
-				FROM BOUND.POINT
-				GROUP BY CODE,
-					G_TYPE) T1 ON BP.CODE = T1.CODE
-		AND BP.G_TYPE = T1.G_TYPE
-		AND BP.X1 = T1.X1
-	) P ON C.CODE = P.CODE
-
-
-
-
-
-
-
-
-
-
-
-
-SELECT BP.* 
-FROM BOUND.POINT BP right join (
-SELECT code, g_type, max(X1) as x1
-			FROM BOUND.POINT
-			group by code, g_type
-) t1 on bp.code= t1.code and bp.g_type= t1.g_type and bp.x1 = t1.x1
-WHERE bp.CODE = '000020'  
-;
-
-SELECT BP.*
-FROM BOUND.POINT BP
-WHERE BP.CODE = '000020'
-	AND BP.X1 in
-		(			
-SELECT  max(X1)
-			FROM BOUND.POINT
-			WHERE CODE = '000020'  
-			group by g_type) ;
-			
-			
-			
+LEFT JOIN PUBLIC.BOUND B ON C.CODE = B.CODE
+LEFT JOIN COMPANY.STATE S ON B.CODE = S.CODE
+GROUP BY C.CODE,
+	B.CODE,
+	S.CODE
+ORDER BY B.CP_Y_PERCENT DESC
