@@ -57,7 +57,6 @@ func (o *InsertPriceStock) Insert() error {
 	stmt, err := db.Conn.Prepare(q_insert)
 
 	for _, item := range o.List {
-		println(o.Params.Code, item.Date, item.OpenPrice, item.HighPrice, item.LowPrice, item.ClosePrice, item.Volume, item.ForeignerBurnoutRate)
 		_, err = stmt.Exec(o.Params.Code, item.Date, item.OpenPrice, item.HighPrice, item.LowPrice, item.ClosePrice, item.Volume, item.ForeignerBurnoutRate)
 	}
 	stmt.Close()

@@ -62,6 +62,7 @@ const TABLE_NAME_PRICE = "stock"
 const TABLE_NAME_MARKET = "market"
 
 const SCHEMA_NAME_BOUND = BOUND
+const TABLE_NAME_BOUND = "point"
 
 var PRICE_DATE_FORMAT = "20060102"
 var PRICE_DEFAULT_START_DATE = ""
