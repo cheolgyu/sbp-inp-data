@@ -57,11 +57,9 @@ const G_TYPE_OPEN = "open"
 
 var G_TYPE map[string]string
 
-const PREFIX_TB_PRICE = PRICE + "_"
-const SCHEMA_NAME_PRICE = PRICE
-
-const PREFIX_TB_MARKET = MARKET + "_"
-const SCHEMA_NAME_MARKET = MARKET
+const SCHEMA_NAME_PRICE = "price"
+const TABLE_NAME_PRICE = "stock"
+const TABLE_NAME_MARKET = "market"
 
 const SCHEMA_NAME_BOUND = BOUND
 

@@ -14,6 +14,7 @@ type PriceParams struct {
 	Object    string
 	Schema_nm string
 	Tb_nm     string
+	Code      string
 }
 
 type GetDownloadDate struct {
@@ -39,30 +40,27 @@ func (o *GetDownloadDate) Get() (string, string, error) {
 	return start_date, end_date, err
 }
 
-type InsertPrice struct {
+type InsertPriceStock struct {
 	Params PriceParams
 	Upsert bool
-	List   []model.Price
+	List   []model.PriceStock
 }
 
-func (o *InsertPrice) Insert() error {
-	o.CreateTable()
-
-	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s" (p_date, op, hp, lp, cp, vol, fb_rate ) VALUES( $1, $2, $3, $4, $5, $6, $7 )`, o.Params.Schema_nm, o.Params.Tb_nm)
+func (o *InsertPriceStock) Insert() error {
+	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s" (code, p_date, op, hp, lp, cp, vol, fb_rate ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8 )`,
+		o.Params.Schema_nm,
+		o.Params.Tb_nm,
+	)
 	if o.Upsert {
-		q_insert += `ON CONFLICT ("p_date") DO UPDATE SET op=$2 ,hp=$3 ,lp=$4 ,cp=$5 ,vol=$6 ,fb_rate=$7`
+		q_insert += `ON CONFLICT ("code","p_date") DO UPDATE SET op=$2 ,hp=$3 ,lp=$4 ,cp=$5 ,vol=$6 ,fb_rate=$7`
 	}
 	stmt, err := db.Conn.Prepare(q_insert)
 
 	for _, item := range o.List {
-		_, err = stmt.Exec(item.Date, item.OpenPrice, item.HighPrice, item.LowPrice, item.ClosePrice, item.Volume, item.ForeignerBurnoutRate)
+		println(o.Params.Code, item.Date, item.OpenPrice, item.HighPrice, item.LowPrice, item.ClosePrice, item.Volume, item.ForeignerBurnoutRate)
+		_, err = stmt.Exec(o.Params.Code, item.Date, item.OpenPrice, item.HighPrice, item.LowPrice, item.ClosePrice, item.Volume, item.ForeignerBurnoutRate)
 	}
 	stmt.Close()
 
-	return err
-}
-
-func (o *InsertPrice) CreateTable() error {
-	_, err := db.Conn.Exec("select price.create_table( $1 ,$2 )", o.Params.Schema_nm, o.Params.Tb_nm)
 	return err
 }

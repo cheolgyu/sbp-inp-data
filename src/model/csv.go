@@ -16,6 +16,6 @@ func (o *CompanyState) String() string {
 	return o.String()
 }
 
-func (o *Price) String() string {
+func (o *PriceStock) String() string {
 	return o.String()
 }

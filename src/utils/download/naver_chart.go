@@ -27,7 +27,7 @@ type NaverChart struct {
 type ChartData struct {
 	Object          string
 	Code            string
-	PriceList       []model.Price
+	PriceList       []model.PriceStock
 	PriceMarketList []model.PriceMarket
 }
 
@@ -50,7 +50,7 @@ func (o *NaverChart) Run() {
 }
 
 func (o *NaverChart) Parse() {
-	var list []model.Price
+	var list []model.PriceStock
 	var list_m []model.PriceMarket
 
 	file, err := os.Open(o.fnm)
@@ -90,7 +90,7 @@ func (o *NaverChart) Parse() {
 
 				if dd > ddd {
 					if o.ChartData.Object == c.PRICE {
-						p := model.Price{}
+						p := model.PriceStock{}
 						p.StringToPrice(re_str)
 						list = append(list, p)
 					} else {

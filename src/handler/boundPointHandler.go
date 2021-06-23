@@ -11,7 +11,7 @@ import (
 	"github.com/cheolgyu/stock-write/src/model"
 )
 
-func BoundHandler() {
+func BoundPointHandler() {
 	b := Bound{}
 	b.Save()
 }
@@ -85,7 +85,7 @@ func (o *BoundCode) Load(wg *sync.WaitGroup, done chan bool) {
 
 type BoundCodeGtype struct {
 	Gtype     string
-	PriceList []model.Price
+	PriceList []model.PriceStock
 	PointList []model.Point
 }
 
@@ -95,7 +95,7 @@ func (o *BoundCodeGtype) Load(code string) {
 	bound_schema_nm := c.SCHEMA_NAME_BOUND
 	bound_tb_nm := code + "_" + o.Gtype
 	price_schema_nm := c.SCHEMA_NAME_PRICE
-	price_tb_nm := c.PREFIX_TB_PRICE + code
+	price_tb_nm := c.TABLE_NAME_PRICE
 
 	conn := db.Conn
 
@@ -116,7 +116,7 @@ func (o *BoundCodeGtype) Load(code string) {
 	defer rows.Close()
 
 	for rows.Next() {
-		i := model.Price{}
+		i := model.PriceStock{}
 		if err := rows.Scan(&i.Date, &i.OpenPrice, &i.HighPrice, &i.LowPrice, &i.ClosePrice, &i.Volume, &i.ForeignerBurnoutRate); err != nil {
 			log.Fatal(err)
 			log.Fatal(err)

@@ -59,6 +59,7 @@ todo
 실패-price .스키마에서 table로 가고 가격목록은 json으로 넣기.
 // https://www.alexedwards.net/blog/using-postgresql-jsonb
 
+price one table 만들기.
 
 
 

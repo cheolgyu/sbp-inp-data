@@ -60,7 +60,7 @@ func (o *CodePriceData) Save(object string) {
 		obj_list.List = cl.List
 	}
 
-	for i := range obj_list.List {
+	for i := range obj_list.List[:2] {
 		log.Println("idex===", i, "======code:", obj_list.List[i])
 		//func(i int) {
 		cp := CodePrice{}
@@ -97,7 +97,7 @@ func (o *CodePriceData) Save(object string) {
 type CodePrice struct {
 	Object          string
 	Code            string
-	PriceList       []model.Price
+	PriceList       []model.PriceStock
 	PriceMarketList []model.PriceMarket
 }
 
@@ -125,31 +125,29 @@ func (o *CodePrice) CPLoad(p codePriceDataParam) {
 func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
 	defer wg_db.Done()
 	schema_nm := c.SCHEMA_NAME_PRICE
-	tb_nm := c.PREFIX_TB_PRICE + o.Code
+	tb_nm := c.TABLE_NAME_PRICE
 	if o.Object == c.MARKET {
-		schema_nm = c.SCHEMA_NAME_MARKET
-		tb_nm = c.PREFIX_TB_MARKET + o.Code
+		tb_nm = c.TABLE_NAME_MARKET
 	}
+	params := dao.PriceParams{
+		Object:    o.Object,
+		Code:      o.Code,
+		Schema_nm: schema_nm,
+		Tb_nm:     tb_nm,
+	}
+
 	switch o.Object {
 	case c.PRICE:
-		insert_price := dao.InsertPrice{
-			Params: dao.PriceParams{
-				Object:    o.Object,
-				Schema_nm: schema_nm,
-				Tb_nm:     tb_nm,
-			},
+		insert_price := dao.InsertPriceStock{
+			Params: params,
 			Upsert: false,
 			List:   o.PriceList,
 		}
 		err := insert_price.Insert()
 		return err
 	default:
-		insert := dao.InsertMarket{
-			Params: dao.PriceParams{
-				Object:    o.Object,
-				Schema_nm: schema_nm,
-				Tb_nm:     tb_nm,
-			},
+		insert := dao.InsertPriceMarket{
+			Params: params,
 			Upsert: false,
 			List:   o.PriceMarketList,
 		}

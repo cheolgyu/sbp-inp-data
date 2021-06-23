@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type Price struct {
+type PriceStock struct {
 	Date                 int
 	OpenPrice            int
 	HighPrice            int
@@ -15,7 +15,7 @@ type Price struct {
 	ForeignerBurnoutRate string
 }
 
-func (o *Price) StringToPrice(str string) {
+func (o *PriceStock) StringToPrice(str string) {
 	arr := strings.Split(str, ",")
 	d, err := strconv.ParseInt(arr[0], 0, 64)
 	if err != nil {
