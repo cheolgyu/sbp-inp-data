@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 	"sync"
 
@@ -42,11 +43,11 @@ func (o *Bound) Save() {
 		//가격목록 가져왔다.
 		bc := BoundCode{Code: cc.Code}
 		wg.Add(1)
-		go bc.Load(&wg, done)
+		go bc.GetPrice(&wg, done)
 		<-done
 		wg_db.Add(1)
-		go bc.GetPoint(&wg_db)
-		if i%10 == 0 {
+		go bc.SaveBound(&wg_db)
+		if i%c.DB_MAX_CONN == 0 {
 			wg_db.Wait()
 		}
 	}
@@ -61,20 +62,74 @@ type BoundCode struct {
 }
 
 // BOUND_POINT구하기.
-func (o *BoundCode) GetPoint(wg_db *sync.WaitGroup) {
+func (o *BoundCode) SaveBound(wg_db *sync.WaitGroup) {
 	defer wg_db.Done()
+	o.SaveHistBound()
+	o.SavePublicBound()
+}
+
+func (o *BoundCode) SaveHistBound() {
 	for i := range o.BoundCodeGtype {
-		log.Println("===========GetPoint==", o.Code, "==시작==")
-		bcg := o.BoundCodeGtype[i]
-		log.Println("===========GetPoint==", o.Code, "price목록수:", len(bcg.PriceList))
-		bcg.GetPointGTYPE()
-		log.Println("===========GetPoint==", o.Code, "bound목록수:", len(bcg.PointList))
-		bcg.Save(o.Code)
+		o.BoundCodeGtype[i].GetBoundGype()
+		log.Println("save-hist-bound:", o.Code, ",price-len:", len(o.BoundCodeGtype[i].PriceList), ",bound-len:", len(o.BoundCodeGtype[i].PointList))
+		o.BoundCodeGtype[i].SaveBoundGype(o.Code)
 	}
 }
 
+func (o *BoundCode) SavePublicBound() {
+	b := model.Bound{}
+	b.Code = o.Code
+
+	for i := range o.BoundCodeGtype {
+		if len(o.BoundCodeGtype[i].PointList) > 0 {
+			list := o.BoundCodeGtype[i].PointList
+			sort.Slice(list, func(i, j int) bool {
+				return list[i].X1 > list[j].X1
+			})
+			switch o.BoundCodeGtype[i].Gtype {
+			case c.G_TYPE_CLOSE:
+				b.Cp_X1 = list[0].X1
+				b.Cp_Y1 = list[0].Y1
+				b.Cp_X2 = list[0].X2
+				b.Cp_Y2 = list[0].Y2
+				b.Cp_X_tick = list[0].X_tick
+				b.Cp_Y_minus = list[0].Y_minus
+				b.Cp_Y_Percent = list[0].Y_Percent
+			case c.G_TYPE_OPEN:
+				b.Op_X1 = list[0].X1
+				b.Op_Y1 = list[0].Y1
+				b.Op_X2 = list[0].X2
+				b.Op_Y2 = list[0].Y2
+				b.Op_X_tick = list[0].X_tick
+				b.Op_Y_minus = list[0].Y_minus
+				b.Op_Y_Percent = list[0].Y_Percent
+			case c.G_TYPE_LOW:
+				b.Lp_X1 = list[0].X1
+				b.Lp_Y1 = list[0].Y1
+				b.Lp_X2 = list[0].X2
+				b.Lp_Y2 = list[0].Y2
+				b.Lp_X_tick = list[0].X_tick
+				b.Lp_Y_minus = list[0].Y_minus
+				b.Lp_Y_Percent = list[0].Y_Percent
+			default:
+				b.Hp_X1 = list[0].X1
+				b.Hp_Y1 = list[0].Y1
+				b.Hp_X2 = list[0].X2
+				b.Hp_Y2 = list[0].Y2
+				b.Hp_X_tick = list[0].X_tick
+				b.Hp_Y_minus = list[0].Y_minus
+				b.Hp_Y_Percent = list[0].Y_Percent
+			}
+
+		}
+	}
+
+	err := dao.InsertPublicBound(b, upsert)
+	ChkErr(err)
+}
+
 // CODE에 해당하는 가격목록 조회.
-func (o *BoundCode) Load(wg *sync.WaitGroup, done chan bool) {
+func (o *BoundCode) GetPrice(wg *sync.WaitGroup, done chan bool) {
 	defer wg.Done()
 	for i := range c.G_TYPE {
 		g := c.G_TYPE[i]
@@ -82,9 +137,9 @@ func (o *BoundCode) Load(wg *sync.WaitGroup, done chan bool) {
 		gcg := BoundCodeGtype{
 			Gtype: g,
 		}
-		gcg.Load(o.Code)
+		gcg.GetPrice(o.Code)
 		o.BoundCodeGtype = append(o.BoundCodeGtype, gcg)
-		log.Println("Load===========,", o.Code, ",G_TYPE:", g, "==>가격목록수:", len(gcg.PriceList))
+		log.Println("get-price===========,", o.Code, ",G_TYPE:", g, ",len=:", len(gcg.PriceList))
 	}
 	done <- true
 }
@@ -96,7 +151,7 @@ type BoundCodeGtype struct {
 }
 
 // GTYPE별 각각의 가격 목록 조회.
-func (o *BoundCodeGtype) Load(code string) {
+func (o *BoundCodeGtype) GetPrice(code string) {
 
 	list, err := dao.GetPriceByLastBound(code, o.Gtype)
 	if err != nil {
@@ -106,10 +161,9 @@ func (o *BoundCodeGtype) Load(code string) {
 }
 
 // GTYPE별 각각의 BOUND_POINT 구하기
-func (o *BoundCodeGtype) GetPointGTYPE() {
+func (o *BoundCodeGtype) GetBoundGype() {
 
 	loop_cnt := len(o.PriceList)
-	log.Println("GetPointGTYPE 시작, price목록수:", loop_cnt)
 	if loop_cnt <= 1 {
 		return
 	}
@@ -120,14 +174,14 @@ func (o *BoundCodeGtype) GetPointGTYPE() {
 
 	cur_p := o.SwitchPrice(0)
 	ago_p := o.SwitchPrice(1)
-	cur_g_way := GetPointGTYPE_Get_Gway(cur_p, ago_p)
+	cur_g_way := GetBoundGype_Get_Gway(cur_p, ago_p)
 
 	write_cnt := 0
 	for i := 0; i < loop_cnt-1; i++ {
 
 		p_cur := o.SwitchPrice(i)
 		p_age := o.SwitchPrice(i + 1)
-		res := GetPointGTYPE_Swith_Gway(p_cur, p_age, cur_g_way)
+		res := GetBoundGype_Swith_Gway(p_cur, p_age, cur_g_way)
 		if !res {
 			keep_cnt++
 		} else {
@@ -156,14 +210,14 @@ func (o *BoundCodeGtype) GetPointGTYPE() {
 			keep_cnt = 0
 			cur_p = o.SwitchPrice(i)
 			ago_p = o.SwitchPrice(i + 1)
-			cur_g_way = GetPointGTYPE_Get_Gway(cur_p, ago_p)
+			cur_g_way = GetBoundGype_Get_Gway(cur_p, ago_p)
 
 			write_cnt++
 		}
 	}
 }
 
-func GetPointGTYPE_Swith_Gway(p_cur float32, p_age float32, cur_g_way string) bool {
+func GetBoundGype_Swith_Gway(p_cur float32, p_age float32, cur_g_way string) bool {
 	switch cur_g_way {
 	case "eq":
 		if p_cur > p_age {
@@ -182,7 +236,7 @@ func GetPointGTYPE_Swith_Gway(p_cur float32, p_age float32, cur_g_way string) bo
 	return false
 }
 
-func GetPointGTYPE_Get_Gway(cur_price float32, ago_price float32) string {
+func GetBoundGype_Get_Gway(cur_price float32, ago_price float32) string {
 	g_way := ""
 	if cur_price > ago_price {
 		g_way = "up"
@@ -212,7 +266,7 @@ func (o *BoundCodeGtype) SwitchPrice(i int) float32 {
 }
 
 // GTYPE별 BOUND 저장.
-func (o *BoundCodeGtype) Save(code string) {
-	err := dao.InsertBoundPoint(code, o.Gtype, o.PointList, upsert)
+func (o *BoundCodeGtype) SaveBoundGype(code string) {
+	err := dao.InsertHistBound(code, o.Gtype, o.PointList, upsert)
 	ChkErr(err)
 }

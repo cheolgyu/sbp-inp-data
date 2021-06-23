@@ -1,7 +1,9 @@
 
-DROP SCHEMA IF EXISTS "bound" CASCADE;
-CREATE SCHEMA "bound";
-CREATE TABLE IF NOT EXISTS BOUND .point (
+--  DROP SCHEMA IF EXISTS "hist" CASCADE;
+CREATE SCHEMA "hist";
+
+DROP TABLE IF  EXISTS hist.bound ;
+CREATE TABLE IF NOT EXISTS hist.bound (
     "code" text,
     "g_type" text,
     "x1" numeric(20, 0),

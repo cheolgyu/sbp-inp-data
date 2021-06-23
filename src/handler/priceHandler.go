@@ -16,8 +16,8 @@ func PriceHandler() {
 	cpd_price.Save(c.PRICE)
 
 	// 마켓가격
-	cpd_market := CodePriceData{}
-	cpd_market.Save(c.MARKET)
+	// cpd_market := CodePriceData{}
+	// cpd_market.Save(c.MARKET)
 }
 
 type CodePriceData struct {
@@ -124,10 +124,10 @@ func (o *CodePrice) CPLoad(p codePriceDataParam) {
 
 func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
 	defer wg_db.Done()
-	schema_nm := c.SCHEMA_NAME_PRICE
-	tb_nm := c.TABLE_NAME_PRICE
+	schema_nm := c.SCHEMA_NAME_HISTORY
+	tb_nm := c.TABLE_NAME_HISTORY_PRICE_STOCK
 	if o.Object == c.MARKET {
-		tb_nm = c.TABLE_NAME_MARKET
+		tb_nm = c.TABLE_NAME_HISTORY_PRICE_MARKET
 	}
 	params := dao.PriceParams{
 		Object:    o.Object,
@@ -143,7 +143,7 @@ func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
 			Upsert: false,
 			List:   o.PriceList,
 		}
-		err := insert_price.Insert()
+		err := insert_price.InsertHistPrice()
 		return err
 	default:
 		insert := dao.InsertPriceMarket{

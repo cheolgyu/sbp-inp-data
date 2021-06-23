@@ -57,20 +57,23 @@ const G_TYPE_OPEN = "open"
 
 var G_TYPE map[string]string
 
+const SCHEMA_NAME_PUBLIC = "public"
+const TABLE_NAME_BOUND = "bound"
+
 const SCHEMA_NAME_COMPANY_CODE = "company"
 const TABLE_NAME_COMPANY_CODE = "code"
 const TABLE_NAME_COMPANY_DETAIL = "detail"
 const TABLE_NAME_COMPANY_STATE = "state"
 
-const SCHEMA_NAME_PRICE = "price"
-const TABLE_NAME_PRICE = "stock"
-const TABLE_NAME_MARKET = "market"
-
-const SCHEMA_NAME_BOUND = BOUND
-const TABLE_NAME_BOUND = "point"
+const SCHEMA_NAME_HISTORY = "hist"
+const TABLE_NAME_HISTORY_BOUND = "bound"
+const TABLE_NAME_HISTORY_PRICE_STOCK = "stock"
+const TABLE_NAME_HISTORY_PRICE_MARKET = "market"
 
 var PRICE_DATE_FORMAT = "20060102"
 var PRICE_DEFAULT_START_DATE = ""
+
+var DB_MAX_CONN = 30
 
 func init() {
 	DownloadCompany = false

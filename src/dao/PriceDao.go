@@ -46,7 +46,7 @@ type InsertPriceStock struct {
 	List   []model.PriceStock
 }
 
-func (o *InsertPriceStock) Insert() error {
+func (o *InsertPriceStock) InsertHistPrice() error {
 	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s" (code, p_date, op, hp, lp, cp, vol, fb_rate ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8 )`,
 		o.Params.Schema_nm,
 		o.Params.Tb_nm,

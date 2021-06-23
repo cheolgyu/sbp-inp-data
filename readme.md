@@ -67,7 +67,25 @@ golang에서 bound 계산후 마지막 것만뽑아서 public.bound에 insert하
 : 쿼리로 짜봤는데 너무 오래걸리고 하루  한번 만 바뀌는데 동적으로 계산하기 보단. 이 방법이 나을듯.   
 view 역활로 public.bound table 이용
 
+hist.price 
+2021/06/23 23:03:43 [걸린시간] Elipsed Time: 8m2.7183269s
+hist.bound 30conn , powerful mod
+2021/06/24 00:06:39 [걸린시간] Elipsed Time: 17m0.5710731s
 
+DB MAX CONN 30으로 설정 : const.go
+
+DB 구조 변경후
+   hist. (추후 파티션 적용)
+      stock
+      market
+      bound
+   public.
+      info
+      bound
+   company.
+      code
+      state
+      detail
 
 
        

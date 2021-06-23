@@ -1,8 +1,7 @@
-DROP SCHEMA IF EXISTS "market" CASCADE;
-CREATE SCHEMA "market";
-DROP SCHEMA IF EXISTS "price" CASCADE;
-CREATE SCHEMA "price";
-CREATE TABLE IF NOT EXISTS price.stock (
+--  DROP SCHEMA IF EXISTS "hist" CASCADE;
+--  CREATE SCHEMA "hist";
+
+CREATE TABLE IF NOT EXISTS hist.stock (
 	"code" text,
 	"p_date" numeric(8, 0),
 	"op" numeric(20, 0),
@@ -14,7 +13,7 @@ CREATE TABLE IF NOT EXISTS price.stock (
 	PRIMARY KEY(code, p_date)
 ) ;
 
-CREATE TABLE IF NOT EXISTS price.market (
+CREATE TABLE IF NOT EXISTS hist.market (
 	"code" text,
 	"p_date" numeric(8, 0),
 	"op" numeric(20, 2),
