@@ -60,7 +60,7 @@ func (o *CodePriceData) Save(object string) {
 		obj_list.List = cl.List
 	}
 
-	for i := range obj_list.List[:2] {
+	for i := range obj_list.List {
 		log.Println("idex===", i, "======code:", obj_list.List[i])
 		//func(i int) {
 		cp := CodePrice{}
@@ -83,7 +83,7 @@ func (o *CodePriceData) Save(object string) {
 		wg_db.Add(1)
 		go cp.CPSave(&wg_db)
 
-		if i%90 == 0 {
+		if i%50 == 0 {
 			wg_db.Wait()
 		}
 		//defer wg.Done()

@@ -58,6 +58,11 @@ func (o *InsertPriceStock) Insert() error {
 
 	for _, item := range o.List {
 		_, err = stmt.Exec(o.Params.Code, item.Date, item.OpenPrice, item.HighPrice, item.LowPrice, item.ClosePrice, item.Volume, item.ForeignerBurnoutRate)
+		if err != nil {
+			log.Fatalln("쿼리 Insert:", err, item)
+			panic(err)
+		}
+
 	}
 	stmt.Close()
 

@@ -60,6 +60,13 @@ todo
 // https://www.alexedwards.net/blog/using-postgresql-jsonb
 
 price one table 만들기.
+bound 
+2021/06/23 17:30:52 [걸린시간] Elipsed Time: 56m19.0167259s
+기존 bound.point는 bound.point_hist로 바꾸고 
+golang에서 bound 계산후 마지막 것만뽑아서 public.bound에 insert하기.
+: 쿼리로 짜봤는데 너무 오래걸리고 하루  한번 만 바뀌는데 동적으로 계산하기 보단. 이 방법이 나을듯.   
+view 역활로 public.bound table 이용
+
 
 
 
