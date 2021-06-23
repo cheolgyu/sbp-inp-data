@@ -57,6 +57,11 @@ const G_TYPE_OPEN = "open"
 
 var G_TYPE map[string]string
 
+const SCHEMA_NAME_COMPANY_CODE = "company"
+const TABLE_NAME_COMPANY_CODE = "code"
+const TABLE_NAME_COMPANY_DETAIL = "detail"
+const TABLE_NAME_COMPANY_STATE = "state"
+
 const SCHEMA_NAME_PRICE = "price"
 const TABLE_NAME_PRICE = "stock"
 const TABLE_NAME_MARKET = "market"
