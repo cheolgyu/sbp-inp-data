@@ -5,17 +5,6 @@ import (
 	"time"
 )
 
-const DIR_COMPANY_DETAIL = "data/dataset/company_detail/"
-const DIR_COMPANY_STATE = "data/dataset/company_state/"
-const DIR_FILENAME_COMPANY_DETAIL = "company_detail.csv"
-const DIR_FILENAME_COMPANY_STATE = "company_state.csv"
-const DIR_PRICE = "data/dataset/price/"
-const DIR_MARKET = "data/dataset/market/"
-const DIR_BOUND = "data/dataset/bound/"
-const DIR_BOUND_PRICE = DIR_BOUND + "price/"
-const DIR_BOUND_MARKET = DIR_BOUND + "market/"
-const DIR_BOUND_FILENAME_INFO = "info.csv"
-
 const DOWNLOAD_URL_COMPANY_DETAIL_CODE = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd"
 const DOWNLOAD_URL_COMPANY_DETAIL_DATA = "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd"
 const DOWNLOAD_URL_COMPANY_DETAIL_PARAMS = "mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms/MDC/STAT/standard/MDCSTAT01901"
