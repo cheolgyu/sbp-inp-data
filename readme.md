@@ -75,6 +75,8 @@ hist.bound 30conn + upsert=f, insert public.bound , powerful mod
 2021/06/24 01:15:02 [걸린시간] Elipsed Time: 20m17.6985163s
 DB MAX CONN 30으로 설정 : const.go
 
+hist.*,pub.bound_*
+2021/06/24 10:24:59 [걸린시간] Elipsed Time: 34m25.4326554s
 DB 구조 변경후
    hist. (추후 파티션 적용)
       stock

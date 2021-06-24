@@ -63,12 +63,22 @@ type CodeList struct {
 	List []model.CompanyCode
 }
 
-//코드목록 조회
-func (o *CodeList) SelectAll() {
+//회사 코드목록 조회
+func (o *CodeList) GetCompanyCode() {
 	list, err := dao.GetCompanyCode()
 	ChkErr(err)
 	o.List = list
 
+}
+
+//마켓 코드목록
+func (o *CodeList) GetMarketCode() {
+	for i := range model.MarketList {
+		o.List = append(o.List, model.CompanyCode{
+			Code: model.MarketList[i],
+			Name: model.MarketListNmae[i],
+		})
+	}
 }
 
 func (o *CodeList) Save() {

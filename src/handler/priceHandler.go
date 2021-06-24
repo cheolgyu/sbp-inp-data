@@ -10,14 +10,19 @@ import (
 	"github.com/cheolgyu/stock-write/src/utils/download"
 )
 
+var upsert_price bool
+
+func init() {
+	upsert_price = false
+}
 func PriceHandler() {
 	// 종목가격
 	cpd_price := CodePriceData{}
 	cpd_price.Save(c.PRICE)
 
 	// 마켓가격
-	// cpd_market := CodePriceData{}
-	// cpd_market.Save(c.MARKET)
+	cpd_market := CodePriceData{}
+	cpd_market.Save(c.MARKET)
 }
 
 type CodePriceData struct {
@@ -47,7 +52,7 @@ func (o *CodePriceData) Save(object string) {
 
 	if object == c.PRICE {
 		comp := Company{}
-		comp.Code.SelectAll()
+		comp.Code.GetCompanyCode()
 		obj_list.List = comp.Code.List
 	} else if object == c.MARKET {
 		cl := CodeList{}
@@ -140,7 +145,7 @@ func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
 	case c.PRICE:
 		insert_price := dao.InsertPriceStock{
 			Params: params,
-			Upsert: false,
+			Upsert: upsert_price,
 			List:   o.PriceList,
 		}
 		err := insert_price.InsertHistPrice()
@@ -148,7 +153,7 @@ func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
 	default:
 		insert := dao.InsertPriceMarket{
 			Params: params,
-			Upsert: false,
+			Upsert: upsert_price,
 			List:   o.PriceMarketList,
 		}
 		err := insert.Insert()

@@ -58,7 +58,8 @@ const G_TYPE_OPEN = "open"
 var G_TYPE map[string]string
 
 const SCHEMA_NAME_PUBLIC = "public"
-const TABLE_NAME_BOUND = "bound"
+const TABLE_NAME_BOUND_STOCK = "bound_stock"
+const TABLE_NAME_BOUND_MARKET = "bound_market"
 
 const SCHEMA_NAME_COMPANY_CODE = "company"
 const TABLE_NAME_COMPANY_CODE = "code"
@@ -66,9 +67,10 @@ const TABLE_NAME_COMPANY_DETAIL = "detail"
 const TABLE_NAME_COMPANY_STATE = "state"
 
 const SCHEMA_NAME_HISTORY = "hist"
-const TABLE_NAME_HISTORY_BOUND = "bound"
-const TABLE_NAME_HISTORY_PRICE_STOCK = "stock"
-const TABLE_NAME_HISTORY_PRICE_MARKET = "market"
+const TABLE_NAME_HISTORY_BOUND_STOCK = "bound_stock"
+const TABLE_NAME_HISTORY_BOUND_MARKET = "bound_market"
+const TABLE_NAME_HISTORY_PRICE_STOCK = "price_stock"
+const TABLE_NAME_HISTORY_PRICE_MARKET = "price_market"
 
 var PRICE_DATE_FORMAT = "20060102"
 var PRICE_DEFAULT_START_DATE = ""

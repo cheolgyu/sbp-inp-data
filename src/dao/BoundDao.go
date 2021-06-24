@@ -10,41 +10,69 @@ import (
 	"github.com/cheolgyu/stock-write/src/model"
 )
 
-var tb_hist_bound string
-var tb_hist_price string
+var tb_hist_bound_stock string
+var tb_hist_bound_market string
+var tb_hist_price_stock string
+var tb_hist_price_market string
 
-//var tb_hist_market string
-var tb_bound string
+var tb_public_bound_stock string
+var tb_public_bound_market string
 
 func init() {
-	tb_hist_bound = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_HISTORY, c.TABLE_NAME_HISTORY_BOUND)
-	tb_hist_price = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_HISTORY, c.TABLE_NAME_HISTORY_PRICE_STOCK)
-	//tb_hist_market = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_HISTORY, c.TABLE_NAME_HISTORY_PRICE_MARKET)
-	tb_bound = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_PUBLIC, c.TABLE_NAME_BOUND)
+	tb_hist_bound_stock = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_HISTORY, c.TABLE_NAME_HISTORY_BOUND_STOCK)
+	tb_hist_bound_market = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_HISTORY, c.TABLE_NAME_HISTORY_BOUND_MARKET)
+
+	tb_hist_price_stock = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_HISTORY, c.TABLE_NAME_HISTORY_PRICE_STOCK)
+	tb_hist_price_market = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_HISTORY, c.TABLE_NAME_HISTORY_PRICE_MARKET)
+
+	tb_public_bound_stock = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_PUBLIC, c.TABLE_NAME_BOUND_STOCK)
+	tb_public_bound_market = fmt.Sprintf(" %v.%v ", c.SCHEMA_NAME_PUBLIC, c.TABLE_NAME_BOUND_MARKET)
 
 }
 
-func GetPriceByLastBound(code string, gType string) ([]model.PriceStock, error) {
-	res := []model.PriceStock{}
+// tb_hist_bound, tb_hist_price, tb_pub_bound := getTbNm(obj)
+func getTbNm(obj string) (string, string, string) {
+	tb_nm_hist_bound := tb_hist_bound_stock
+	tb_nm_hist_price := tb_hist_price_stock
+	tb_nm_pub_bound := tb_public_bound_stock
+
+	if obj == c.MARKET {
+		tb_nm_hist_bound = tb_hist_bound_market
+		tb_nm_hist_price = tb_hist_price_market
+		tb_nm_pub_bound = tb_public_bound_market
+	}
+	return tb_nm_hist_bound, tb_nm_hist_price, tb_nm_pub_bound
+}
+
+// 바운스 마지막 시작일자 보다 큰 가격목록 조회.
+
+// obj price 도 model.PriceMarket 로  담아서 보내고 사용시 model.PriceMarket.ToPriceStock() 이용하기.
+func GetPriceByLastBound(obj string, code string, gType string) ([]model.PriceMarket, error) {
+	res_market := []model.PriceMarket{}
+	tb_hist_bound, tb_hist_price, _ := getTbNm(obj)
 
 	query := "SELECT PS.P_DATE, PS.OP, PS.HP, PS.LP, PS.CP FROM " +
-		tb_hist_price + " PS WHERE PS.CODE = $1 AND P_DATE >= ( SELECT COALESCE(max(cp_x1),0) FROM " +
-		tb_bound + " WHERE  CODE = $1 ) "
+		tb_hist_price + " PS WHERE PS.CODE = $1 AND PS.P_DATE >= ( SELECT COALESCE(max(x1),0) FROM " +
+		tb_hist_bound + " WHERE  CODE = $1 AND G_TYPE= $2 ) order  by ps.p_date asc "
 
-	rows, err := db.Conn.QueryContext(context.Background(), query, code)
+	//log.Fatal(query)
+
+	rows, err := db.Conn.QueryContext(context.Background(), query, code, gType)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err, tb_hist_bound, tb_hist_price)
 		panic(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		item := model.PriceStock{}
+		item := model.PriceMarket{}
+
 		if err := rows.Scan(&item.Date, &item.OpenPrice, &item.HighPrice, &item.LowPrice, &item.ClosePrice); err != nil {
 			log.Fatal(err)
 			panic(err)
 		}
-		res = append(res, item)
+		res_market = append(res_market, item)
+
 	}
 	// Check for errors from iterating over rows.
 	if err := rows.Err(); err != nil {
@@ -52,11 +80,12 @@ func GetPriceByLastBound(code string, gType string) ([]model.PriceStock, error) 
 		panic(err)
 	}
 
-	return res, err
+	return res_market, err
 }
 
-func InsertHistBound(code string, gType string, list []model.Point, upsert bool) error {
+func InsertHistBound(obj string, code string, gType string, list []model.Point, upsert bool) error {
 	client := db.Conn
+	tb_hist_bound, _, _ := getTbNm(obj)
 	q_insert := fmt.Sprintf(`INSERT INTO %s (code, g_type, x1, y1, x2, y2, x_tick, y_minus, y_percent ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8, $9 )`, tb_hist_bound)
 	if upsert {
 		q_insert += ` ON CONFLICT ("code","g_type","x1") DO UPDATE SET y1=$4 ,x2=$5 ,y2=$6 ,x_tick=$7 ,y_minus=$8 ,y_percent=$9 `
@@ -80,10 +109,12 @@ func InsertHistBound(code string, gType string, list []model.Point, upsert bool)
 	return err
 }
 
-func InsertPublicBound(item model.Bound, upsert bool) error {
+func InsertPublicBound(obj string, item model.Bound, upsert bool) error {
+	_, _, tb_pub_bound := getTbNm(obj)
+
 	client := db.Conn
 	q_insert := `
-	INSERT INTO ` + tb_bound + `(
+	INSERT INTO ` + tb_pub_bound + `(
 		code, cp_x1, cp_y1, cp_x2, cp_y2, cp_x_tick, cp_y_minus, cp_y_percent, op_x1, op_y1, op_x2, op_y2, op_x_tick, op_y_minus, op_y_percent, lp_x1, lp_y1, lp_x2, lp_y2, lp_x_tick, lp_y_minus, lp_y_percent, hp_x1, hp_y1, hp_x2, hp_y2, hp_x_tick, hp_y_minus, hp_y_percent)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)
 	`
