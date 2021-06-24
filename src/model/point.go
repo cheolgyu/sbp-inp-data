@@ -3,6 +3,7 @@ package model
 import (
 	"strconv"
 	"strings"
+<<<<<<< HEAD
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -27,6 +28,20 @@ type Point struct {
 func (o *Point) BsonA() bson.A {
 	return bson.A{
 		o.X1, o.Y1, o.X2, o.Y2, o.X_tick, o.Y_minus, o.Y_Percent}
+=======
+)
+
+// x1,y1 좌표가 bound_point
+//x2,y2 는 현재 계산일
+type Point struct {
+	X1        uint
+	Y1        float32
+	X2        uint
+	Y2        float32
+	X_tick    uint
+	Y_minus   float32
+	Y_Percent float32
+>>>>>>> postgresql
 }
 
 func StringToPoint(str string) Point {

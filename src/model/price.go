@@ -1,6 +1,7 @@
 package model
 
 import (
+<<<<<<< HEAD
 	"fmt"
 	"strconv"
 	"strings"
@@ -30,48 +31,69 @@ func format(object string) string {
 	} else {
 		return "%.3f"
 	}
+=======
+	"strconv"
+	"strings"
+)
+
+type PriceStock struct {
+	Date                 int
+	OpenPrice            int
+	HighPrice            int
+	LowPrice             int
+	ClosePrice           int
+	Volume               int
+	ForeignerBurnoutRate string
+>>>>>>> postgresql
 }
 
-func (o *Price) CSV(object string) string {
-
-	v := fmt.Sprintf("%v,%v,%v,%v,%v,%v,%v",
-		o.Date,
-		fmt.Sprintf(format(object), o.OpenPrice),
-		fmt.Sprintf(format(object), o.HighPrice),
-		fmt.Sprintf(format(object), o.LowPrice),
-		fmt.Sprintf(format(object), o.ClosePrice),
-		o.Volume,
-		o.ForeignerBurnoutRate,
-	)
-
-	if len(v) < c.REPEAT_CNT_PRICE {
-		v += strings.Repeat(c.REPEAT_STR_PRICE, c.REPEAT_CNT_PRICE-len(v))
-	}
-
-	return v
-}
-
-func StringToPrice(str string) Price {
-	item := Price{}
+func (o *PriceStock) StringToPrice(str string) {
 	arr := strings.Split(str, ",")
-	d, err := strconv.ParseUint(arr[0], 0, 32)
+	d, err := strconv.ParseInt(arr[0], 0, 64)
 	if err != nil {
 		panic(err)
 	}
-	item.Date = uint32(d)
+	o.Date = int(d)
 
+<<<<<<< HEAD
 	item.OpenPrice = parse_float(arr[1])
 	item.HighPrice = parse_float(arr[2])
 	item.LowPrice = parse_float(arr[3])
 	item.ClosePrice = parse_float(arr[4])
-
-	v, err := strconv.ParseUint(arr[5], 0, 32)
+=======
+	op, err := strconv.ParseInt(arr[1], 0, 64)
 	if err != nil {
 		panic(err)
 	}
-	item.Volume = uint32(v)
+	o.OpenPrice = int(op)
+
+	hp, err := strconv.ParseInt(arr[2], 0, 64)
+	if err != nil {
+		panic(err)
+	}
+	o.HighPrice = int(hp)
+
+	lp, err := strconv.ParseInt(arr[3], 0, 64)
+	if err != nil {
+		panic(err)
+	}
+	o.LowPrice = int(lp)
+
+	cp, err := strconv.ParseInt(arr[4], 0, 64)
+	if err != nil {
+		panic(err)
+	}
+	o.ClosePrice = int(cp)
+>>>>>>> postgresql
+
+	v, err := strconv.ParseInt(arr[5], 0, 32)
+	if err != nil {
+		panic(err)
+	}
+	o.Volume = int(v)
 
 	str_fr := strings.Replace(arr[6], ",", "", -1)
+<<<<<<< HEAD
 	if str_fr == "" {
 		//대박. 오래된 주식데이터는 외국인 보유가 없음. 없음.
 		str_fr = "0"
@@ -86,4 +108,7 @@ func parse_float(s string) float32 {
 		panic(err)
 	}
 	return float32(int(f_p*100)) / 100
+=======
+	o.ForeignerBurnoutRate = str_fr
+>>>>>>> postgresql
 }

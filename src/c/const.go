@@ -5,17 +5,6 @@ import (
 	"time"
 )
 
-const DIR_COMPANY_DETAIL = "data/dataset/company_detail/"
-const DIR_COMPANY_STATE = "data/dataset/company_state/"
-const DIR_FILENAME_COMPANY_DETAIL = "company_detail.csv"
-const DIR_FILENAME_COMPANY_STATE = "company_state.csv"
-const DIR_PRICE = "data/dataset/price/"
-const DIR_MARKET = "data/dataset/market/"
-const DIR_BOUND = "data/dataset/bound/"
-const DIR_BOUND_PRICE = DIR_BOUND + "price/"
-const DIR_BOUND_MARKET = DIR_BOUND + "market/"
-const DIR_BOUND_FILENAME_INFO = "info.csv"
-
 const DOWNLOAD_URL_COMPANY_DETAIL_CODE = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd"
 const DOWNLOAD_URL_COMPANY_DETAIL_DATA = "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd"
 const DOWNLOAD_URL_COMPANY_DETAIL_PARAMS = "mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms/MDC/STAT/standard/MDCSTAT01901"
@@ -65,13 +54,27 @@ const G_TYPE_OPEN = "open"
 
 var G_TYPE map[string]string
 
-const PREFIX_TB_PRICE = PRICE + "_"
-const SCHEMA_NAME_PRICE = PRICE
+const SCHEMA_NAME_PUBLIC = "public"
+const TABLE_NAME_BOUND_STOCK = "bound_stock"
+const TABLE_NAME_BOUND_MARKET = "bound_market"
 
-const PREFIX_TB_MARKET = MARKET + "_"
-const SCHEMA_NAME_MARKET = MARKET
+const SCHEMA_NAME_COMPANY_CODE = "company"
+const TABLE_NAME_COMPANY_CODE = "code"
+const TABLE_NAME_COMPANY_DETAIL = "detail"
+const TABLE_NAME_COMPANY_STATE = "state"
 
-const SCHEMA_NAME_BOUND = BOUND
+const SCHEMA_NAME_HISTORY = "hist"
+const TABLE_NAME_HISTORY_BOUND_STOCK = "bound_stock"
+const TABLE_NAME_HISTORY_BOUND_MARKET = "bound_market"
+const TABLE_NAME_HISTORY_PRICE_STOCK = "price_stock"
+const TABLE_NAME_HISTORY_PRICE_MARKET = "price_market"
+
+const INFO_NAME_UPDATED = "updated"
+
+var PRICE_DATE_FORMAT = "20060102"
+var PRICE_DEFAULT_START_DATE = ""
+
+var DB_MAX_CONN = 30
 
 var DB = "stock"
 var DB_PRICE = "stock_" + PRICE
@@ -83,13 +86,18 @@ var PRICE_DEFAULT_START_DATE = ""
 
 func init() {
 	DownloadCompany = false
-	DownloadPrice = false
+	DownloadPrice = true
 
 	G_TYPE = make(map[string]string)
 	G_TYPE[G_TYPE_LOW] = G_TYPE_LOW
 	G_TYPE[G_TYPE_HIGH] = G_TYPE_HIGH
 	G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
 	G_TYPE[G_TYPE_OPEN] = G_TYPE_OPEN
+<<<<<<< HEAD
 	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
 
+=======
+
+	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
+>>>>>>> postgresql
 }

@@ -54,6 +54,6 @@ func main() {
 
 func project_run() {
 
-	p := project.Project3{}
+	p := project.Project{}
 	p.Run(run_type)
 }

@@ -7,7 +7,10 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+<<<<<<< HEAD
 	"time"
+=======
+>>>>>>> postgresql
 
 	"log"
 	"strings"
@@ -26,9 +29,10 @@ type NaverChart struct {
 }
 
 type ChartData struct {
-	Object string
-	Code   string
-	List   []model.Price
+	Object          string
+	Code            string
+	PriceList       []model.PriceStock
+	PriceMarketList []model.PriceMarket
 }
 
 func (o *NaverChart) init() {
@@ -50,7 +54,9 @@ func (o *NaverChart) Run() {
 }
 
 func (o *NaverChart) Parse() {
-	var list []model.Price
+	var list []model.PriceStock
+	var list_m []model.PriceMarket
+
 	file, err := os.Open(o.fnm)
 	if err != nil {
 		log.Println("파일열기 에러")
@@ -88,17 +94,36 @@ func (o *NaverChart) Parse() {
 				}
 
 				if dd > ddd {
+<<<<<<< HEAD
 					list = append(list, model.StringToPrice(re_str))
 				} else {
 
 				}
 
+=======
+					if o.ChartData.Object == c.PRICE {
+						p := model.PriceStock{}
+						p.StringToPrice(re_str)
+						list = append(list, p)
+					} else {
+						p := model.PriceMarket{}
+						p.StringToPrice(re_str)
+						list_m = append(list_m, p)
+					}
+
+				}
+>>>>>>> postgresql
 			}
 
 		}
 
 	}
-	o.ChartData.List = list
+	if o.ChartData.Object == c.PRICE {
+		o.ChartData.PriceList = list
+	} else {
+		o.ChartData.PriceMarketList = list_m
+	}
+
 }
 
 func (o *NaverChart) Download() {

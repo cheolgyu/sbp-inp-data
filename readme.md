@@ -56,9 +56,48 @@ todo
          
 
 데이터 3년치만 하자 너무 느리다.
+<<<<<<< HEAD
 
 
 
+=======
+실패-price .스키마에서 table로 가고 가격목록은 json으로 넣기.
+// https://www.alexedwards.net/blog/using-postgresql-jsonb
+
+price one table 만들기.
+bound 
+2021/06/23 17:30:52 [걸린시간] Elipsed Time: 56m19.0167259s
+기존 bound.point는 bound.point_hist로 바꾸고 
+golang에서 bound 계산후 마지막 것만뽑아서 public.bound에 insert하기.
+: 쿼리로 짜봤는데 너무 오래걸리고 하루  한번 만 바뀌는데 동적으로 계산하기 보단. 이 방법이 나을듯.   
+view 역활로 public.bound table 이용
+
+hist.price 
+2021/06/23 23:03:43 [걸린시간] Elipsed Time: 8m2.7183269s
+hist.bound 30conn , powerful mod
+2021/06/24 00:06:39 [걸린시간] Elipsed Time: 17m0.5710731s
+hist.bound 30conn + upsert=f, insert public.bound , powerful mod
+2021/06/24 01:15:02 [걸린시간] Elipsed Time: 20m17.6985163s
+DB MAX CONN 30으로 설정 : const.go
+
+hist.*,pub.bound_*
+2021/06/24 10:24:59 [걸린시간] Elipsed Time: 34m25.4326554s
+DB 구조 변경후
+   hist. (추후 파티션 적용)
+      stock
+      market
+      bound
+   public.
+      info
+      bound
+   company.
+      code
+      state
+      detail
+
+*
+2021/06/24 11:00:48 [걸린시간] Elipsed Time: 3m52.4231855s
+>>>>>>> postgresql
        
 
       
@@ -668,5 +707,4 @@ price 가격
 + ec2 하나로 쓰기
    + 저장소 ebs 파일로 관리하기.
    + api 서버는 시세,회사는 파일에서 읽고 반등정보는 변수로 담았다가 dbment가 요청 보내면 업데이트하기.
-
 

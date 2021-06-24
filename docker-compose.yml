@@ -1,5 +1,6 @@
 version: '3.8'
 services:
+<<<<<<< HEAD
   mongo:
     image: mongo:latest
     restart: always
@@ -11,11 +12,33 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes: 
       - mongo-data:/data/db
+=======
+  db:
+    image: postgres
+    restart: always
+    command: postgres -c 'max_connections=100'
+    volumes:
+      - pq-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: postgres
+      POSTGRES_DB: dev
+      TZ: Asia/Seoul
+      # 이어서 시작할때 필요함. 기존데이터로 시작함.
+      POSTGRES_CONFIG_hot_standby: "on"
+    ports:
+      - 5432:5432
+>>>>>>> postgresql
 
-  mongo-express:
-    image: mongo-express
+  adminer:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=my@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=PassW@rd!!
     restart: always
     ports:
+<<<<<<< HEAD
       - 8081:8081
     environment:
       TZ: Asia/Seoul 
@@ -28,10 +51,17 @@ services:
 
 volumes:
   mongo-data:
+=======
+      - 8080:80
+
+volumes:
+  pq-data:
+>>>>>>> postgresql
     driver: local
     driver_opts:
       type: none
       o: bind
+<<<<<<< HEAD
       device: "C:\\Users\\cheolgyu\\volume\\mongo"
   mongo-express-data:
     driver: local
@@ -39,3 +69,6 @@ volumes:
       type: none
       o: bind
       device: "C:\\Users\\cheolgyu\\volume\\mongo-express"
+=======
+      device: "C:\\Users\\cheolgyu\\volume\\postgresql"
+>>>>>>> postgresql

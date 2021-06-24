@@ -55,6 +55,7 @@ func (o *CompanySave) Load() {
 
 	o.State.Load()
 }
+<<<<<<< HEAD
 func (o *CompanySave) Save() {
 	o.Code.SetColl(c.DB, c.COLL_CODE)
 	o.Code.Run()
@@ -71,6 +72,50 @@ func (o *CompanySave) Save() {
 	info = dao.InsertInfo{}
 	info.Updated(c.COLL_COMPANY_STATE)
 
+=======
+func (o *Company) Save() {
+	o.Code.Save()
+	o.Detail.Save()
+	o.State.Save()
+
+}
+
+type CodeList struct {
+	List []model.CompanyCode
+}
+
+//회사 코드목록 조회
+func (o *CodeList) GetCompanyCode() {
+	list, err := dao.GetCompanyCode()
+	ChkErr(err)
+	o.List = list
+
+}
+
+//마켓 코드목록
+func (o *CodeList) GetMarketCode() {
+	for i := range model.MarketList {
+		o.List = append(o.List, model.CompanyCode{
+			Code: model.MarketList[i],
+			Name: model.MarketListNmae[i],
+		})
+	}
+}
+
+func (o *CodeList) Save() {
+	err := dao.InsertCompanyCode(o.List)
+	ChkErr(err)
+
+}
+
+type DetailList struct {
+	List []model.CompanyDetail
+}
+
+func (o *DetailList) Save() {
+	err := dao.InsertCompanyDetail(o.List)
+	ChkErr(err)
+>>>>>>> postgresql
 }
 
 type StateSave struct {
@@ -102,7 +147,13 @@ func (o *StateSave) Load() {
 
 	}
 }
+<<<<<<< HEAD
 func (o *StateSave) Save() {
 	o.Relpace.SetColl(c.DB, c.COLL_COMPANY_STATE)
 	o.Relpace.Run()
+=======
+func (o *StateList) Save() {
+	err := dao.InsertCompanyState(o.List)
+	ChkErr(err)
+>>>>>>> postgresql
 }

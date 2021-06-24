@@ -12,6 +12,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+var upsert_price bool
+
+func init() {
+	upsert_price = true
+}
 func PriceHandler() {
 	// 종목가격
 	cpd_price := CodePriceData{}
@@ -41,16 +46,28 @@ type codePriceDataParam struct {
 }
 
 func (o *CodePriceData) Save(object string) {
+	down := dao.GetDownloadDate{}
+	startDate, endDate, err := down.Get()
+	ChkErr(err)
 
+<<<<<<< HEAD
 	startDate, endDate := get_download_date()
 
+=======
+>>>>>>> postgresql
 	wg := sync.WaitGroup{}
 	wg_db := sync.WaitGroup{}
 	var obj_list []model.CompanyCode
 
 	if object == c.PRICE {
+<<<<<<< HEAD
 		selectCode := dao.SelectCode{}
 		obj_list = selectCode.All()
+=======
+		comp := Company{}
+		comp.Code.GetCompanyCode()
+		obj_list.List = comp.Code.List
+>>>>>>> postgresql
 	} else if object == c.MARKET {
 		for i := range model.MarketList {
 			cc := model.CompanyCode{}
@@ -72,6 +89,7 @@ func (o *CodePriceData) Save(object string) {
 				startDate: startDate,
 				endDate:   endDate,
 
+<<<<<<< HEAD
 				wg: &wg,
 			}
 			wg.Add(1)
@@ -87,6 +105,23 @@ func (o *CodePriceData) Save(object string) {
 			}
 
 		}(i)
+=======
+			wg: &wg,
+			ch: done_load,
+		}
+		wg.Add(1)
+		go cp.CPLoad(p)
+		<-done_load
+
+		o.List = append(o.List, cp)
+		wg_db.Add(1)
+		go cp.CPSave(&wg_db)
+
+		if i%50 == 0 {
+			wg_db.Wait()
+		}
+		//defer wg.Done()
+>>>>>>> postgresql
 
 	}
 
@@ -95,15 +130,22 @@ func (o *CodePriceData) Save(object string) {
 }
 
 type CodePrice struct {
+<<<<<<< HEAD
 	Object      string
 	Code        string
 	List        []model.Price
 	Filter      []interface{}
 	Data        interface{}
 	RemoveStart model.Price
+=======
+	Object          string
+	Code            string
+	PriceList       []model.PriceStock
+	PriceMarketList []model.PriceMarket
+>>>>>>> postgresql
 }
 
-func (o *CodePrice) Load(p codePriceDataParam) {
+func (o *CodePrice) CPLoad(p codePriceDataParam) {
 	defer p.wg.Done()
 	o.Code = p.item.Code
 	o.Object = p.object
@@ -117,6 +159,7 @@ func (o *CodePrice) Load(p codePriceDataParam) {
 	}
 	nc.Run()
 
+<<<<<<< HEAD
 	o.List = nc.ChartData.List
 	var ab []interface{}
 	for _, item := range o.List {
@@ -127,9 +170,17 @@ func (o *CodePrice) Load(p codePriceDataParam) {
 	}
 
 	o.Data = bson.M{"$push": bson.M{"data": bson.M{"$each": ab, "$sort": bson.M{"p_date": 1}}}}
+=======
+	o.PriceMarketList = nc.ChartData.PriceMarketList
+	o.PriceList = nc.ChartData.PriceList
+
+	p.ch <- true
+>>>>>>> postgresql
 }
-func (o *CodePrice) Save(wg_db *sync.WaitGroup) {
+
+func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
 	defer wg_db.Done()
+<<<<<<< HEAD
 	coll := c.COLL_PRICE
 	if o.Object == c.MARKET {
 		coll = c.COLL_MARKET
@@ -157,6 +208,38 @@ func get_download_date() (string, string) {
 	}
 	log.Println("price_downlaod: startdate,enddate:", start_date, end_date)
 	return start_date, end_date
+=======
+	schema_nm := c.SCHEMA_NAME_HISTORY
+	tb_nm := c.TABLE_NAME_HISTORY_PRICE_STOCK
+	if o.Object == c.MARKET {
+		tb_nm = c.TABLE_NAME_HISTORY_PRICE_MARKET
+	}
+	params := dao.PriceParams{
+		Object:    o.Object,
+		Code:      o.Code,
+		Schema_nm: schema_nm,
+		Tb_nm:     tb_nm,
+	}
+
+	switch o.Object {
+	case c.PRICE:
+		insert_price := dao.InsertPriceStock{
+			Params: params,
+			Upsert: upsert_price,
+			List:   o.PriceList,
+		}
+		err := insert_price.InsertHistPrice()
+		return err
+	default:
+		insert := dao.InsertPriceMarket{
+			Params: params,
+			Upsert: upsert_price,
+			List:   o.PriceMarketList,
+		}
+		err := insert.Insert()
+		return err
+	}
+>>>>>>> postgresql
 
 }
 
