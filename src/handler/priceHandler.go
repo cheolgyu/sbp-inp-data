@@ -13,7 +13,7 @@ import (
 var upsert_price bool
 
 func init() {
-	upsert_price = false
+	upsert_price = true
 }
 func PriceHandler() {
 	// 종목가격

@@ -72,6 +72,8 @@ const TABLE_NAME_HISTORY_BOUND_MARKET = "bound_market"
 const TABLE_NAME_HISTORY_PRICE_STOCK = "price_stock"
 const TABLE_NAME_HISTORY_PRICE_MARKET = "price_market"
 
+const INFO_NAME_UPDATED = "updated"
+
 var PRICE_DATE_FORMAT = "20060102"
 var PRICE_DEFAULT_START_DATE = ""
 
@@ -79,7 +81,7 @@ var DB_MAX_CONN = 30
 
 func init() {
 	DownloadCompany = false
-	DownloadPrice = false
+	DownloadPrice = true
 
 	G_TYPE = make(map[string]string)
 	G_TYPE[G_TYPE_LOW] = G_TYPE_LOW

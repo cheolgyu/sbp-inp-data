@@ -15,7 +15,7 @@ import (
 var upsert_bound bool
 
 func init() {
-	upsert_bound = false
+	upsert_bound = true
 }
 
 func BoundHandler() {

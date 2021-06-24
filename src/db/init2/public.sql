@@ -6,7 +6,7 @@ CREATE TABLE "public"."info" (
 ) WITH (oids = false);
 
 INSERT INTO "info" ("name", "updated") VALUES
-('price_start_date',	NULL);
+('updated',	NULL);
 
 DROP TABLE IF  EXISTS public.bound_stock;
 CREATE TABLE IF NOT EXISTS public.bound_stock (

@@ -90,7 +90,8 @@ DB 구조 변경후
       state
       detail
 
-
+*
+2021/06/24 11:00:48 [걸린시간] Elipsed Time: 3m52.4231855s
        
 
       

@@ -23,10 +23,11 @@ type GetDownloadDate struct {
 func (o *GetDownloadDate) Get() (string, string, error) {
 	var start_date string
 	var end_date string
-	info_nm := "price_start_date"
+	info_nm := c.INFO_NAME_UPDATED
 
-	q := "select to_char( COALESCE(updated, '" + c.PRICE_DEFAULT_START_DATE + "'), 'YYYYMMDD') as start , to_char( now(), 'YYYYMMDD') as end from public.info where name = $1 "
-	err := db.Conn.QueryRow(q, info_nm).Scan(&start_date, &end_date)
+	query := "select to_char( COALESCE(updated, '" + c.PRICE_DEFAULT_START_DATE + "'), 'YYYYMMDD') as start , to_char( now(), 'YYYYMMDD') as end from public.info where name = $1 "
+	log.Println(query)
+	err := db.Conn.QueryRow(query, info_nm).Scan(&start_date, &end_date)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Println("조회 결과가 없습니다.")
