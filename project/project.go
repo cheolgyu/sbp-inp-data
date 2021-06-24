@@ -7,10 +7,10 @@ import (
 	"github.com/cheolgyu/stock-write/src/utils"
 )
 
-type Project3 struct {
+type Project struct {
 }
 
-func (p *Project3) Run(arg string) {
+func (p *Project) Run(arg string) {
 
 	uf := utils.File{}
 	uf.Init()
