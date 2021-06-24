@@ -1,117 +1,71 @@
 package dao
 
 import (
-	"context"
+	"database/sql"
 	"fmt"
 	"log"
 
 	"github.com/cheolgyu/stock-write/src/c"
+	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type PriceDao struct {
+type PriceParams struct {
+	Object    string
+	Schema_nm string
+	Tb_nm     string
+	Code      string
 }
 
-type PriceDoc struct {
-	Code string        `bson:"_id"`
-	Data []model.Price `bson:"data"`
+type GetDownloadDate struct {
 }
 
-func (o *PriceDao) Find(code string, x1 int) []model.Price {
-	var res []model.Price
+func (o *GetDownloadDate) Get() (string, string, error) {
+	var start_date string
+	var end_date string
+	info_nm := c.INFO_NAME_UPDATED
 
-	findOptions := options.Find()
-	// projection := bson.M{
-	// 	"data.$": 1,
-	// 	"_id":    0,
-	// }
-	projection := bson.D{
-		//{"data.$", 1},
-		{"_id", 0},
-	}
-	findOptions.SetProjection(projection)
-	type AA struct {
-		Data []model.Price `bson:"data"`
-	}
-	coll := client.Database(c.DB_PRICE).Collection(c.COLL_PRICE)
-	pipeline := `
-	[{
-		"$match": {
-		  "_id": "` + code + `"
-		}
-	  },
-	  {
-		"$project": {
-		  "data": {
-			"$filter": {
-			  "input": "$data",
-			  "cond": {
-				"$gte": [	
-				  "$$this.p_date",
-				  ` + fmt.Sprintf("%v", x1) + `
-				]
-			  }
-			}
-		  }
-		}
-	  }
-	  ]
-	`
-	opts := options.Aggregate()
-	cursor, err := coll.Aggregate(context.Background(), MongoPipeline(pipeline), opts)
-
-	if err != nil {
-		log.Fatal(err)
+	query := "select to_char( COALESCE(updated, '" + c.PRICE_DEFAULT_START_DATE + "'), 'YYYYMMDD') as start , to_char( now(), 'YYYYMMDD') as end from public.info where name = $1 "
+	log.Println(query)
+	err := db.Conn.QueryRow(query, info_nm).Scan(&start_date, &end_date)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println("조회 결과가 없습니다.")
+	case err != nil:
+		log.Fatalln("쿼리 오류:", err)
 		panic(err)
+	default:
+		log.Println("다운로드 기간: ", start_date, " ~ ", end_date)
 	}
 
-	defer cursor.Close(context.Background())
+	return start_date, end_date, err
+}
 
-	var result_doc_arr []PriceDoc
-	for cursor.Next(context.Background()) {
+type InsertPriceStock struct {
+	Params PriceParams
+	Upsert bool
+	List   []model.PriceStock
+}
 
-		var result_doc = PriceDoc{}
-		err := cursor.Decode(&result_doc)
+func (o *InsertPriceStock) InsertHistPrice() error {
+	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s" (code, p_date, op, hp, lp, cp, vol, fb_rate ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8 )`,
+		o.Params.Schema_nm,
+		o.Params.Tb_nm,
+	)
+	if o.Upsert {
+		q_insert += `ON CONFLICT ("code","p_date") DO UPDATE SET op=$2 ,hp=$3 ,lp=$4 ,cp=$5 ,vol=$6 ,fb_rate=$7`
+	}
+	stmt, err := db.Conn.Prepare(q_insert)
+
+	for _, item := range o.List {
+		_, err = stmt.Exec(o.Params.Code, item.Date, item.OpenPrice, item.HighPrice, item.LowPrice, item.ClosePrice, item.Volume, item.ForeignerBurnoutRate)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalln("쿼리 Insert:", err, item)
 			panic(err)
 		}
-		if result_doc.Code != "" {
-			result_doc_arr = append(result_doc_arr, result_doc)
-		}
 
 	}
+	stmt.Close()
 
-	if err := cursor.Err(); err != nil {
-		panic(err)
-	}
-	if len(result_doc_arr) > 0 {
-		return result_doc_arr[0].Data
-	}
-
-	return res
-}
-
-type PriceDaoInsert struct {
-	Coll        string
-	Filter      []interface{}
-	Data        interface{}
-	RemoveStart model.Price
-}
-
-func (o *PriceDaoInsert) Run(code string) error {
-	opt := options.Update()
-	opt.SetUpsert(true)
-
-	coll := client.Database(c.DB_PRICE).Collection(o.Coll)
-	if o.RemoveStart.Date != 0 {
-		result, err := coll.UpdateOne(context.Background(), bson.M{"_id": code}, bson.M{"$pull": bson.M{"data": o.RemoveStart}})
-		ChkErr(err)
-		log.Println(result)
-	}
-	_, err := coll.UpdateOne(context.Background(), bson.M{"_id": code}, o.Data, opt)
 	return err
-
 }

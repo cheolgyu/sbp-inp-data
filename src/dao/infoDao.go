@@ -1,46 +1,29 @@
 package dao
 
 import (
-	"context"
 	"log"
-	"time"
 
-	"github.com/cheolgyu/stock-write/src/c"
-	"github.com/cheolgyu/stock-write/src/model"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/cheolgyu/stock-write/src/db"
 )
 
-type InsertInfo struct {
-	Relpace
-}
+func UpdateInfo(nm string) {
+	query := `
+	UPDATE public.info
+	SET  updated= now()
+	WHERE name = $1
+	`
+	db.Conn.Exec(query)
 
-func (o *InsertInfo) Updated(info_name string) {
-	o.Relpace.SetColl(c.DB, c.COLL_INFO)
-	log.Println("info-update", info_name)
-
-	o.Relpace.Filter = append(o.Relpace.Filter, bson.M{"_id": info_name})
-
-	o.Relpace.Data = append(o.Relpace.Data, model.Info{
-		Name:    info_name,
-		Updated: time.Now().String(),
-	})
-	o.Run()
-}
-
-type SelectInfo struct {
-}
-
-func (o *SelectInfo) One(name string) model.Info {
-
-	info := model.Info{}
-	err := client.Database(c.DB).Collection(c.COLL_INFO).FindOne(context.Background(), bson.M{"_id": name}).Decode(&info)
+	stmt, err := db.Conn.Prepare(query)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return info
-		}
+		log.Fatalln("쿼리 info Prepare:", err, nm)
+		panic(err)
+	}
+	_, err = stmt.Exec(nm)
+	if err != nil {
+		log.Fatalln("쿼리 info udpate:", err, nm)
 		panic(err)
 	}
 
-	return info
+	stmt.Close()
 }

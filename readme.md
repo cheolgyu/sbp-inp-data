@@ -56,11 +56,6 @@ todo
          
 
 데이터 3년치만 하자 너무 느리다.
-<<<<<<< HEAD
-
-
-
-=======
 실패-price .스키마에서 table로 가고 가격목록은 json으로 넣기.
 // https://www.alexedwards.net/blog/using-postgresql-jsonb
 
@@ -97,7 +92,6 @@ DB 구조 변경후
 
 *
 2021/06/24 11:00:48 [걸린시간] Elipsed Time: 3m52.4231855s
->>>>>>> postgresql
        
 
       
