@@ -5,11 +5,11 @@ import (
 	"log"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/dao"
 	"github.com/cheolgyu/stock-write/src/model"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 var upsert_bound bool
@@ -34,28 +34,17 @@ type Bound struct {
 func (o *Bound) Save() {
 
 	//코드목록 조회
-<<<<<<< HEAD
-	selectCode := dao.SelectCode{}
-	obj_list := selectCode.All()
-=======
 	cl := CodeList{}
 	if o.Obj == c.PRICE {
 		cl.GetCompanyCode()
 	} else {
 		cl.GetMarketCode()
 	}
->>>>>>> postgresql
 
-	for i := range obj_list {
-		cc := obj_list[i]
-		log.Println("시작:", i, "==>", cc.Code)
+	wg := sync.WaitGroup{}
+	wg_db := sync.WaitGroup{}
+	done := make(chan bool)
 
-<<<<<<< HEAD
-		bc := BoundCode{Code: cc.Code}
-		bc.LoadPrice()
-		bc.GetPoint()
-
-=======
 	for i := range cl.List {
 		cc := cl.List[i]
 		log.Println("==", i, "==", cc.Code, "시작")
@@ -71,8 +60,9 @@ func (o *Bound) Save() {
 		if i%c.DB_MAX_CONN == 0 {
 			wg_db.Wait()
 		}
->>>>>>> postgresql
 	}
+	wg_db.Wait()
+	wg.Wait()
 
 }
 
@@ -83,17 +73,6 @@ type BoundCode struct {
 }
 
 // BOUND_POINT구하기.
-<<<<<<< HEAD
-func (o *BoundCode) GetPoint() {
-	for i := range o.BoundCodeGtype {
-		//log.Println("마지막 포인트 찾기:", o.Code)
-		bcg := o.BoundCodeGtype[i]
-		log.Println(o.Code, "price:", len(bcg.PriceList))
-		bcg.GetPointGTYPE()
-		log.Println(o.Code, "bound:", len(bcg.PointList))
-		bcg.Save(o.Code)
-		log.Println(o.Code, "==================================:")
-=======
 func (o *BoundCode) SaveBound(wg_db *sync.WaitGroup) {
 	defer wg_db.Done()
 	o.SaveHistBound()
@@ -105,7 +84,6 @@ func (o *BoundCode) SaveHistBound() {
 		o.BoundCodeGtype[i].GetBoundGype()
 		o.BoundCodeGtype[i].SaveBoundGype(o.Code)
 		log.Println("save-hist-bound:", o.Code, ",price-len:", len(o.BoundCodeGtype[i].PriceList), ",bound-len:", len(o.BoundCodeGtype[i].PointList))
->>>>>>> postgresql
 	}
 }
 
@@ -162,30 +140,20 @@ func (o *BoundCode) SavePublicBound() {
 }
 
 // CODE에 해당하는 가격목록 조회.
-<<<<<<< HEAD
-func (o *BoundCode) LoadPrice() {
-	for i := range c.G_TYPE {
-		g := c.G_TYPE[i]
-		//log.Println("Load===========,", o.Code, ",G_TYPE:", g)
-=======
 func (o *BoundCode) GetPrice(wg *sync.WaitGroup, done chan bool) {
 	defer wg.Done()
 	for i := range c.G_TYPE {
 		g := c.G_TYPE[i]
 		//		log.Println("Load===========,", o.Code, ",G_TYPE:", g)
->>>>>>> postgresql
 		gcg := BoundCodeGtype{
 			Obj:   o.Obj,
 			Gtype: g,
 		}
 		gcg.GetPrice(o.Code)
 		o.BoundCodeGtype = append(o.BoundCodeGtype, gcg)
-<<<<<<< HEAD
-		//log.Println("Load===========,", o.Code, ",G_TYPE:", g, "==>가격목록수:", len(gcg.PriceList))
-=======
 		log.Println("get-price,", o.Code, ",G_TYPE:", g, ",len=:", len(gcg.PriceList))
->>>>>>> postgresql
 	}
+	done <- true
 }
 
 type BoundCodeGtype struct {
@@ -196,22 +164,6 @@ type BoundCodeGtype struct {
 }
 
 // GTYPE별 각각의 가격 목록 조회.
-<<<<<<< HEAD
-func (o *BoundCodeGtype) Load(code string) {
-
-	bound_dao := dao.BoundDao{}
-	last_point := bound_dao.LastGtypePoint(code, o.Gtype)
-	start_price_date := 0
-	if last_point.X1 != 0 {
-		start_price_date = int(last_point.X1)
-	}
-
-	log.Println("가격조회 시작일:", start_price_date)
-
-	price_dao := dao.PriceDao{}
-	o.PriceList = price_dao.Find(code, start_price_date)
-
-=======
 func (o *BoundCodeGtype) GetPrice(code string) {
 
 	pmlist, err := dao.GetPriceByLastBound(o.Obj, code, o.Gtype)
@@ -219,17 +171,12 @@ func (o *BoundCodeGtype) GetPrice(code string) {
 		log.Println("오류:GetPriceByLastBound ", code, o.Gtype)
 	}
 	o.PriceList = pmlist
->>>>>>> postgresql
 }
 
 // GTYPE별 각각의 BOUND_POINT 구하기
 func (o *BoundCodeGtype) GetBoundGype() {
 
 	loop_cnt := len(o.PriceList)
-<<<<<<< HEAD
-	//log.Println("GetPointGTYPE 시작, price목록수:", loop_cnt)
-=======
->>>>>>> postgresql
 	if loop_cnt <= 1 {
 		return
 	}
@@ -332,26 +279,7 @@ func (o *BoundCodeGtype) SwitchPrice(i int) float32 {
 }
 
 // GTYPE별 BOUND 저장.
-<<<<<<< HEAD
-func (o *BoundCodeGtype) Save(code string) {
-
-	bound_dao_insert := dao.BoundDaoInsert{Code: code}
-
-	var data []interface{}
-	i := 0
-	for i = range o.PointList {
-		data = append(data, o.PointList[i])
-	}
-	bound_dao_insert.Data = bson.M{"$push": bson.M{o.Gtype: bson.M{"$each": data, "$sort": bson.M{"x1": 1}}}}
-	if i > 1 {
-		if err := bound_dao_insert.Run(); err != nil {
-			panic(err)
-		}
-	}
-
-=======
 func (o *BoundCodeGtype) SaveBoundGype(code string) {
 	err := dao.InsertHistBound(o.Obj, code, o.Gtype, o.PointList, upsert_bound)
 	ChkErr(err)
->>>>>>> postgresql
 }

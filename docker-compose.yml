@@ -1,18 +1,5 @@
 version: '3.8'
 services:
-<<<<<<< HEAD
-  mongo:
-    image: mongo:latest
-    restart: always
-    ports:
-      - 27017:27017
-    environment:
-      TZ: Asia/Seoul 
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    volumes: 
-      - mongo-data:/data/db
-=======
   db:
     image: postgres
     restart: always
@@ -28,7 +15,6 @@ services:
       POSTGRES_CONFIG_hot_standby: "on"
     ports:
       - 5432:5432
->>>>>>> postgresql
 
   adminer:
     image: dpage/pgadmin4
@@ -38,37 +24,12 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=PassW@rd!!
     restart: always
     ports:
-<<<<<<< HEAD
-      - 8081:8081
-    environment:
-      TZ: Asia/Seoul 
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-    volumes: 
-      - mongo-express-data:/data/db
-    depends_on: 
-      - mongo
-
-volumes:
-  mongo-data:
-=======
       - 8080:80
 
 volumes:
   pq-data:
->>>>>>> postgresql
     driver: local
     driver_opts:
       type: none
       o: bind
-<<<<<<< HEAD
-      device: "C:\\Users\\cheolgyu\\volume\\mongo"
-  mongo-express-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: "C:\\Users\\cheolgyu\\volume\\mongo-express"
-=======
       device: "C:\\Users\\cheolgyu\\volume\\postgresql"
->>>>>>> postgresql

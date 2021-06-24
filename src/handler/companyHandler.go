@@ -6,24 +6,23 @@ import (
 	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/cheolgyu/stock-write/src/utils/download"
 	"github.com/tealeg/xlsx"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func CompanyHandler() {
-	handler := CompanySave{}
+	handler := Company{}
 	handler.Load()
 	handler.Save()
 
 	//log.Println(handler)
 }
 
-type CompanySave struct {
-	Code   dao.Relpace
-	Detail dao.Relpace
-	State  StateSave
+type Company struct {
+	Code   CodeList
+	Detail DetailList
+	State  StateList
 }
 
-func (o *CompanySave) Load() {
+func (o *Company) Load() {
 	f_download := c.DOWNLOAD_DIR_COMPANY_DETAIL + c.DOWNLOAD_FILENAME_COMPANY_DETAIL
 	if c.DownloadCompany {
 		download_data_krx := download.Data_krx{
@@ -43,11 +42,9 @@ func (o *CompanySave) Load() {
 		_, content := model.RowGet(row)
 		detail := model.StringToCompanyDetail(content)
 
-		o.Detail.Filter = append(o.Detail.Filter, bson.M{"_id": detail.Code})
-		o.Detail.Data = append(o.Detail.Data, detail)
+		o.Detail.List = append(o.Detail.List, detail)
 
-		o.Code.Filter = append(o.Code.Filter, bson.M{"_id": detail.Code})
-		o.Code.Data = append(o.Code.Data, model.CompanyCode{
+		o.Code.List = append(o.Code.List, model.CompanyCode{
 			Code: detail.Code,
 			Name: detail.Name,
 		})
@@ -55,24 +52,6 @@ func (o *CompanySave) Load() {
 
 	o.State.Load()
 }
-<<<<<<< HEAD
-func (o *CompanySave) Save() {
-	o.Code.SetColl(c.DB, c.COLL_CODE)
-	o.Code.Run()
-	info := dao.InsertInfo{}
-	info.Updated(c.COLL_CODE)
-
-	o.Detail.SetColl(c.DB, c.COLL_COMPANY_DETAIL)
-	o.Detail.Run()
-	info = dao.InsertInfo{}
-	info.Updated(c.COLL_COMPANY_DETAIL)
-
-	o.State.Relpace.SetColl(c.DB, c.COLL_COMPANY_STATE)
-	o.State.Relpace.Run()
-	info = dao.InsertInfo{}
-	info.Updated(c.COLL_COMPANY_STATE)
-
-=======
 func (o *Company) Save() {
 	o.Code.Save()
 	o.Detail.Save()
@@ -115,14 +94,13 @@ type DetailList struct {
 func (o *DetailList) Save() {
 	err := dao.InsertCompanyDetail(o.List)
 	ChkErr(err)
->>>>>>> postgresql
 }
 
-type StateSave struct {
-	Relpace dao.Relpace
+type StateList struct {
+	List []model.CompanyState
 }
 
-func (o *StateSave) Load() {
+func (o *StateList) Load() {
 	f_download := c.DOWNLOAD_DIR_COMPANY_STATE + c.DOWNLOAD_FILENAME_COMPANY_STATE
 	if c.DownloadCompany {
 		download_data_krx := download.Data_krx{
@@ -142,18 +120,11 @@ func (o *StateSave) Load() {
 		_, content := model.RowGet(row)
 		state := model.StringToCompanyState(content)
 
-		o.Relpace.Filter = append(o.Relpace.Filter, bson.M{"_id": state.Code})
-		o.Relpace.Data = append(o.Relpace.Data, state)
+		o.List = append(o.List, state)
 
 	}
 }
-<<<<<<< HEAD
-func (o *StateSave) Save() {
-	o.Relpace.SetColl(c.DB, c.COLL_COMPANY_STATE)
-	o.Relpace.Run()
-=======
 func (o *StateList) Save() {
 	err := dao.InsertCompanyState(o.List)
 	ChkErr(err)
->>>>>>> postgresql
 }

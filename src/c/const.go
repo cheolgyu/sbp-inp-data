@@ -21,25 +21,11 @@ const DOWNLOAD_FILENAME_COMPANY_STATE = "company_state.xlsx"
 const DOWNLOAD_DIR_PRICE = "data/download/price/"
 const DOWNLOAD_DIR_MARKET = "data/download/market/"
 
-const COLL_CODE = "code"
-const COLL_COMPANY_DETAIL = "company.detail"
-const COLL_COMPANY_STATE = "company.state"
-const COLL_INFO = "info"
-const COLL_BOUND = BOUND
-const COLL_PRICE = PRICE
-const COLL_MARKET = MARKET
-
 const BOUND = "bound"
 const PRICE = "price"
 const MARKET = "market"
 const COMPANY_DETAIL = "company_detail"
 const COMPANY_STATE = "company_state"
-
-const REPEAT_CNT_PRICE = 80
-const REPEAT_STR_PRICE = "-"
-
-const REPEAT_CNT_BOUND = 60
-const REPEAT_STR_BOUND = "-"
 
 var DownloadCompany bool
 var DownloadPrice bool
@@ -76,14 +62,6 @@ var PRICE_DEFAULT_START_DATE = ""
 
 var DB_MAX_CONN = 30
 
-var DB = "stock"
-var DB_PRICE = "stock_" + PRICE
-var DB_MARKET = "stock_" + MARKET
-var DB_BOUND = "stock_" + BOUND
-
-var PRICE_DATE_FORMAT = "20060102"
-var PRICE_DEFAULT_START_DATE = ""
-
 func init() {
 	DownloadCompany = false
 	DownloadPrice = true
@@ -93,11 +71,6 @@ func init() {
 	G_TYPE[G_TYPE_HIGH] = G_TYPE_HIGH
 	G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
 	G_TYPE[G_TYPE_OPEN] = G_TYPE_OPEN
-<<<<<<< HEAD
-	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
-
-=======
 
 	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
->>>>>>> postgresql
 }

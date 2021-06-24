@@ -7,10 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-<<<<<<< HEAD
 	"time"
-=======
->>>>>>> postgresql
 
 	"log"
 	"strings"
@@ -94,13 +91,6 @@ func (o *NaverChart) Parse() {
 				}
 
 				if dd > ddd {
-<<<<<<< HEAD
-					list = append(list, model.StringToPrice(re_str))
-				} else {
-
-				}
-
-=======
 					if o.ChartData.Object == c.PRICE {
 						p := model.PriceStock{}
 						p.StringToPrice(re_str)
@@ -112,7 +102,6 @@ func (o *NaverChart) Parse() {
 					}
 
 				}
->>>>>>> postgresql
 			}
 
 		}

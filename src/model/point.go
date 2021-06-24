@@ -3,32 +3,6 @@ package model
 import (
 	"strconv"
 	"strings"
-<<<<<<< HEAD
-
-	"go.mongodb.org/mongo-driver/bson"
-)
-
-// type HighPoint struct {
-// 	Code  string
-// 	Point Point
-// }
-
-// x1,y1 좌표가 bound_point
-//x2,y2 는 현재 계산일
-type Point struct {
-	X1        uint    `bson:"x1"`
-	Y1        float32 `bson:"y1"`
-	X2        uint    `bson:"x2"`
-	Y2        float32 `bson:"y2"`
-	X_tick    uint    `bson:"x_tick"`
-	Y_minus   float32 `bson:"y_minus"`
-	Y_Percent float32 `bson:"y_percent"`
-}
-
-func (o *Point) BsonA() bson.A {
-	return bson.A{
-		o.X1, o.Y1, o.X2, o.Y2, o.X_tick, o.Y_minus, o.Y_Percent}
-=======
 )
 
 // x1,y1 좌표가 bound_point
@@ -41,7 +15,6 @@ type Point struct {
 	X_tick    uint
 	Y_minus   float32
 	Y_Percent float32
->>>>>>> postgresql
 }
 
 func StringToPoint(str string) Point {
