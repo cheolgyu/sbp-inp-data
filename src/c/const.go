@@ -63,7 +63,7 @@ var PRICE_DEFAULT_START_DATE = ""
 var DB_MAX_CONN = 30
 
 func init() {
-	DownloadCompany = false
+	DownloadCompany = true
 	DownloadPrice = true
 
 	G_TYPE = make(map[string]string)

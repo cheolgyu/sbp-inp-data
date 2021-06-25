@@ -53,7 +53,7 @@ func (o *InsertPriceStock) InsertHistPrice() error {
 		o.Params.Tb_nm,
 	)
 	if o.Upsert {
-		q_insert += `ON CONFLICT ("code","p_date") DO UPDATE SET op=$2 ,hp=$3 ,lp=$4 ,cp=$5 ,vol=$6 ,fb_rate=$7`
+		q_insert += `ON CONFLICT ("code","p_date") DO UPDATE SET op=$3 ,hp=$4 ,lp=$5 ,cp=$6 ,vol=$7 ,fb_rate=$8`
 	}
 	stmt, err := db.Conn.Prepare(q_insert)
 
