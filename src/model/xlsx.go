@@ -4,17 +4,14 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/tealeg/xlsx"
 )
-
-// func (row *xlsx.Row) ToCompany(data_krx Data_KRX) {
-// 	data_krx.Set(row)
-// }
 
 func RowGet(row *xlsx.Row) (string, string) {
 	txt_replace := strings.NewReplacer("'", " ")
 
-	str := fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+	str := fmt.Sprintf("%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s"+c.XLSX_SPLIT+"%s",
 		txt_replace.Replace(row.Cells[0].String()),
 		txt_replace.Replace(row.Cells[1].String()),
 		txt_replace.Replace(row.Cells[2].String()),

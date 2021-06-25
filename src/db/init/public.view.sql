@@ -4,7 +4,9 @@
 DROP VIEW IF EXISTS "daily_stock";
 
 CREATE VIEW public.daily_stock AS
-SELECT C.*,
+SELECT C.CODE,
+	C.NAME,
+	D.MARKET,
 	B.CP_X1,
 	B.CP_Y1,
 	B.CP_X2,
@@ -33,21 +35,23 @@ SELECT C.*,
 	B.HP_X_TICK,
 	B.HP_Y_MINUS,
 	B.HP_Y_PERCENT,
-    s.Stop        	,
-	s.Clear       	,
-	s.Managed     	,
-	s.Ventilation 	,
-	s.Unfaithful    	,
-	s.Low_liquidity 	,
-	s.Lack_listed   	,
-	s.Overheated    	,
-	s.Caution      	,
-	s.Warning 		,
-	s.Risk    		
+	S.STOP ,
+	S.CLEAR ,
+	S.MANAGED ,
+	S.VENTILATION ,
+	S.UNFAITHFUL ,
+	S.LOW_LIQUIDITY ,
+	S.LACK_LISTED ,
+	S.OVERHEATED ,
+	S.CAUTION ,
+	S.WARNING ,
+	S.RISK
 FROM COMPANY.CODE C
-LEFT JOIN PUBLIC.BOUND_STOCK B ON C.CODE = B.CODE
+LEFT JOIN COMPANY.DETAIL D ON C.CODE = D.CODE
+LEFT JOIN PUBLIC.BOUND_STOCK B ON D.CODE = B.CODE
 LEFT JOIN COMPANY.STATE S ON B.CODE = S.CODE
 GROUP BY C.CODE,
+	D.CODE,
 	B.CODE,
 	S.CODE
 ORDER BY B.CP_Y_PERCENT DESC;

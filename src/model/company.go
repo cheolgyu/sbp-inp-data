@@ -2,6 +2,8 @@ package model
 
 import (
 	"strings"
+
+	"github.com/cheolgyu/stock-write/src/c"
 )
 
 var LinkMarket = "네버링크"
@@ -30,7 +32,7 @@ type CompanyDetail struct {
 }
 
 func StringToCompanyDetail(str string) CompanyDetail {
-	arr := strings.Split(str, ",")
+	arr := strings.Split(str, c.XLSX_SPLIT)
 	item := CompanyDetail{}
 	item.Full_code = arr[0]
 	item.Code = arr[1]
@@ -70,7 +72,7 @@ type CompanyState struct {
 
 func StringToCompanyState(str string) CompanyState {
 	o := CompanyState{}
-	arr := strings.Split(str, ",")
+	arr := strings.Split(str, c.XLSX_SPLIT)
 
 	txt_replace := strings.NewReplacer("'", " ")
 

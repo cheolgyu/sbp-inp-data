@@ -60,6 +60,8 @@ const INFO_NAME_UPDATED = "updated"
 var PRICE_DATE_FORMAT = "20060102"
 var PRICE_DEFAULT_START_DATE = ""
 
+const XLSX_SPLIT = "!,_"
+
 var DB_MAX_CONN = 30
 
 func init() {
