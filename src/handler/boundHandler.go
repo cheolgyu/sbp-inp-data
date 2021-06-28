@@ -81,8 +81,8 @@ func (o *BoundCode) SaveBound(wg_db *sync.WaitGroup) {
 
 func (o *BoundCode) SaveHistBound() {
 	for i := range o.BoundCodeGtype {
-		o.BoundCodeGtype[i].GetBoundGype()
-		o.BoundCodeGtype[i].SaveBoundGype(o.Code)
+		o.BoundCodeGtype[i].GetBoundGType()
+		o.BoundCodeGtype[i].SaveBoundGType(o.Code)
 		log.Println("save-hist-bound:", o.Code, ",price-len:", len(o.BoundCodeGtype[i].PriceList), ",bound-len:", len(o.BoundCodeGtype[i].PointList))
 	}
 }
@@ -174,39 +174,47 @@ func (o *BoundCodeGtype) GetPrice(code string) {
 }
 
 // GTYPE별 각각의 BOUND_POINT 구하기
-func (o *BoundCodeGtype) GetBoundGype() {
+func (o *BoundCodeGtype) GetBoundGType() {
 
-	loop_cnt := len(o.PriceList)
-	if loop_cnt <= 1 {
-		return
-	}
+	count := len(o.PriceList)
 
-	keep_cnt := 0
-	start_X1 := uint(o.PriceList[0].Date)
-	start_Y1 := o.SwitchPrice(0)
+	for i := 0; i < count; i++ {
 
-	cur_p := o.SwitchPrice(0)
-	ago_p := o.SwitchPrice(1)
-	cur_g_way := GetBoundGype_Get_Gway(cur_p, ago_p)
+		x1 := uint(o.PriceList[i].Date)
+		y1 := o.SwitchPrice(i)
+		log.Println("========i=", i, ",x1=", x1)
 
-	write_cnt := 0
-	for i := 0; i < loop_cnt-1; i++ {
+		save := false
+		var x2_i uint
+		var y2_i float32
+		x_tick := 0
 
-		p_cur := o.SwitchPrice(i)
-		p_age := o.SwitchPrice(i + 1)
-		res := GetBoundGype_Swith_Gway(p_cur, p_age, cur_g_way)
-		if !res {
-			keep_cnt++
-		} else {
+		for j := i + 1; j < count; j++ {
+			x_tick++
+			//flog.Println("========>>>>>>>======j=", j)
+			x2 := uint(o.PriceList[j].Date)
+			y2 := o.SwitchPrice(j)
 
-			//bound 포인트 찾음.
+			g_way := GetBoundGType_Get_Gway(y1, y2)
+			peek := GetBoundGType_Swith_Gway(y1, y2, g_way)
+			//log.Println("========>>>>>>>======______x1=", x1, y1, x2, y2, " ,pekk=", peek, " ,Gway=", g_way)
+			if peek || j+1 == count {
+				i = j
+				save = true
+				x2_i = x2
+				y2_i = y2
+				break
+			}
+
+		}
+
+		if save {
 			var bp = model.Point{}
-			bp.X1 = start_X1
-			bp.Y1 = start_Y1
-
-			bp.X2 = uint(o.PriceList[i].Date)
-			bp.Y2 = o.SwitchPrice(i)
-			bp.X_tick = uint(keep_cnt)
+			bp.X1 = x1
+			bp.Y1 = y1
+			bp.X2 = x2_i
+			bp.Y2 = y2_i
+			bp.X_tick = uint(x_tick)
 			bp.Y_minus = bp.Y2 - bp.Y1
 			bp.Y_Percent = float32(float64(bp.Y_minus / bp.Y2 * 100))
 			test := fmt.Sprintf("%v", bp.Y_Percent)
@@ -214,34 +222,24 @@ func (o *BoundCodeGtype) GetBoundGype() {
 				bp.Y_Percent = 0
 			}
 
-			// 파일쓰기.
 			o.PointList = append(o.PointList, bp)
 
-			// 이어쓰기 위해 갱신
-			start_X1 = uint(o.PriceList[i].Date)
-			start_Y1 = o.SwitchPrice(i)
-			keep_cnt = 0
-			cur_p = o.SwitchPrice(i)
-			ago_p = o.SwitchPrice(i + 1)
-			cur_g_way = GetBoundGype_Get_Gway(cur_p, ago_p)
-
-			write_cnt++
+			x_tick = 0
+			//log.Println("::::::::::::", x1, x2_i, y1, y2_i, age_g_way)
 		}
 	}
 }
 
-func GetBoundGype_Swith_Gway(p_cur float32, p_age float32, cur_g_way string) bool {
-	switch cur_g_way {
-	case "eq":
-		if p_cur > p_age {
-			cur_g_way = "down"
-		} else if p_cur < p_age {
-			cur_g_way = "up"
+func GetBoundGType_Swith_Gway(y1 float32, y2 float32, ago_g_way string) bool {
+	if ago_g_way == "" || ago_g_way == "eq" {
+		if y1 < y2 {
+			ago_g_way = "up"
+		} else if y1 > y2 {
+			ago_g_way = "down"
 		}
-
 	}
-	exit1 := cur_g_way == "down" && p_cur > p_age
-	exit2 := cur_g_way == "up" && p_cur < p_age
+	exit1 := ago_g_way == "down" && y1 < y2
+	exit2 := ago_g_way == "up" && y1 > y2
 
 	if exit1 || exit2 {
 		return true
@@ -249,13 +247,13 @@ func GetBoundGype_Swith_Gway(p_cur float32, p_age float32, cur_g_way string) boo
 	return false
 }
 
-func GetBoundGype_Get_Gway(cur_price float32, ago_price float32) string {
+func GetBoundGType_Get_Gway(y1 float32, y2 float32) string {
 	g_way := ""
-	if cur_price > ago_price {
+	if y1 < y2 {
 		g_way = "up"
-	} else if cur_price < ago_price {
+	} else if y1 > y2 {
 		g_way = "down"
-	} else if cur_price == ago_price {
+	} else if y1 == y2 {
 		g_way = "eq"
 	} else {
 		panic("머냐")
@@ -279,7 +277,7 @@ func (o *BoundCodeGtype) SwitchPrice(i int) float32 {
 }
 
 // GTYPE별 BOUND 저장.
-func (o *BoundCodeGtype) SaveBoundGype(code string) {
+func (o *BoundCodeGtype) SaveBoundGType(code string) {
 	err := dao.InsertHistBound(o.Obj, code, o.Gtype, o.PointList, upsert_bound)
 	ChkErr(err)
 }
