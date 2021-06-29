@@ -13,8 +13,17 @@ todo
 ```
 container application sysout으로 로깅하고 
 https://docs.docker.com/config/containers/logging/syslog/ 이용해 로그 모으는 컨테이너 만들면
+   유료 30일 무료https://github.com/elastic/logstash
+   https://github.com/topics/logging-server
+      https://github.com/amir20/dozzle
+
 container application dockerfile에서
 FROM alpine:3.14 를 FROM scratch 로 수정하기.
+
+```
+
+```
+stock-write 안에 stock-write-ticker 넣을까?
 
 ```
 
@@ -140,45 +149,7 @@ stock-write
    1. cd stock-write
    2. go run . -run=daily
 
----
-### postgres 백업
-1. export
-    ```
-    postgres container 
-    su - postgres
-    pg_dump  dev  -n company >> company.dumpFile.sql
-    pg_dump  dev  -n public >> public.dumpFile.sql
-    pg_dump  dev  -n utils >> utils.dumpFile.sql
-    pg_dump  dev  -n price >> price.dumpFile.sql
-    pg_dump  dev  -n market >> market.dumpFile.sql
-    pg_dump  dev  -n bound >> bound.dumpFile.sql
 
-    window 
-    docker cp stock-write_db_1:/var/lib/postgresql/public.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//public.dumpFile.sql
-    docker cp stock-write_db_1:/var/lib/postgresql/company.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//company.dumpFile.sql
-    docker cp stock-write_db_1:/var/lib/postgresql/utils.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//utils.dumpFile.sql
-    docker cp stock-write_db_1:/var/lib/postgresql/price.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//price.dumpFile.sql
-    docker cp stock-write_db_1:/var/lib/postgresql/market.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//market.dumpFile.sql
-    docker cp stock-write_db_1:/var/lib/postgresql/bound.dumpFile.sql C://Users//cheolgyu//Desktop//backup//dumpFile//2021-06-17//bound.dumpFile.sql
-
-    ```
-2. import
-    ```
-    su - postgres
-    psql --dbname prod --host database-stock-1.czunxjjslnrd.ap-northeast-2.rds.amazonaws.com --port 5432 --username postgres < dumpFile.sql    
-    psql --dbname dev  < ./data/dumpFile/2021-06-17/public.dumpFile.sql
-    psql --dbname dev  < ./data/dumpFile/2021-06-17/company.dumpFile.sql
-    psql --dbname dev  < ./data/dumpFile/2021-06-17/utils.dumpFile.sql
-    psql --dbname dev  < ./data/dumpFile/2021-06-17/market.dumpFile.sql
-    psql --dbname dev  < ./data/dumpFile/2021-06-17/price.dumpFile.sql
-    psql --dbname dev  < ./data/dumpFile/2021-06-17/bound.dumpFile.sql
-    
-
-    window 
- 
-    ```
-
----
 ## 빌드
 ```
 golang 환경변수 설정 (powershell)
@@ -199,29 +170,7 @@ $env:GOARCH = 'amd64'
 4. site
    1. main 브랜치에 push시 빌드 및 배포
    
----
-## 배포 
-### ssh접속
-   1. ssh -i "highserpot_stock.pem" ec2-user@ec2-3-35-30-100.ap-northeast-2.compute.amazonaws.com
-### 준비
-    ```
-    chmod +x dbment 
-    ```
-    ec2 업로드 전 기존 프로세스 kill -9 p_id 시키기.
 
-### ec2 업로드
-1. cd C:\Users\cheolgyu\go\github.com\cheolgyu\stock\
-   1. dbment
-      1. scp -i "highserpot_stock.pem" .env.prod  ec2-user@3.35.30.100:~/.env.prod
-      2. scp -i "highserpot_stock.pem" bin/dbment  ec2-user@3.35.30.100:~/dbment
-
-### ec2 실행 명령어
-1. ssh 접속
-   1. dbment
-      1. ticker에서 실행시킴
-      2. 수동 
-         1. ./dbment -run=daily -prod
----
 
 ### 참고 
 + dbment

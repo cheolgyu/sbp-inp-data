@@ -6,6 +6,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "run write ",
+            "type": "shell",
+            "command": " go run main.go ",
+            "args": [],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "presentation": {
+                "reveal": "always"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "none"
+        },
+        {
             "label": "build",
             "type": "shell",
             "group": {

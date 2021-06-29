@@ -3,8 +3,10 @@ package db
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	"github.com/cheolgyu/stock-write/src/c"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -21,10 +23,15 @@ type PQ struct {
 }
 
 func (o *PQ) conn() *sql.DB {
-
-	db, err := sql.Open("postgres", "host=localhost port=5432 user=postgres password=example dbname=dev sslmode=disable")
+	err := godotenv.Load(".env.local")
 	if err != nil {
-		log.Println("커넥션 오류:")
+		log.Panic("Error loading .env file")
+	}
+
+	DB_URL := os.Getenv("DB_URL")
+	db, err := sql.Open("postgres", DB_URL)
+	if err != nil {
+		log.Println("커넥션 오류:", err)
 		panic(err)
 	}
 	return db

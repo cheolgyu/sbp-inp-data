@@ -6,8 +6,6 @@ import (
 	"log"
 	"time"
 
-	"flag"
-
 	"github.com/cheolgyu/stock-write/project"
 	"github.com/joho/godotenv"
 )
@@ -21,27 +19,11 @@ func ElapsedTime(tag string, msg string) func() {
 	return func() { log.Printf("[%s] Elipsed Time: %s", tag, time.Since(start)) }
 }
 
-var run_type string
-
 func init() {
-	flag_prod := flag.Bool("prod", false, "a bool")
-	flag_run_type := flag.String("run", "daily", "a string")
-
-	flag.Parse()
-
-	if *flag_prod {
-		err := godotenv.Load(".env.prod")
-		if err != nil {
-			log.Panic("Error loading .env file")
-		}
-	} else {
-		err := godotenv.Load(".env.local")
-		if err != nil {
-			log.Panic("Error loading .env file")
-		}
+	err := godotenv.Load(".env.local")
+	if err != nil {
+		log.Panic("Error loading .env file")
 	}
-	log.Println("prod", *flag_prod, ", run_type", string(*flag_run_type))
-	run_type = string(*flag_run_type)
 }
 
 func main() {
@@ -55,5 +37,5 @@ func main() {
 func project_run() {
 
 	p := project.Project{}
-	p.Run(run_type)
+	p.Run()
 }

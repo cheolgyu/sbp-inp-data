@@ -10,7 +10,7 @@ import (
 type Project struct {
 }
 
-func (p *Project) Run(arg string) {
+func (p *Project) Run() {
 
 	uf := utils.File{}
 	uf.Init()
