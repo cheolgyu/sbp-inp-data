@@ -6,7 +6,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build for linux",
+            "label": "build",
             "type": "shell",
             "group": {
                 "kind": "build",
@@ -15,10 +15,19 @@
             "options": {
                 "env": {
                     "GOOS": "linux",
-                    "GOARCH": "amd64", 
+                    "GOARCH": "amd64",
                 }
             },
-            "command": "go build -o ./bin/stock-write main.go ",
+            "command": "go build -o ../stock-write-ticker/bin/stock-write main.go",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "build move file",
+            ]
+        },
+        {
+            "label": "build move file",
+            "type": "shell",
+            "command": " cp ./.env.local ../stock-write-ticker/bin/.env.local",
         },
     ]
 }
