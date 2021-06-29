@@ -10,6 +10,13 @@
 
 ---
 todo
+```
+container application sysout으로 로깅하고 
+https://docs.docker.com/config/containers/logging/syslog/ 이용해 로그 모으는 컨테이너 만들면
+container application dockerfile에서
+FROM alpine:3.14 를 FROM scratch 로 수정하기.
+
+```
 
 - [ ] info
   - [ ] 업데이트하기

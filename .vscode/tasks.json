@@ -18,7 +18,7 @@
                     "GOARCH": "amd64",
                 }
             },
-            "command": "go build -o ../stock-write-ticker/bin/stock-write main.go",
+            "command": "go build  -ldflags '-w -s' -a -installsuffix cgo   -o ../stock-write-ticker/bin/stock-write main.go",
             "dependsOrder": "sequence",
             "dependsOn": [
                 "build move file",
@@ -27,7 +27,7 @@
         {
             "label": "build move file",
             "type": "shell",
-            "command": " cp ./.env.local ../stock-write-ticker/bin/.env.local",
+            "command": " cp ./.env.prod ../stock-write-ticker/bin/.env.local",
         },
     ]
 }
