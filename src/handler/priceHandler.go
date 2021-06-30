@@ -90,7 +90,9 @@ func (o *CodePriceData) Save(object string) {
 		wg_db.Add(1)
 		go cp.CPSave(&wg_db)
 
-		if i%50 == 0 {
+		//ec2.컨테이너 자꾸 죽음.
+		if i%c.DB_MAX_CONN == 0 {
+			wg.Wait()
 			wg_db.Wait()
 		}
 		//defer wg.Done()
