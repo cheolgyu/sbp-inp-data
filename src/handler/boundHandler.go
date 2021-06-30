@@ -57,7 +57,8 @@ func (o *Bound) Save() {
 		<-done
 		wg_db.Add(1)
 		go bc.SaveBound(&wg_db)
-		if i%c.DB_MAX_CONN == 0 {
+		if i%10 == 0 {
+			wg.Wait()
 			wg_db.Wait()
 		}
 	}
