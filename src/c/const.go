@@ -69,9 +69,9 @@ func init() {
 	DownloadPrice = true
 
 	G_TYPE = make(map[string]string)
+	G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
 	G_TYPE[G_TYPE_LOW] = G_TYPE_LOW
 	G_TYPE[G_TYPE_HIGH] = G_TYPE_HIGH
-	G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
 	G_TYPE[G_TYPE_OPEN] = G_TYPE_OPEN
 
 	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)

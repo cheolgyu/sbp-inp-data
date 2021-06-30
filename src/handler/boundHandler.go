@@ -1,10 +1,8 @@
 package handler
 
 import (
-	"fmt"
 	"log"
 	"sort"
-	"strings"
 	"sync"
 
 	"github.com/cheolgyu/stock-write/src/c"
@@ -47,7 +45,7 @@ func (o *Bound) Save() {
 
 	for i := range cl.List {
 		cc := cl.List[i]
-		log.Println("==", i, "==", cc.Code, "시작")
+		//log.Println("==", i, "==", cc.Code, "시작")
 		//가격목록 가져왔다.
 		bc := BoundCode{
 			Obj:  o.Obj,
@@ -83,7 +81,8 @@ func (o *BoundCode) SaveHistBound() {
 	for i := range o.BoundCodeGtype {
 		o.BoundCodeGtype[i].GetBoundGType()
 		o.BoundCodeGtype[i].SaveBoundGType(o.Code)
-		log.Println("save-hist-bound:", o.Code, ",price-len:", len(o.BoundCodeGtype[i].PriceList), ",bound-len:", len(o.BoundCodeGtype[i].PointList))
+		//log.Println(o.BoundCodeGtype[i].PointList)
+		log.Println("save-hist-bound:", o.Code, " g-type:", o.BoundCodeGtype[i].Gtype, ",price-len:", len(o.BoundCodeGtype[i].PriceList), ",bound-len:", len(o.BoundCodeGtype[i].PointList))
 	}
 }
 
@@ -175,59 +174,77 @@ func (o *BoundCodeGtype) GetPrice(code string) {
 
 // GTYPE별 각각의 BOUND_POINT 구하기
 func (o *BoundCodeGtype) GetBoundGType() {
+	/*
+		변화 구분 0: eq 1 증가 -1 감소
+		변화시작점 변화종료점
+		변화 기간
+
+	*/
 
 	count := len(o.PriceList)
+	//last_x1 := uint(o.PriceList[count-1].Date)
+	if count < 2 {
+		return
+	}
+
+	chg_value := GetChageValue(o.SwitchPrice(0), o.SwitchPrice(0+1))
+	chg_start_x := uint(o.PriceList[0].Date)
+	chg_start_y := o.SwitchPrice(0)
+
+	// chg_end_x := uint(o.PriceList[1].Date)
+	// chg_end_y := o.SwitchPrice(1)
+
+	chg_tick := 0
 
 	for i := 0; i < count; i++ {
 
+		//log.Println("===============================================================", i, count)
+		chg_tick++
+		n := i + 1
+		if n == count {
+			n = i
+		}
+
 		x1 := uint(o.PriceList[i].Date)
 		y1 := o.SwitchPrice(i)
-		log.Println("========i=", i, ",x1=", x1)
 
-		save := false
-		var x2_i uint
-		var y2_i float32
-		x_tick := 0
+		//x2 := uint(o.PriceList[n].Date)
+		y2 := o.SwitchPrice(n)
 
-		for j := i + 1; j < count; j++ {
-			x_tick++
-			//flog.Println("========>>>>>>>======j=", j)
-			x2 := uint(o.PriceList[j].Date)
-			y2 := o.SwitchPrice(j)
+		//log.Println("i=", i, ",n=", n, "len=", count)
+		g_way := GetChageValue(y1, y2)
+		chg := CheckChange(chg_value, g_way)
+		// log.Println("x1, y1,", x1, y1,
+		// 	",x2,y2=", x2, y2, " ,chage=", chg, " ,chg_value", chg_value, " cur g way =", g_way)
 
-			g_way := GetBoundGType_Get_Gway(y1, y2)
-			peek := GetBoundGType_Swith_Gway(y1, y2, g_way)
-			//log.Println("========>>>>>>>======______x1=", x1, y1, x2, y2, " ,pekk=", peek, " ,Gway=", g_way)
-			if peek || j+1 == count {
-				i = j
-				save = true
-				x2_i = x2
-				y2_i = y2
-				break
-			}
+		if chg {
+			// log.Println("____________________________")
+			// log.Println("______________chage_save____")
+			// log.Println("____________________________")
 
-		}
-
-		if save {
 			var bp = model.Point{}
-			bp.X1 = x1
-			bp.Y1 = y1
-			bp.X2 = x2_i
-			bp.Y2 = y2_i
-			bp.X_tick = uint(x_tick)
-			bp.Y_minus = bp.Y2 - bp.Y1
-			bp.Y_Percent = float32(float64(bp.Y_minus / bp.Y2 * 100))
-			test := fmt.Sprintf("%v", bp.Y_Percent)
-			if strings.Contains(test, "Inf") {
-				bp.Y_Percent = 0
-			}
-
+			bp.Set(chg_start_x, chg_start_y, x1, y1, uint(chg_tick))
 			o.PointList = append(o.PointList, bp)
+			//log.Println("____________________________", chg_start_x, chg_start_y, x1, y1)
+			// init
+			chg_tick = 0
+			chg_value = g_way
+			chg_start_x = x1
+			chg_start_y = y1
 
-			x_tick = 0
-			//log.Println("::::::::::::", x1, x2_i, y1, y2_i, age_g_way)
 		}
+		// chg_end_x = x2
+		// chg_end_y = y2
+
+		//log.Println(" end i_____  ,", chg_start_x, chg_start_y, chg_end_x, chg_end_y)
+
 	}
+
+	// log.Println("____________________________")
+	// log.Println("______________end loop _____")
+	// log.Println("____________________________")
+	// log.Println("____________________________", chg_start_x, chg_start_y, chg_end_x, chg_end_y)
+
 }
 
 func GetBoundGType_Swith_Gway(y1 float32, y2 float32, ago_g_way string) bool {
@@ -238,6 +255,7 @@ func GetBoundGType_Swith_Gway(y1 float32, y2 float32, ago_g_way string) bool {
 			ago_g_way = "down"
 		}
 	}
+	//log.Println("ago_g_way = ", ago_g_way)
 	exit1 := ago_g_way == "down" && y1 < y2
 	exit2 := ago_g_way == "up" && y1 > y2
 
@@ -247,14 +265,24 @@ func GetBoundGType_Swith_Gway(y1 float32, y2 float32, ago_g_way string) bool {
 	return false
 }
 
-func GetBoundGType_Get_Gway(y1 float32, y2 float32) string {
-	g_way := ""
+func CheckChange(ago_g_way int, cur_g_way int) bool {
+
+	if ago_g_way == cur_g_way {
+		return false
+	} else {
+		return true
+	}
+
+}
+
+func GetChageValue(y1 float32, y2 float32) int {
+	g_way := 0
 	if y1 < y2 {
-		g_way = "up"
+		g_way = 1
 	} else if y1 > y2 {
-		g_way = "down"
+		g_way = -1
 	} else if y1 == y2 {
-		g_way = "eq"
+		g_way = 0
 	} else {
 		panic("머냐")
 	}

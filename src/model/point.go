@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -15,6 +16,22 @@ type Point struct {
 	X_tick    uint
 	Y_minus   float32
 	Y_Percent float32
+}
+
+func (o *Point) Set(x1 uint, y1 float32, x2 uint, y2 float32, x_tick uint) {
+	o.X1 = x1
+	o.Y1 = y1
+	o.X2 = x2
+	o.Y2 = y2
+	o.X_tick = x_tick
+	o.Y_minus = o.Y2 - o.Y1
+	o.Y_Percent = float32(float64(o.Y_minus / o.Y2 * 100))
+
+	test := fmt.Sprintf("%v", o.Y_Percent)
+	if strings.Contains(test, "Inf") {
+		o.Y_Percent = 0
+	}
+
 }
 
 func StringToPoint(str string) Point {
