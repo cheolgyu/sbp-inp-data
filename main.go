@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"log"
 	"time"
@@ -23,6 +24,16 @@ func init() {
 	err := godotenv.Load(".env.local")
 	if err != nil {
 		log.Panic("Error loading .env file")
+	}
+	DB_URL := os.Getenv("DB_URL")
+	log.Println("============================")
+	log.Println("============================")
+	log.Println("============================")
+	log.Println("============================")
+	log.Println("============================")
+	log.Println(DB_URL)
+	if DB_URL == "" {
+		panic("디비 유알엘 없다.")
 	}
 }
 

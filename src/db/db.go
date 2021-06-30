@@ -27,8 +27,14 @@ func (o *PQ) conn() *sql.DB {
 	if err != nil {
 		log.Panic("Error loading .env file")
 	}
-
 	DB_URL := os.Getenv("DB_URL")
+	log.Println("============================")
+	log.Println("============================")
+	log.Println("============================")
+	log.Println("============================")
+	log.Println("============================")
+	log.Println(DB_URL)
+
 	db, err := sql.Open("postgres", DB_URL)
 	if err != nil {
 		log.Println("커넥션 오류:", err)
