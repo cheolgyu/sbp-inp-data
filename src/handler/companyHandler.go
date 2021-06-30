@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"log"
+
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/dao"
 	"github.com/cheolgyu/stock-write/src/model"
@@ -9,11 +11,12 @@ import (
 )
 
 func CompanyHandler() {
+	log.Println(" CompanyHandler  start")
 	handler := Company{}
 	handler.Load()
 	handler.Save()
 
-	//log.Println(handler)
+	log.Println(" CompanyHandler  end")
 }
 
 type Company struct {
@@ -33,7 +36,8 @@ func (o *Company) Load() {
 
 	xlFile, err := xlsx.OpenFile(f_download)
 	if err != nil {
-		panic(err)
+		log.Println("오류발생.CompanyHandler.xlFile.DOWNLOAD_DIR_COMPANY_DETAIL ")
+		log.Panic(err)
 	}
 
 	sheet := xlFile.Sheets[0]
@@ -111,7 +115,8 @@ func (o *StateList) Load() {
 
 	xlFile, err := xlsx.OpenFile(f_download)
 	if err != nil {
-		panic(err)
+		log.Println("오류발생.CompanyHandler.xlFile.StateList ")
+		log.Panic(err)
 	}
 
 	sheet := xlFile.Sheets[0]

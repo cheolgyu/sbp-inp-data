@@ -16,6 +16,7 @@ func init() {
 	upsert_price = true
 }
 func PriceHandler() {
+	log.Println(" PriceHandler  start")
 	// 종목가격
 	cpd_price := CodePriceData{}
 	cpd_price.Save(c.PRICE)
@@ -23,6 +24,7 @@ func PriceHandler() {
 	// 마켓가격
 	cpd_market := CodePriceData{}
 	cpd_market.Save(c.MARKET)
+	log.Println(" PriceHandler  end")
 }
 
 type CodePriceData struct {

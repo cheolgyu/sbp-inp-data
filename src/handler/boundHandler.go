@@ -17,11 +17,13 @@ func init() {
 }
 
 func BoundHandler() {
+	log.Println(" BoundHandler  start")
 	bp := Bound{Obj: c.PRICE}
 	bp.Save()
 
 	bm := Bound{Obj: c.MARKET}
 	bm.Save()
+	log.Println(" BoundHandler  end")
 }
 
 type Bound struct {
