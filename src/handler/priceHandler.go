@@ -83,12 +83,12 @@ func (o *CodePriceData) Save(object string) {
 			ch: done_load,
 		}
 		wg.Add(1)
-		go cp.CPLoad(p)
+		cp.CPLoad(p)
 		<-done_load
 
 		o.List = append(o.List, cp)
 		wg_db.Add(1)
-		go cp.CPSave(&wg_db)
+		cp.CPSave(&wg_db)
 
 		//ec2.컨테이너 자꾸 죽음.
 		if i%10 == 0 {

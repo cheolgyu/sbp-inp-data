@@ -53,10 +53,10 @@ func (o *Bound) Save() {
 			Obj:  o.Obj,
 			Code: cc.Code}
 		wg.Add(1)
-		go bc.GetPrice(&wg, done)
+		bc.GetPrice(&wg, done)
 		<-done
 		wg_db.Add(1)
-		go bc.SaveBound(&wg_db)
+		bc.SaveBound(&wg_db)
 		if i%10 == 0 {
 			wg.Wait()
 			wg_db.Wait()
