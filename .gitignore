@@ -10,3 +10,4 @@ test/*.sql
 .env.prod
 bin/
 data/download/
+logs/

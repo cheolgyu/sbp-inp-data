@@ -54,7 +54,7 @@ func (o *Bound) Save() {
 			Code: cc.Code}
 		wg.Add(1)
 		bc.GetPrice(&wg, done)
-		<-done
+		//<-done
 		wg_db.Add(1)
 		bc.SaveBound(&wg_db)
 		if i%10 == 0 {
@@ -155,7 +155,7 @@ func (o *BoundCode) GetPrice(wg *sync.WaitGroup, done chan bool) {
 		o.BoundCodeGtype = append(o.BoundCodeGtype, gcg)
 		log.Println("get-price,", o.Code, ",G_TYPE:", g, ",len=:", len(gcg.PriceList))
 	}
-	done <- true
+	//done <- true
 }
 
 type BoundCodeGtype struct {

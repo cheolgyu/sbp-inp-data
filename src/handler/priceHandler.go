@@ -84,7 +84,8 @@ func (o *CodePriceData) Save(object string) {
 		}
 		wg.Add(1)
 		cp.CPLoad(p)
-		<-done_load
+		// 멈춤
+		//<-done_load
 
 		o.List = append(o.List, cp)
 		wg_db.Add(1)
@@ -128,7 +129,8 @@ func (o *CodePrice) CPLoad(p codePriceDataParam) {
 	o.PriceMarketList = nc.ChartData.PriceMarketList
 	o.PriceList = nc.ChartData.PriceList
 
-	p.ch <- true
+	//멈춤
+	//p.ch <- true
 }
 
 func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
