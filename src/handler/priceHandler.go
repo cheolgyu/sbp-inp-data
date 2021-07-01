@@ -61,7 +61,7 @@ func (o *CodePriceData) Save(object string) {
 		for i := range model.MarketList {
 			cc := model.CompanyCode{}
 			cc.Code = model.MarketList[i]
-			cc.Name = model.MarketListNmae[i]
+			cc.Name = model.MarketListName[i]
 			cl.List = append(cl.List, cc)
 		}
 		obj_list.List = cl.List

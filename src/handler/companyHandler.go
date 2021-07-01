@@ -80,7 +80,7 @@ func (o *CodeList) GetMarketCode() {
 	for i := range model.MarketList {
 		o.List = append(o.List, model.CompanyCode{
 			Code: model.MarketList[i],
-			Name: model.MarketListNmae[i],
+			Name: model.MarketListName[i],
 		})
 	}
 }
