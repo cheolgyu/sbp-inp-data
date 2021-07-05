@@ -16,7 +16,7 @@ CREATE or replace FUNCTION update_day_trading()
  RETURNS void AS $$
 BEGIN
  -- code get
- perform 1
+ select *
     from information_schema.tables 
     where table_name = 'tb_daily_day_trading';
     if found then
