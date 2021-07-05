@@ -81,3 +81,13 @@ CREATE TABLE IF NOT EXISTS public.bound_market (
     "hp_y_percent" numeric(20, 2),
     PRIMARY KEY(code)
 );
+
+
+DROP TABLE IF  EXISTS public.tb_daily_day_trading;
+CREATE TABLE IF NOT EXISTS public.tb_daily_day_trading (
+    "code" text,
+    "name" text,
+    "market" text,
+    "std" numeric,
+    PRIMARY KEY(code)
+);

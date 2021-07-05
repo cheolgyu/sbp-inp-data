@@ -16,7 +16,7 @@ POST http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd HTTP/1.1
 Accept-Encoding: gzip, deflate
 content-type: application/x-www-form-urlencoded
 
-code=MzsoLyrm9m4iibyhBLIs7zmzvLFHNw0WMB4TV4pABvYRtSksuLS7Bnxpl86F7dAOvXfGx9S2U5wgvoxsacATRRtmGtORI4WrGDmruVe6oXtCqUypoW0Lp6SAPP0PhVkgThCTcjIZNPI5lCTubZnhjio6AHXdxc45YVEhz4JdugHPMxvIwHadpQpCGE1HxZAXvTCprTIXuXT9XxFb88awpQ==
+code=gRY0jP6rQnfIF4FBiKhU63G17glcHrX+nhaqIpXeNXsRtSksuLS7Bnxpl86F7dAOvXfGx9S2U5wgvoxsacATRRtmGtORI4WrGDmruVe6oXtCqUypoW0Lp6SAPP0PhVkgThCTcjIZNPI5lCTubZnhjio6AHXdxc45YVEhz4JdugHPMxvIwHadpQpCGE1HxZAXvTCprTIXuXT9XxFb88awpQ==
 
 ### 전종목 지정내역 코드요청 
 ## http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201020103
