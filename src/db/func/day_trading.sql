@@ -16,7 +16,7 @@ CREATE or replace FUNCTION update_day_trading()
  RETURNS void AS $$
 BEGIN
  -- code get
- select *
+ PERFORM 1
     from information_schema.tables 
     where table_name = 'tb_daily_day_trading';
     if found then
@@ -24,7 +24,7 @@ BEGIN
     end if;
   insert into public.tb_daily_day_trading (code,name, market, std)
    select code, name , market, std from  public.get_day_trading();
-
+  
 END;  $$
 LANGUAGE plpgsql;
 ----------------------------------------
