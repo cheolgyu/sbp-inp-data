@@ -1,0 +1,1 @@
+select  round((35-40)/(10-0)::numeric ,3);
