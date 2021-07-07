@@ -27,7 +27,7 @@ func UpdateDayTrading() {
 
 func UpdateDailyLine() {
 	query := `
-	select 1 from public.update_tb_daily_line();
+	select 1 from public.update_lines();
 	`
 	db.Conn.Exec(query)
 
