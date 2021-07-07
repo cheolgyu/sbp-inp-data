@@ -18,6 +18,7 @@ func (p *Project) Run() {
 	handler.PriceHandler()
 	handler.BoundHandler()
 	dao.UpdateDayTrading()
+	dao.UpdateDailyLine()
 	dao.UpdateInfo(c.INFO_NAME_UPDATED)
 
 }
