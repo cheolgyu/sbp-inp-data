@@ -95,8 +95,6 @@ CREATE TABLE IF NOT EXISTS public.tb_daily_day_trading (
 DROP TABLE IF  EXISTS public.tb_daily_line;
 CREATE TABLE IF NOT EXISTS public.tb_daily_line (
     "code" text,
-    "name" text,
-    "market" text,
     "g_type" text,
     "x1" integer,
     "y1" integer,
@@ -104,5 +102,5 @@ CREATE TABLE IF NOT EXISTS public.tb_daily_line (
     "y2" integer,
     "x3" integer,
     "y3" integer,
-    PRIMARY KEY(code)
+    PRIMARY KEY(code,g_type)
 );
