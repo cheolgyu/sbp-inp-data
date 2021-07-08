@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS public.tb_daily_day_trading (
     "code" text,
     "name" text,
     "market" text,
+    "avg" numeric,
     "std" numeric,
     PRIMARY KEY(code)
 );
