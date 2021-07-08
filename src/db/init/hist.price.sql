@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS hist.price_stock (
 	"cp" numeric(20, 0),
 	"vol" numeric(20, 0),
 	"fb_rate" numeric(20, 2),
+	"o2c" numeric(10, 2),
+	"l2h" numeric(10, 2),
 	PRIMARY KEY(code, p_date)
 ) ;
 
