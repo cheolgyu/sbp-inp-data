@@ -22,7 +22,7 @@
             "group": "none"
         },
         {
-            "label": "build",
+            "label": "1. build",
             "type": "shell",
             "group": {
                 "kind": "build",
@@ -37,11 +37,11 @@
             "command": "go build  -ldflags '-w -s' -a -installsuffix cgo   -o ../stock-write-ticker/bin/stock-write main.go",
             "dependsOrder": "sequence",
             "dependsOn": [
-                "build move file",
+                "1.1. build move file",
             ]
         },
         {
-            "label": "build move file",
+            "label": "1.1. build move file",
             "type": "shell",
             "command": " cp ./.env.prod ../stock-write-ticker/bin/.env.local",
         },
