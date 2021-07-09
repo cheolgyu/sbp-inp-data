@@ -119,3 +119,21 @@ GROUP BY C.CODE,
 	B.CODE,
 	S.CODE
 ORDER BY B.CP_Y_PERCENT DESC;
+
+
+DROP VIEW IF EXISTS "daily_monthly_peek";
+CREATE VIEW PUBLIC.daily_monthly_peek AS
+SELECT MP.CODE as mp_code,
+	c.NAME,
+	d.market,
+	MP.PEEK,
+	MP.PEEK_LIST,
+	MP.PEEK_PERCENT,
+	MP.LIST,
+	s.*
+FROM PUBLIC.TB_DAILY_MONTHLY_PEEK MP
+LEFT JOIN COMPANY.code c ON MP.CODE = c.CODE
+LEFT JOIN COMPANY.detail d ON MP.CODE = d.CODE
+LEFT JOIN COMPANY.state s ON MP.CODE = s.CODE
+--where peek =  extract(month FROM now()::timestamp)
+order by peek_percent desc 
