@@ -42,3 +42,21 @@ func UpdateDailyLine() {
 		}
 	}
 }
+
+func UpdateDailyMonthlyPeek() {
+	query := `
+	select 1 from public.daily_monthly_peek();
+	`
+	db.Conn.Exec(query)
+
+	_, err := db.Conn.Query(query)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// there were no rows, but otherwise no error occurred
+		} else {
+			log.Fatalln("쿼리 UpdateDailyMonthlyPeek udpate:", err)
+
+			panic(err)
+		}
+	}
+}
