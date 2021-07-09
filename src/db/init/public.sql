@@ -105,3 +105,13 @@ CREATE TABLE IF NOT EXISTS public.tb_daily_line (
     "y3" integer,
     PRIMARY KEY(code,g_type)
 );
+
+
+DROP TABLE IF  EXISTS public.tb_daily_monthly_peek;
+CREATE TABLE IF NOT EXISTS public.tb_daily_monthly_peek (
+   "code" text PRIMARY KEY REFERENCES "company"."code"
+   ,"peek" numeric(2, 0) 
+   ,"peek_list" numeric(2, 0)[]
+   ,"peek_percent" numeric(10, 2) 
+   ,"list" json
+);
