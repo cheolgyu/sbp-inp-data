@@ -17,6 +17,7 @@ func (p *Project) Run() {
 	handler.CompanyHandler()
 	handler.PriceHandler()
 	handler.BoundHandler()
+	dao.InsertOpeningDate()
 	dao.UpdateDayTrading()
 	dao.UpdateDailyLine()
 	dao.UpdateDailyMonthlyPeek()
