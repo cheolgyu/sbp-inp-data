@@ -39,12 +39,13 @@ BEGIN
 		FOREACH g_type IN ARRAY arr_g_type
 		LOOP
 			EXECUTE format(' SELECT * FROM  public.get_xy(%L ,%L) ', row.code, g_type ) INTO count, x1 ,y1 ,x2 ,y2;
-			EXECUTE format(' SELECT * FROM  public.get_x3_y3(%L ,%L    ,%L ,%L ,%L ,%L ) ', row.code ,row.MARKET_NUM   ,x1 ,y1 ,x2 ,y2 ) INTO x3 ,y3;
-			IF y3 > 0 then
-				EXECUTE format(' SELECT * FROM  public.convert_y3(%L ,%L ) ', row.MARKET_NUM ,y3 ) INTO y3_price;
-				EXECUTE format(' SELECT * FROM  public.update_tb_daily_line( %L,%L,  %L ,%L ,%L ,%L ,%L ,%L) ', row.code ,g_type ,x1 ,y1 ,x2 ,y2 ,x3 ,y3_price ) ;
+			IF x1 != null then
+				EXECUTE format(' SELECT * FROM  public.get_x3_y3(%L ,%L    ,%L ,%L ,%L ,%L ) ', row.code ,row.MARKET_NUM   ,x1 ,y1 ,x2 ,y2 ) INTO x3 ,y3;
+				IF y3 > 0 then
+					EXECUTE format(' SELECT * FROM  public.convert_y3(%L ,%L ) ', row.MARKET_NUM ,y3 ) INTO y3_price;
+					EXECUTE format(' SELECT * FROM  public.update_tb_daily_line( %L,%L,  %L ,%L ,%L ,%L ,%L ,%L) ', row.code ,g_type ,x1 ,y1 ,x2 ,y2 ,x3 ,y3_price ) ;
+				END IF;
 			END IF;
-			
 		END LOOP;
  
 		

@@ -166,7 +166,7 @@ CREATE OR REPLACE FUNCTION  public.is_one_peek(inp_code text)
       ) 
       ,a as ( select avg(t.c),sum(t.c) from t )
       ,tp as( select  t.mm, round(public.get_percent(t.c, a.sum),2) from t,a )
-      ,tp_agg as( select  JSON_AGG(json_build_object(tp.mm, tp.round)) as agg from tp )
+      ,tp_agg as( select  JSON_AGG(json_build_object(tp.mm, tp.round)) as agg from tp where mm is not null  )
       , c as ( select count(*) from t,a where t.c > a.avg )
       , m as ( select mm::integer from t,a where t.c > a.avg  order by mm)
       , m_agg as ( select array_agg(m.mm) as agg, max(mm)  from m)
@@ -202,7 +202,7 @@ CREATE OR REPLACE FUNCTION  public.daily_monthly_peek( )
   RETURNS void AS
   $$
   DECLARE
-	r RECORD;
+	  r RECORD;
     r2 RECORD;
     chk boolean;
   BEGIN
@@ -212,8 +212,8 @@ CREATE OR REPLACE FUNCTION  public.daily_monthly_peek( )
   
   FOR r IN  select code  from company.code order by code 
     LOOP
-        select * into r2 from public.is_one_peek( r.code);
-       -- RAISE NOTICE 'Iterator: %', r2 ;
+       EXECUTE format( 'select * from public.is_one_peek(%L) ',r.code) into r2 ;
+        RAISE NOTICE 'Iterator: %', r2 ;
         if r2.is_peek = true then
            INSERT INTO public.tb_daily_monthly_peek(
             code, peek, peek_list, peek_percent, list)
