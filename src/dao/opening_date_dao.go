@@ -12,6 +12,7 @@ func InsertOpeningDate() {
 	insert into hist.opening_date (dt)
    	select max(p_date)
     from  HIST.PRICE_STOCK HPS 
+	ON CONFLICT do nothing
     ;
 	`
 	db.Conn.Exec(query)
