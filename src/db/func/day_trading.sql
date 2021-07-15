@@ -1,3 +1,10 @@
+/*
+
+파일명: 단타
+단타용 종목 찾기 
+
+
+*/
 ----------------------------------------
 ----------------------------------------
 ----------------------------------------
@@ -76,4 +83,51 @@ LANGUAGE plpgsql;
   ----------------------------------------
 
 
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+
+-- 중앙값 구하기.
+
+/*
+SELECT median(AA)
+FROM (
+SELECT 1 AA UNION ALL
+SELECT 2 UNION ALL
+SELECT 3 UNION ALL
+SELECT 4 UNION ALL
+SELECT 5 UNION ALL
+SELECT 6 UNION ALL
+SELECT 7
+) A ;
+*/
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+CREATE OR REPLACE FUNCTION _final_median(numeric[])
+   RETURNS numeric AS
+$$
+   SELECT AVG(val)
+   FROM (
+     SELECT val
+     FROM unnest($1) val
+     ORDER BY 1
+     LIMIT  2 - MOD(array_upper($1, 1), 2)
+     OFFSET CEIL(array_upper($1, 1) / 2.0) - 1
+   ) sub;
+$$
+LANGUAGE 'sql' IMMUTABLE;
+
+CREATE AGGREGATE median(numeric) (
+  SFUNC=array_append,
+  STYPE=numeric[],
+  FINALFUNC=_final_median,
+  INITCOND='{}'
+);
 

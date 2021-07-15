@@ -10,4 +10,5 @@ insert into hist.opening_date (dt)
    select p_date
     from  HIST.PRICE_STOCK HPS 
     group by p_date 
-    order by p_date asc;
+    order by p_date asc
+on conflict do nothing; 
