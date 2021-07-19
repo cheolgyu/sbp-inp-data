@@ -16,6 +16,9 @@ func init() {
 	upsert_price = true
 }
 func PriceHandler() {
+	MetaCode_StockOld = SetMetaCode_StockOld(Config["stock"])
+	MetaCode_MarketOld = SetMetaCode_StockOld(Config["market"])
+
 	log.Println(" PriceHandler  start")
 	// 종목가격
 	cpd_price := CodePriceData{}
@@ -35,7 +38,7 @@ type codePriceDataParam struct {
 
 	startDate string
 	endDate   string
-	item      model.CompanyCode
+	item      model.Company
 	idx       int
 
 	wg *sync.WaitGroup
@@ -50,18 +53,18 @@ func (o *CodePriceData) Save(object string) {
 	wg := sync.WaitGroup{}
 	wg_db := sync.WaitGroup{}
 	done_load := make(chan bool)
-	var obj_list CodeList
+	var obj_list CompanyList
 
 	if object == c.PRICE {
 		comp := Company{}
-		comp.Code.GetCompanyCode()
-		obj_list.List = comp.Code.List
+		comp.PubCompany.GetCompanyCode()
+		obj_list.List = comp.PubCompany.List
 	} else if object == c.MARKET {
-		cl := CodeList{}
+		cl := CompanyList{}
 		for i := range model.MarketList {
-			cc := model.CompanyCode{}
+			cc := model.Company{}
 			cc.Code = model.MarketList[i]
-			cc.Name = model.MarketListName[i]
+			//cc.Name = model.MarketListName[i]
 			cl.List = append(cl.List, cc)
 		}
 		obj_list.List = cl.List
@@ -107,7 +110,6 @@ func (o *CodePriceData) Save(object string) {
 type CodePrice struct {
 	Object          string
 	Code            string
-	PriceList       []model.PriceStock
 	PriceMarketList []model.PriceMarket
 }
 
@@ -127,8 +129,6 @@ func (o *CodePrice) CPLoad(p codePriceDataParam) {
 	nc.Run()
 
 	o.PriceMarketList = nc.ChartData.PriceMarketList
-	o.PriceList = nc.ChartData.PriceList
-
 	//멈춤
 	//p.ch <- true
 }
@@ -147,24 +147,13 @@ func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
 		Tb_nm:     tb_nm,
 	}
 
-	switch o.Object {
-	case c.PRICE:
-		insert_price := dao.InsertPriceStock{
-			Params: params,
-			Upsert: upsert_price,
-			List:   o.PriceList,
-		}
-		err := insert_price.InsertHistPrice()
-		return err
-	default:
-		insert := dao.InsertPriceMarket{
-			Params: params,
-			Upsert: upsert_price,
-			List:   o.PriceMarketList,
-		}
-		err := insert.Insert()
-		return err
+	insert := dao.InsertPriceMarket{
+		Params: params,
+		Upsert: upsert_price,
+		List:   o.PriceMarketList,
 	}
+	err := insert.Insert()
+	return err
 
 }
 

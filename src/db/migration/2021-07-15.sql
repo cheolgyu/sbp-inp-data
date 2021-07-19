@@ -168,7 +168,7 @@ INSERT INTO hist.vol(
 -------------------------------------------------------------------------------------------------------------------
 
 --stock
-INSERT INTO public.tb_code (id, code,code_type,name,market_type,stop)
+INSERT INTO public.tb_code (code_id, code,code_type,name,market_type,stop)
 select 
 	mc.id
     , mc.code
@@ -184,7 +184,7 @@ select
     order by cc.code asc
 on conflict do nothing; 
 --market
-INSERT INTO public.tb_code (id, code,code_type,name,market_type,stop)
+INSERT INTO public.tb_code (code_id, code,code_type,name,market_type,stop)
 select 
     mc.id
     , mc.code

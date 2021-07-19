@@ -34,7 +34,7 @@ type Bound struct {
 func (o *Bound) Save() {
 
 	//코드목록 조회
-	cl := CodeList{}
+	cl := CompanyList{}
 	if o.Obj == c.PRICE {
 		cl.GetCompanyCode()
 	} else {

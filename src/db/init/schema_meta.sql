@@ -29,6 +29,7 @@
     code                VARCHAR(10) NOT NULL UNIQUE,
     code_type           integer NOT NULL REFERENCES "meta"."config"(id)
   );
+  
 
 
 DROP TABLE IF  EXISTS meta.opening;

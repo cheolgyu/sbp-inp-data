@@ -70,7 +70,7 @@ BEGIN
 			case when t.market_name ='KOSPI' THEN 1 ELSE 2 END AS MARKET_NUM 
 		from(
 			select  
-				id,code, name, market_type
+				code_id ,code, name, market_type
 				,(select  name from meta.config where upper_code='market_type' and id = market_type) as market_name
 			from public.tb_code pc 
 			where stop is not false
@@ -82,7 +82,7 @@ BEGIN
 		FOREACH i_price_type IN ARRAY r_p.id
 		LOOP
 			--RAISE NOTICE 'Iterator: %', i_price_type ;
-			EXECUTE format(' SELECT * FROM  project.func_lines_get_last_point(%L ,%L) ', row.id, i_price_type ) INTO r2;
+			EXECUTE format(' SELECT * FROM  project.func_lines_get_last_point(%L ,%L) ', row.code_id, i_price_type ) INTO r2;
 			IF r2.x1 != null then
 				EXECUTE format(' SELECT * FROM  project.func_lines_get_next_point(%L ,%L    ,%L ,%L ,%L ,%L ) ', row.code ,row.MARKET_NUM   ,r2.x1 ,r2.y1 ,r2.x2 ,r2.y2 ) INTO x3 ,y3;
 				IF y3 > 0 then
@@ -124,9 +124,9 @@ BEGIN
  -- code  
 --------------------
 EXECUTE format('INSERT INTO project.tb_line(
-	id, code,  price_type, x1, y1, x2, y2, x3, y3)
+	code_id, code,  price_type, x1, y1, x2, y2, x3, y3)
 	VALUES (%L, %L,%L,
-	%L, %L, %L, %L, %L, %L) on CONFLICT ("id","price_type") DO UPDATE  
+	%L, %L, %L, %L, %L, %L) on CONFLICT ("code_id","price_type") DO UPDATE  
 	SET  x1=%L, y1=%L, x2=%L, y2=%L, x3=%L, y3=%L ;
 	 ', inp_code_id, inp_code , inp_price_type
 	,x1   ,y1  ,x2  ,y2  ,x3  ,y3 

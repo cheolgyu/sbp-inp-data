@@ -114,7 +114,7 @@ CREATE OR REPLACE FUNCTION  project.func_day_trading(
 	,inp_market_arr integer[]
 	)
  RETURNS TABLE (
-	 id integer  
+	 code_id integer  
 	 ,code VARCHAR  
 	 ,name VARCHAR 
 	 ,market_type integer 
@@ -143,7 +143,7 @@ with tbo as (
 	select min(dt) from (select dt from meta.opening  order by dt desc limit $1 )t
 ), tb as (
 	SELECT  
-		  pc.id
+		  pc.code_id
 		  , round(AVG(hp.L2H),2) AS AVG_L2H
 		  , round(STDDEV(hp.L2H),2) AS STD_L2H
 		  , round(AVG(hp.o2c),2) AS AVG_o2c
@@ -155,19 +155,19 @@ with tbo as (
 		  , array_agg(hp.hp) 
 	   from 
 		  	tbo, public.tb_code pc 
-		  	left join hist.PRICE hp  on hp.code_id = pc.id 
+		  	left join hist.PRICE hp  on hp.code_id = pc.code_id 
 		  
 	   where 1=1
        and pc.code_type = 1
 	   and hp. dt >= tbo.min 
 	   and hp.vol != 0
-	   group by pc.id 
+	   group by pc.code_id 
 	   having count(hp.L2H) = $1
 )
 
 
 select  	
-	  tb.id 
+	  tb.code_id 
 	  ,pc.code
 	  ,pc.name
 	  ,pc.market_type 
@@ -178,7 +178,7 @@ select
 	  ,tb.std_l2h
 	  ,tb.std_o2c
   from tb 
-  left join  public.tb_code pc on tb.id = pc.id 
+  left join  public.tb_code pc on tb.code_id = pc.code_id 
   left join meta.config mc on pc.market_type = mc.id
   where 1=1
   and market_type =any ($6)

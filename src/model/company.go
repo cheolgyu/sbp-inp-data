@@ -9,26 +9,28 @@ import (
 var LinkMarket = "네버링크"
 var LinkPrice = "네버링크"
 
-type CompanyCode struct {
-	Code string
-	Name string
+type Company struct {
+	Code_id     int    `db:"code_id"`
+	Code        string `db:"code"`
+	Name        string `db:"name"`
+	Code_type   int    `db:"code_type"`
+	Market_type int    `db:"market_type"`
+	Stop        bool   `db:"stop"`
+	//Name string
 }
 type CompanyDetail struct {
-	Name string
+	Company `db:"company"`
 
-	Code          string
-	Full_code     string
-	Full_name_kr  string
-	Full_name_eng string
-	Listing_date  string
-
-	Market                    string
-	Securities_classification string
-	Department                string
-	Stock_type                string
-	Face_value                string
-
-	Listed_stocks string
+	Full_code                 string `db:"full_code"`
+	Full_name_kr              string `db:"full_name_kr"`
+	Full_name_eng             string `db:"full_name_eng"`
+	Listing_date              string `db:"listing_date"`
+	Market                    string `db:"market"`
+	Securities_classification string `db:"securities_classification"`
+	Department                string `db:"department"`
+	Stock_type                string `db:"stock_type"`
+	Face_value                string `db:"face_value"`
+	Listed_stocks             string `db:"listed_stocks"`
 }
 
 func StringToCompanyDetail(str string) CompanyDetail {
@@ -52,22 +54,18 @@ func StringToCompanyDetail(str string) CompanyDetail {
 }
 
 type CompanyState struct {
-	Name string
+	Company `db:"company"`
 
-	Code        string
-	Stop        bool
-	Clear       bool
-	Managed     bool
-	Ventilation bool
-
-	Unfaithful    bool
-	Low_liquidity bool
-	Lack_listed   bool
-	Overheated    bool
-	Caution       bool
-
-	Warning bool
-	Risk    bool
+	Clear         bool `db:"clear"`
+	Managed       bool `db:"managed"`
+	Ventilation   bool `db:"ventilation"`
+	Unfaithful    bool `db:"unfaithful"`
+	Low_liquidity bool `db:"low_liquidity"`
+	Lack_listed   bool `db:"lack_listed"`
+	Overheated    bool `db:"overheated"`
+	Caution       bool `db:"caution"`
+	Warning       bool `db:"warning"`
+	Risk          bool `db:"risk"`
 }
 
 func StringToCompanyState(str string) CompanyState {

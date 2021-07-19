@@ -65,8 +65,8 @@ const XLSX_SPLIT = "!,_"
 var DB_MAX_CONN = 30
 
 func init() {
-	DownloadCompany = true
-	DownloadPrice = true
+	DownloadCompany = false
+	DownloadPrice = false
 
 	G_TYPE = make(map[string]string)
 	G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE

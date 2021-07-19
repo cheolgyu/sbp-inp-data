@@ -28,10 +28,7 @@ func (o *PQ) conn() *sql.DB {
 		log.Panic("Error loading .env file")
 	}
 	DB_URL := os.Getenv("DB_URL")
-	log.Println("============================")
-	log.Println("============================")
-	log.Println("============================")
-	log.Println("============================")
+
 	log.Println("============================")
 	log.Println(DB_URL)
 

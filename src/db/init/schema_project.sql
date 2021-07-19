@@ -15,7 +15,7 @@ CREATE SCHEMA "project";
 
 DROP TABLE IF  EXISTS project.tb_line;
 CREATE TABLE IF NOT EXISTS project.tb_line (
-    id                  integer NOT NULL REFERENCES "meta"."code"(id)
+    code_id                  integer NOT NULL REFERENCES "meta"."code"(id)
     ,code                VARCHAR(10) NOT NULL REFERENCES "meta"."code"(code)
     , "price_type" integer not null REFERENCES "meta"."config"(id)
     , "x1" numeric
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS project.tb_line (
     , "y2" numeric
     , "x3" numeric
     , "y3" numeric
-    , PRIMARY KEY(id,price_type)
+    , PRIMARY KEY(code_id,price_type)
 );
 
 ----------------------------------------

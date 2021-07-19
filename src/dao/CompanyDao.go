@@ -4,27 +4,24 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
 )
 
 func InsertCompanyState(list []model.CompanyState) error {
 	client := db.Conn
-	schema_nm := c.SCHEMA_NAME_COMPANY_CODE
-	tb_nm := c.TABLE_NAME_COMPANY_STATE
-	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s" 
-		("code", "stop", "clear", "managed", "ventilation", 
-        "unfaithful", "low_liquidity", "lack_listed", "overheated", "caution", 
-        "warning","risk")
-		VALUES ( $1 ,$2 ,$3 ,$4 ,$5    ,$6 ,$7 ,$7 ,$9 ,$10    ,$11,$12 )`, schema_nm, tb_nm)
-	q_insert += ` ON CONFLICT ("code") DO UPDATE SET 
-	stop=$2 ,clear=$3 ,managed=$4 ,ventilation=$5 
-	,unfaithful=$6 ,low_liquidity=$7 ,lack_listed=$8 ,overheated=$9 ,caution=$10 
-	,warning=$11 ,risk=$12   `
+	q_insert := `INSERT INTO public.company_state `
+	q_insert += `( "code_id", "code" , "name" ,"code_type" ,"market_type", "stop", `
+	q_insert += ` "clear", "managed", "ventilation", "unfaithful","low_liquidity",  `
+	q_insert += `   "lack_listed", "overheated", "caution","warning","risk"  )`
+	q_insert += `	VALUES ( $1 ,$2 ,$3 ,$4 ,$5,$6    ,$7,$8,$9,$10,$11  ,$12,$13,$14,$15,$16 ) `
+	q_insert += ` ON CONFLICT ("code_id") DO UPDATE SET `
+	q_insert += ` name=$3, code_type=$4, market_type=$5, stop=$6 ,`
+	q_insert += `	clear=$7 ,managed=$8 ,ventilation=$9 ,unfaithful=$10 ,low_liquidity=$11, `
+	q_insert += ` lack_listed=$12 ,overheated=$13 ,caution=$14 ,warning=$15 ,risk=$16 `
 	stmt, err := client.Prepare(q_insert)
 	if err != nil {
-		log.Println("쿼리:Prepare 오류: ", schema_nm, tb_nm)
+		log.Println("쿼리:InsertCompanyState:Prepare 오류 ")
 		log.Fatal(err)
 		panic(err)
 	}
@@ -33,13 +30,12 @@ func InsertCompanyState(list []model.CompanyState) error {
 	for _, item := range list {
 
 		_, err := stmt.Exec(
-			item.Code, item.Stop, item.Clear, item.Managed, item.Ventilation,
-			item.Unfaithful, item.Unfaithful, item.Lack_listed, item.Overheated, item.Caution,
-			item.Warning, item.Risk,
+			item.Company.Code_id, item.Company.Code, item.Company.Name, item.Company.Code_type, item.Company.Market_type, item.Company.Stop,
+			item.Clear, item.Managed, item.Ventilation, item.Unfaithful, item.Unfaithful,
+			item.Lack_listed, item.Overheated, item.Caution, item.Warning, item.Risk,
 		)
 		if err != nil {
-			log.Println("쿼리:stmt.Exec 오류: ", schema_nm, tb_nm)
-			log.Println("쿼리:stmt.Exec 오류: ", item)
+			log.Println("쿼리:InsertCompanyState:stmt.Exec 오류: ", item)
 			log.Fatal(err)
 			panic(err)
 		}
@@ -49,20 +45,21 @@ func InsertCompanyState(list []model.CompanyState) error {
 
 func InsertCompanyDetail(list []model.CompanyDetail) error {
 	client := db.Conn
-	schema_nm := c.SCHEMA_NAME_COMPANY_CODE
-	tb_nm := c.TABLE_NAME_COMPANY_DETAIL
-	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s"(
-		"code", "full_code", "full_name_kr", "full_name_eng", "listing_date"
-		,"market", "securities_classification", "department", "stock_type"
-		,"face_value","listed_stocks")  
-		VALUES ( $1 ,$2 ,$3 ,$4 ,$5    ,$6 ,$7 ,$7 ,$9 ,$10    ,$11 )`, schema_nm, tb_nm)
-	q_insert += ` ON CONFLICT ("code") DO UPDATE SET 
-	full_code=$2 ,full_name_kr=$3 ,full_name_eng=$4 ,listing_date=$5 
-	,market=$6 ,securities_classification=$7 ,department=$8 ,stock_type=$9 ,face_value=$10 
-	,listed_stocks=$11   `
+	q_insert := `INSERT INTO public.company_detail`
+	q_insert += `(code_id, code, name, code_type, market_type, stop,`
+	q_insert += `  full_code, full_name_kr, full_name_eng, listing_date, market, `
+	q_insert += `  securities_classification, department, stock_type, face_value, listed_stocks)`
+	q_insert += `VALUES (  $1 ,$2 ,$3 ,$4 ,$5,$6  `
+	q_insert += `  ,$7,$8,$9,$10,$11 `
+	q_insert += `  ,$12,$13,$14,$15,$16)`
+	q_insert += `ON CONFLICT (code_id, code) DO UPDATE SET`
+	q_insert += `  name=$3, code_type=$4, market_type=$5, stop=$6,`
+	q_insert += `   full_code=$7, full_name_kr=$8, full_name_eng=$9, listing_date=$10, market=$11, `
+	q_insert += `  securities_classification=$12, department=$13, stock_type=$14, face_value=$15, listed_stocks=$16`
+
 	stmt, err := client.Prepare(q_insert)
 	if err != nil {
-		log.Println("쿼리:Prepare 오류: ", schema_nm, tb_nm)
+		log.Println("쿼리:InsertCompanyDetail Prepare 오류: ")
 		log.Fatal(err)
 		panic(err)
 	}
@@ -70,13 +67,14 @@ func InsertCompanyDetail(list []model.CompanyDetail) error {
 
 	for _, item := range list {
 		_, err := stmt.Exec(
-			item.Code, item.Full_code, item.Full_name_kr, item.Full_name_eng, item.Listing_date,
-			item.Market, item.Securities_classification, item.Department, item.Stock_type, item.Face_value,
-			item.Listed_stocks,
+			item.Company.Code_id, item.Company.Code, item.Company.Name, item.Company.Code_type, item.Company.Market_type, item.Company.Stop,
+			item.Full_code, item.Full_name_kr, item.Full_name_eng, item.Listing_date, item.Market,
+			item.Securities_classification, item.Department, item.Stock_type, item.Face_value, item.Listed_stocks,
 		)
 		if err != nil {
-			log.Println("쿼리:stmt.Exec 오류: ", schema_nm, tb_nm)
-			log.Println("쿼리:stmt.Exec 오류: ", item)
+			log.Println("쿼리InsertCompanyDetail:stmt.Exec 오류: ")
+
+			log.Println("쿼리InsertCompanyDetail :stmt.Exec 오류: ", fmt.Sprintf("%+v\n", item))
 			log.Fatal(err)
 			panic(err)
 		}
@@ -84,25 +82,26 @@ func InsertCompanyDetail(list []model.CompanyDetail) error {
 	return err
 }
 
-func InsertCompanyCode(list []model.CompanyCode) error {
+func InsertCompany(list []model.Company) error {
 	client := db.Conn
-	schema_nm := c.SCHEMA_NAME_COMPANY_CODE
-	tb_nm := c.TABLE_NAME_COMPANY_CODE
-	q_insert := fmt.Sprintf(`INSERT INTO "%s"."%s"("code", "name") VALUES( $1, $2 )`, schema_nm, tb_nm)
-	q_insert += ` ON CONFLICT ("code") DO UPDATE SET name=$2 `
+	q_insert := `INSERT INTO public.company `
+	q_insert += `(code_id, "code", "code_type", "market_type", "name", "stop")`
+	q_insert += `VALUES( $1, $2, $3, $4, $5, $6 )`
+	q_insert += `ON CONFLICT (code_id) DO UPDATE SET code=$2, code_type=$3,market_type=$4, name=$5, stop=$6 `
 	stmt, err := client.Prepare(q_insert)
 	if err != nil {
-		log.Println("쿼리:Prepare 오류: ", schema_nm, tb_nm)
+		log.Println("쿼리:InsertPublicTbCode:Prepare 오류: ")
 		log.Fatal(err)
 		panic(err)
 	}
 	defer stmt.Close()
 
 	for _, item := range list {
-		_, err := stmt.Exec(item.Code, item.Name)
+		_, err := stmt.Exec(item.Code_id, item.Code, item.Code_type, item.Market_type, item.Name, item.Stop)
+
 		if err != nil {
-			log.Println("쿼리:stmt.Exec 오류: ", schema_nm, tb_nm)
-			log.Println("쿼리:stmt.Exec 오류: ", item)
+			log.Println("쿼리:InsertPublicTbCode:stmt.Exec 오류: ")
+			log.Println("쿼리:InsertPublicTbCode:stmt.Exec 오류: ", fmt.Sprintf("%+v\n", item))
 			log.Fatal(err)
 			panic(err)
 		}
@@ -110,8 +109,8 @@ func InsertCompanyCode(list []model.CompanyCode) error {
 	return err
 }
 
-func GetCompanyCode() ([]model.CompanyCode, error) {
-	var res []model.CompanyCode
+func GetCompanyCode() ([]model.Company, error) {
+	var res []model.Company
 	rows, err := db.Conn.Query("select code,name from company.code order by code asc ")
 	if err != nil {
 		log.Fatalln(err)
@@ -126,9 +125,9 @@ func GetCompanyCode() ([]model.CompanyCode, error) {
 			log.Fatal(err)
 			panic(err)
 		}
-		res = append(res, model.CompanyCode{
+		res = append(res, model.Company{
 			Code: code,
-			Name: name,
+			//Name: name,
 		})
 	}
 	// Check for errors from iterating over rows.
