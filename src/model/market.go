@@ -23,19 +23,6 @@ type PriceMarket struct {
 	ForeignerBurnoutRate string
 }
 
-// func (o *PriceMarket) ToPriceStock() PriceStock {
-// 	return PriceStock{
-// 		Date:                 o.Date,
-// 		OpenPrice:            int(o.OpenPrice),
-// 		HighPrice:            int(o.HighPrice),
-// 		LowPrice:             int(o.LowPrice),
-// 		ClosePrice:           int(o.ClosePrice),
-// 		Volume:               o.Volume,
-// 		ForeignerBurnoutRate: o.ForeignerBurnoutRate,
-// 	}
-
-// }
-
 func convert_g4(num int) (int, error) {
 	var err error
 	res := 0
