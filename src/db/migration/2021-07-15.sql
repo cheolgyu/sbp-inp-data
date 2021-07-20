@@ -29,7 +29,7 @@ table추가
 -----------------------meta.code
 INSERT INTO meta.code (code,code_type)
 select code ,t.id
-from  company.code,(select id from  meta.config where upper_code='code_type' and code='stock')  t
+from  public.company,(select id from  meta.config where upper_code='code_type' and code='stock')  t
     order by code asc
 on conflict do nothing; 
 
@@ -38,7 +38,8 @@ select t1.code ,t2.id
 from  
 	(select code from  meta.config where upper_code='market_type' )  t1
 	,(select id from  meta.config where upper_code='code_type' and code='market')  t2
-order by code asc;
+order by code asc
+on conflict do nothing; 
 
 -----------------------meta.opening
 insert into meta.opening (dt,yyyy,mm,dd)
@@ -73,13 +74,16 @@ Query returned successfully in 1 min 26 secs.
 INSERT 0 1799469
 Query returned successfully in 2 min 36 secs.
 
+Query returned successfully in 1 min 9 secs.
+
   */
 --stock
 insert into hist.price
     (code_id, dt, dt_y, dt_m, dt_q4, op, hp, lp, cp, vol, fb_rate, o2c, l2h)
+
 SELECT 
-	(select id from meta.code mc where code = hps.code)
-	, (select dt from meta.opening  where dt = hps.p_date)
+	mc.id
+	,mo.dt
     , substring(p_date::text,1,4)::numeric
     , substring(p_date::text,5,2)::numeric
     , (
@@ -90,7 +94,10 @@ SELECT
             else 4 end as q4
     )
 	, op, hp, lp, cp, vol, fb_rate, o2c, l2h
-FROM hist.price_stock hps ;
+FROM meta.code mc 
+left join hist.price_stock hps on mc.code = hps.code
+left join meta.opening mo on hps.p_date = mo.dt 
+;
 --market
 insert into hist.price
     (code_id, dt, dt_y, dt_m, dt_q4, op, hp, lp, cp, vol, fb_rate, o2c, l2h)

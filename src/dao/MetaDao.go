@@ -82,3 +82,19 @@ func InsertMateCode(list []string, code_type int) error {
 	}
 	return err
 }
+
+/*
+1. insert  meta.opening
+*/
+func Before_closing() error {
+	client := db.Conn
+	q_insert := ` SELECT 1 FROM public.before_closing() ;`
+	_, err := client.Exec(q_insert)
+	if err != nil {
+		log.Println("Before_closing :Prepare 오류: ")
+		log.Fatal(err)
+		panic(err)
+	}
+
+	return err
+}

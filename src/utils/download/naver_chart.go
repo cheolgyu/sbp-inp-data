@@ -19,38 +19,37 @@ import (
 type NaverChart struct {
 	StartDate string
 	EndDate   string
-	ChartData ChartData
+	model.Code
 
 	url string
 	fnm string
 }
 
-type ChartData struct {
-	Object          string
-	Code            string
-	PriceMarketList []model.PriceMarket
-}
-
 func (o *NaverChart) init() {
-	if o.ChartData.Object == c.PRICE {
-		o.fnm = c.DOWNLOAD_DIR_PRICE + o.ChartData.Code
-	} else {
-		o.fnm = c.DOWNLOAD_DIR_MARKET + o.ChartData.Code
+	if o.Code.Code_type == c.Config["stock"] {
+		o.fnm = c.DOWNLOAD_DIR_PRICE + o.Code.Code
+	} else if o.Code.Code_type == c.Config["market"] {
+		o.fnm = c.DOWNLOAD_DIR_MARKET + o.Code.Code
 	}
-	o.url = fmt.Sprintf(c.DOWNLOAD_URL_PRICE, o.ChartData.Code, o.StartDate, o.EndDate)
+	o.url = fmt.Sprintf(c.DOWNLOAD_URL_PRICE, o.Code.Code, o.StartDate, o.EndDate)
 
 }
 
-func (o *NaverChart) Run() {
+func (o *NaverChart) Run() ([]model.PriceMarket, error) {
+	var err error = nil
+
 	o.init()
 	if c.DownloadPrice {
-		o.Download()
+		err_down := o.Download()
+		return nil, err_down
 	}
-	o.Parse()
+	res, err := o.Parse()
+
+	return res, err
 }
 
-func (o *NaverChart) Parse() {
-	var list_m []model.PriceMarket
+func (o *NaverChart) Parse() ([]model.PriceMarket, error) {
+	var res []model.PriceMarket
 
 	file, err := os.Open(o.fnm)
 	if err != nil {
@@ -80,18 +79,20 @@ func (o *NaverChart) Parse() {
 				arr[0] = strings.Replace(arr[0], " ", "", -1)
 				dd, e := strconv.ParseInt(arr[0], 0, 64)
 				if e != nil {
+
 					log.Printf("??....%v..", arr[0])
-					panic(e)
+					//panic(e)
+					return nil, e
 				}
 				ddd, e := strconv.ParseInt(c.PRICE_DEFAULT_START_DATE, 0, 64)
 				if e != nil {
-					panic(e)
+					return nil, e
 				}
 
 				if dd > ddd {
 					p := model.PriceMarket{}
 					p.StringToPrice(re_str)
-					list_m = append(list_m, p)
+					res = append(res, p)
 
 				}
 			}
@@ -99,16 +100,16 @@ func (o *NaverChart) Parse() {
 		}
 
 	}
-	o.ChartData.PriceMarketList = list_m
+	return res, err
 
 }
 
-func (o *NaverChart) Download() {
+func (o *NaverChart) Download() error {
 	req, err := http.NewRequest("GET", o.url, nil)
 	if err != nil {
 		log.Println("Download NewRequest 에러")
 		log.Fatal(err)
-		panic(err)
+		return err
 	}
 
 	client := &http.Client{
@@ -118,7 +119,7 @@ func (o *NaverChart) Download() {
 	if err != nil {
 		log.Println("Download Do 에러")
 		log.Fatal(err)
-		panic(err)
+		return err
 	}
 
 	defer resp.Body.Close()
@@ -126,14 +127,14 @@ func (o *NaverChart) Download() {
 	if err != nil {
 		log.Println("Download os.Create 에러")
 		log.Fatal(err)
-		panic(err)
+		return err
 	}
 	defer out.Close()
 	_, err = io.Copy(out, resp.Body)
 	if err != nil {
 		log.Println("Download io.Copy 에러")
 		log.Fatal(err)
-		panic(err)
+		return err
 	}
-
+	return err
 }

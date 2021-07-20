@@ -67,7 +67,7 @@ func GetPriceByLastBound(obj string, code string, gType string) ([]model.PriceMa
 	for rows.Next() {
 		item := model.PriceMarket{}
 
-		if err := rows.Scan(&item.Date, &item.OpenPrice, &item.HighPrice, &item.LowPrice, &item.ClosePrice); err != nil {
+		if err := rows.Scan(&item.Dt, &item.OpenPrice, &item.HighPrice, &item.LowPrice, &item.ClosePrice); err != nil {
 			log.Fatal(err)
 			panic(err)
 		}

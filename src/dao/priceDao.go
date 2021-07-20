@@ -8,13 +8,6 @@ import (
 	"github.com/cheolgyu/stock-write/src/db"
 )
 
-type PriceParams struct {
-	Object    string
-	Schema_nm string
-	Tb_nm     string
-	Code      string
-}
-
 type GetDownloadDate struct {
 }
 

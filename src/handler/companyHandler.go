@@ -21,24 +21,13 @@ import (
 4. update public.tb_code, company.detail, company.state
 
 */
-var Config map[string]int
 var MetaCode_StockOld map[string]int
 var MetaCode_MarketOld map[string]int
 
 func init() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	SetConfig()
-	MetaCode_StockOld = SetMetaCode_StockOld(Config["stock"])
-	MetaCode_MarketOld = SetMetaCode_StockOld(Config["market"])
-}
-
-func SetConfig() {
-	config, err := dao.GetConfig()
-	log.Println(config)
-	ChkErr(err)
-	Config = config
-	//log.Println("Config=", len(Config))
+	MetaCode_StockOld = SetMetaCode_StockOld(c.Config["stock"])
+	MetaCode_MarketOld = SetMetaCode_StockOld(c.Config["market"])
 }
 
 func SetMetaCode_StockOld(code_type int) map[string]int {
@@ -102,17 +91,17 @@ func (o *Company) Load() {
 		o.PubCompany.List = append(o.PubCompany.List, model.Company{
 			Code:        detail.Code,
 			Name:        detail.Name,
-			Code_type:   Config["stock"],
-			Market_type: Config[detail.Market],
+			Code_type:   c.Config["stock"],
+			Market_type: c.Config[detail.Market],
 		})
 	}
 
 	o.State.Load()
 }
 func (o *Company) Save() {
-	dao.InsertMateCode(o.MetaCodeNew, Config["stock"])
+	dao.InsertMateCode(o.MetaCodeNew, c.Config["stock"])
 
-	MetaCode_StockOld = SetMetaCode_StockOld(Config["stock"])
+	MetaCode_StockOld = SetMetaCode_StockOld(c.Config["stock"])
 
 	for i, v := range o.Detail.List {
 		if v.Code_id == 0 {

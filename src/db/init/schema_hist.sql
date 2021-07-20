@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS hist.price  (
 ) PARTITION  BY  RANGE (dt); 
 CREATE INDEX ON hist.price (code_id);
 CREATE INDEX ON hist.price (dt);
+ALTER TABLE hist.price ADD CONSTRAINT hist_price_code_id_dt_key UNIQUE (code_id, dt);
 
 
 

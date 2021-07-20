@@ -16,36 +16,39 @@ func init() {
 	upsert_price = true
 }
 func PriceHandler() {
-	MetaCode_StockOld = SetMetaCode_StockOld(Config["stock"])
-	MetaCode_MarketOld = SetMetaCode_StockOld(Config["market"])
 
 	log.Println(" PriceHandler  start")
+
+	arr_MetaCode_Stock, err := dao.GetCode(c.Config["stock"])
+	ChkErr(err)
+
+	arr_MetaCode_Market, err := dao.GetCode(c.Config["market"])
+	ChkErr(err)
+
 	// 종목가격
 	cpd_price := CodePriceData{}
-	cpd_price.Save(c.PRICE)
+	cpd_price.Save(arr_MetaCode_Stock[:1])
 
 	// 마켓가격
 	cpd_market := CodePriceData{}
-	cpd_market.Save(c.MARKET)
+	cpd_market.Save(arr_MetaCode_Market)
 	log.Println(" PriceHandler  end")
 }
 
 type CodePriceData struct {
-	List []CodePrice
 }
-type codePriceDataParam struct {
-	object string
-
+type downLoadParam struct {
 	startDate string
 	endDate   string
-	item      model.Company
-	idx       int
+	item      model.Code
 
 	wg *sync.WaitGroup
 	ch chan bool
 }
 
-func (o *CodePriceData) Save(object string) {
+func (o *CodePriceData) Save(list []model.Code) {
+	var err error = nil
+
 	down := dao.GetDownloadDate{}
 	startDate, endDate, err := down.Get()
 	ChkErr(err)
@@ -53,32 +56,14 @@ func (o *CodePriceData) Save(object string) {
 	wg := sync.WaitGroup{}
 	wg_db := sync.WaitGroup{}
 	done_load := make(chan bool)
-	var obj_list CompanyList
 
-	if object == c.PRICE {
-		comp := Company{}
-		comp.PubCompany.GetCompanyCode()
-		obj_list.List = comp.PubCompany.List
-	} else if object == c.MARKET {
-		cl := CompanyList{}
-		for i := range model.MarketList {
-			cc := model.Company{}
-			cc.Code = model.MarketList[i]
-			//cc.Name = model.MarketListName[i]
-			cl.List = append(cl.List, cc)
-		}
-		obj_list.List = cl.List
-	}
+	for i := range list {
 
-	for i := range obj_list.List {
-		log.Println("idex===", i, "======code:", obj_list.List[i])
+		log.Println("idx=", i, "  ,======code:", list[i])
 		//func(i int) {
-		cp := CodePrice{}
-		p := codePriceDataParam{
-			object: object,
 
-			item:      obj_list.List[i],
-			idx:       i,
+		p := downLoadParam{
+			item:      list[i],
 			startDate: startDate,
 			endDate:   endDate,
 
@@ -86,13 +71,15 @@ func (o *CodePriceData) Save(object string) {
 			ch: done_load,
 		}
 		wg.Add(1)
-		cp.CPLoad(p)
+		cp := CodePriceSave{}
+		err = cp.Download(p)
+		ChkErr(err)
 		// 멈춤
 		//<-done_load
 
-		o.List = append(o.List, cp)
 		wg_db.Add(1)
-		cp.CPSave(&wg_db)
+		err = cp.Insert(&wg_db)
+		ChkErr(err)
 
 		//ec2.컨테이너 자꾸 죽음.
 		if i%10 == 0 {
@@ -107,48 +94,33 @@ func (o *CodePriceData) Save(object string) {
 	wg.Wait()
 }
 
-type CodePrice struct {
-	Object          string
-	Code            string
+type CodePriceSave struct {
+	model.Code
 	PriceMarketList []model.PriceMarket
 }
 
-func (o *CodePrice) CPLoad(p codePriceDataParam) {
+func (o *CodePriceSave) Download(p downLoadParam) error {
 	defer p.wg.Done()
 
-	o.Code = p.item.Code
-	o.Object = p.object
+	o.Code = p.item
 	nc := download.NaverChart{
 		StartDate: p.startDate,
 		EndDate:   p.endDate,
-		ChartData: download.ChartData{
-			Object: p.object,
-			Code:   o.Code,
-		},
+		Code:      p.item,
 	}
-	nc.Run()
+	res, err := nc.Run()
 
-	o.PriceMarketList = nc.ChartData.PriceMarketList
+	o.PriceMarketList = res
+	return err
 	//멈춤
 	//p.ch <- true
 }
 
-func (o *CodePrice) CPSave(wg_db *sync.WaitGroup) error {
+func (o *CodePriceSave) Insert(wg_db *sync.WaitGroup) error {
 	defer wg_db.Done()
-	schema_nm := c.SCHEMA_NAME_HISTORY
-	tb_nm := c.TABLE_NAME_HISTORY_PRICE_STOCK
-	if o.Object == c.MARKET {
-		tb_nm = c.TABLE_NAME_HISTORY_PRICE_MARKET
-	}
-	params := dao.PriceParams{
-		Object:    o.Object,
-		Code:      o.Code,
-		Schema_nm: schema_nm,
-		Tb_nm:     tb_nm,
-	}
 
 	insert := dao.InsertPriceMarket{
-		Params: params,
+		Code:   o.Code,
 		Upsert: upsert_price,
 		List:   o.PriceMarketList,
 	}
@@ -162,5 +134,4 @@ func ChkErr(err error) {
 		log.Println(err)
 		panic(err)
 	}
-
 }

@@ -191,7 +191,7 @@ func (o *BoundCodeGtype) GetBoundGType() {
 	}
 
 	chg_value := GetChageValue(o.SwitchPrice(0), o.SwitchPrice(0+1))
-	chg_start_x := uint(o.PriceList[0].Date)
+	chg_start_x := uint(o.PriceList[0].Dt)
 	chg_start_y := o.SwitchPrice(0)
 
 	// chg_end_x := uint(o.PriceList[1].Date)
@@ -208,7 +208,7 @@ func (o *BoundCodeGtype) GetBoundGType() {
 			n = i
 		}
 
-		x1 := uint(o.PriceList[i].Date)
+		x1 := uint(o.PriceList[i].Dt)
 		y1 := o.SwitchPrice(i)
 
 		//x2 := uint(o.PriceList[n].Date)
