@@ -32,8 +32,9 @@ func (p *Project) Run() {
 	uf := utils.File{}
 	uf.Init()
 
-	dao.Before_closing()
+	//dao.Before_closing()
 	//handler.CompanyHandler()
-	handler.PriceHandler()
-	// handler.BoundHandler()
+	//handler.PriceHandler()
+	handler.BoundHandler()
+
 }

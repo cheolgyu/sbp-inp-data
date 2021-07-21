@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"sort"
 	"sync"
@@ -33,6 +34,8 @@ func BoundHandler() {
 
 	arr_MetaCode_Market, err := dao.GetCode(c.Config["market"])
 	ChkErr(err)
+	txt := fmt.Sprintf("arr_price_type= %+v\n  ,arr_MetaCode_Stock: %+v\n  ", Arr_price_type, arr_MetaCode_Stock[:3])
+	log.Println(txt)
 
 	log.Println(" BoundHandler  start")
 	bp := Bound{}
@@ -129,7 +132,7 @@ func (o *BoundCode) SavePublicBound() {
 				b.Lp_X_tick = list[0].X_tick
 				b.Lp_Y_minus = list[0].Y_minus
 				b.Lp_Y_Percent = list[0].Y_Percent
-			default:
+			case Map_price_type["high"]:
 				b.Hp_X1 = list[0].X1
 				b.Hp_Y1 = list[0].Y1
 				b.Hp_X2 = list[0].X2
@@ -156,7 +159,8 @@ func (o *BoundCode) GetPrice(wg *sync.WaitGroup, done chan bool) {
 		}
 		gcg.GetPrice()
 		o.BoundCodeGtype = append(o.BoundCodeGtype, gcg)
-		//log.Println("get-price,", o.Code, ",G_TYPE:", g, ",len=:", len(gcg.PriceList))
+		txt := fmt.Sprintf("len= %+v  ,Code.Id: %+v  ,price_type:  %+v", len(gcg.PriceList), o.Code.Id, Arr_price_type[i])
+		log.Println(txt)
 	}
 	//done <- true
 }

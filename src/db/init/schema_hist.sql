@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS hist.rebound  (
     "y_percent" numeric(20, 2)
 ) PARTITION  BY  RANGE (x2); 
 CREATE INDEX ON hist.rebound (code_id);
+ALTER TABLE hist.rebound ADD CONSTRAINT hist_rebound_code_id_price_type_x1_key PRIMARY KEY (code_id, price_type, x2);
 
 
 CREATE TABLE IF NOT EXISTS hist.rebound_2021 PARTITION OF hist.rebound FOR VALUES FROM (20210101) TO (20211231);

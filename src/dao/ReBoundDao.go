@@ -16,7 +16,7 @@ func GetPriceByLastBound(code_id int, price_type_id int) ([]model.PriceMarket, e
 	//"SELECT code_id, dt, dt_y, dt_m, dt_q4, op, hp, lp, cp, vol, fb_rate, o2c, l2h" +
 	query := "SELECT  dt, op, hp, lp, cp" +
 		" FROM hist.price WHERE CODE_ID =$1  AND  dt >=   " +
-		"  (SELECT  x1 FROM hist.rebound WHERE CODE_ID =$1  AND PRICE_TYPE=$2 ORDER BY X1 DESC LIMIT 1)  "
+		"  (SELECT  COALESCE(MAX(X1),0) AS X1  FROM hist.rebound WHERE CODE_ID =$1  AND PRICE_TYPE=$2 )  "
 
 	//log.Fatal(query)
 
@@ -53,7 +53,7 @@ func InsertHistBound(code_id int, price_type_id int, list []model.Point, upsert 
 	q_insert += "(code_id, price_type, x1, y1, x2, y2, x_tick, y_minus, y_percent) "
 	q_insert += "	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) "
 	if upsert {
-		q_insert += "	ON CONFLICT (code_id,price_type) DO UPDATE SET "
+		q_insert += "	ON CONFLICT (code_id,price_type,x2) DO UPDATE SET "
 		q_insert += " x1=$3, y1=$4, x2=$5, y2=$6, x_tick=$7, y_minus=$8, y_percent=$9 "
 	}
 	stmt, err := client.Prepare(q_insert)
@@ -74,11 +74,15 @@ func InsertHistBound(code_id int, price_type_id int, list []model.Point, upsert 
 	return err
 }
 
+/*
+ 2021/07/21 19:39:43 main.go:21: [걸린시간] Elipsed Time: 16.8630616s
+
+*/
 func InsertPublicBound(item model.TbReBound, upsert bool) error {
 
 	client := db.Conn
 	q_insert := `
-	INSERT INTO  hist.rebound (
+	INSERT INTO  public.tb_rebound (
 		code_id, cp_x1, cp_y1, cp_x2, cp_y2, cp_x_tick, cp_y_minus, cp_y_percent, op_x1, op_y1, op_x2, op_y2, op_x_tick, op_y_minus, op_y_percent, lp_x1, lp_y1, lp_x2, lp_y2, lp_x_tick, lp_y_minus, lp_y_percent, hp_x1, hp_y1, hp_x2, hp_y2, hp_x_tick, hp_y_minus, hp_y_percent)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)
 	`
