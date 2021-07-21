@@ -11,7 +11,7 @@ import (
 // 바운스 마지막 시작일자 보다 큰 가격목록 조회.
 
 // obj price 도 model.PriceMarket 로  담아서 보내고 사용시 model.PriceMarket.ToPriceStock() 이용하기.
-func GetPriceByLastBound(code_id int, price_type_id int) ([]model.PriceMarket, error) {
+func GetPriceByLastReBound(code_id int, price_type_id int) ([]model.PriceMarket, error) {
 	res_market := []model.PriceMarket{}
 	//"SELECT code_id, dt, dt_y, dt_m, dt_q4, op, hp, lp, cp, vol, fb_rate, o2c, l2h" +
 	query := "SELECT  dt, op, hp, lp, cp" +
@@ -46,7 +46,7 @@ func GetPriceByLastBound(code_id int, price_type_id int) ([]model.PriceMarket, e
 	return res_market, err
 }
 
-func InsertHistBound(code_id int, price_type_id int, list []model.Point, upsert bool) error {
+func InsertHistReBound(code_id int, price_type_id int, list []model.Point, upsert bool) error {
 	client := db.Conn
 
 	q_insert := "INSERT INTO hist.rebound"
@@ -78,7 +78,7 @@ func InsertHistBound(code_id int, price_type_id int, list []model.Point, upsert 
  2021/07/21 19:39:43 main.go:21: [걸린시간] Elipsed Time: 16.8630616s
 
 */
-func InsertPublicBound(item model.TbReBound, upsert bool) error {
+func InsertPublicReBound(item model.TbReBound, upsert bool) error {
 
 	client := db.Conn
 	q_insert := `

@@ -35,6 +35,6 @@ func (p *Project) Run() {
 	//dao.Before_closing()
 	//handler.CompanyHandler()
 	//handler.PriceHandler()
-	handler.BoundHandler()
+	handler.ReBoundHandler()
 
 }
