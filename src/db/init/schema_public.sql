@@ -3,11 +3,11 @@
 
     DROP TABLE IF  EXISTS public.company CASCADE;
     CREATE TABLE public.company (
-        code_id             integer PRIMARY KEY REFERENCES "meta"."code"(id),
+        code_id             integer UNIQUE REFERENCES "meta"."code"(id) CHECK (code_type > 0),
         code                VARCHAR(10) NOT NULL UNIQUE REFERENCES "meta"."code"(code),
         name                VARCHAR(20) NOT NULL UNIQUE,
-        code_type           integer NOT NULL REFERENCES "meta"."config"(id),
-        market_type         integer NOT NULL  REFERENCES "meta"."config"(id),
+        code_type           integer NOT NULL REFERENCES "meta"."config"(id) CHECK (code_type > 0),
+        market_type         integer NOT NULL  REFERENCES "meta"."config"(id) CHECK (market_type > 0),
         stop                BOOLEAN  
     );
 

@@ -12,6 +12,23 @@ import (
 
 /*
 
+1. 종목목록 다운로드
+
+2. meta.code에 없으면 추가
+
+3. public.company 에 meta.code(id) 넣어서 저장
+
+4. public.company_detail, company_state 에 code_id 넣어서 저장
+
+etc)
+select * from public.company where code_id =1; -- 2줄나옴
+
+select * from only public.company where code_id =1; -- 1줄나옴. only 키워드 필요시 붙이기.
+
+*/
+
+/*
+
 1. Splitting old and new code
 
 2. insert new code
@@ -21,28 +38,27 @@ import (
 4. update public.tb_code, company.detail, company.state
 
 */
-var MetaCode_StockOld map[string]int
-var MetaCode_MarketOld map[string]int
+var meta_code_stock map[string]int
 
 func init() {
 
-	MetaCode_StockOld = SetMetaCode_StockOld(c.Config["stock"])
-	MetaCode_MarketOld = SetMetaCode_StockOld(c.Config["market"])
 }
 
-func SetMetaCode_StockOld(code_type int) map[string]int {
+func getMetaCode(code_type int) map[string]int {
 	cl, err := dao.GetCode(code_type)
-	//log.Println("MetaCode_StockOld=", cl)
+	//log.Println("code_stock=", cl)
 	ChkErr(err)
 	elementMap := make(map[string]int)
 	for _, data := range cl {
 		elementMap[data.Code] = data.Id
 	}
 	return elementMap
-	//log.Println("MetaCode_StockOld=", len(MetaCode_StockOld))
+	//log.Println("code_stock=", len(code_stock))
 }
 
 func CompanyHandler() {
+	meta_code_stock = getMetaCode(c.Config["stock"])
+
 	log.Println(" CompanyHandler  start")
 
 	handler := Company{}
@@ -80,10 +96,10 @@ func (o *Company) Load() {
 		row := sheet.Row(i)
 		_, content := model.RowGet(row)
 		detail := model.StringToCompanyDetail(content)
-		if _, exist := MetaCode_StockOld[detail.Code]; !exist {
+		if _, exist := meta_code_stock[detail.Code]; !exist {
 			o.MetaCodeNew = append(o.MetaCodeNew, detail.Code)
 		} else {
-			detail.Code_id = MetaCode_StockOld[detail.Code]
+			detail.Code_id = meta_code_stock[detail.Code]
 		}
 
 		o.Detail.List = append(o.Detail.List, detail)
@@ -100,33 +116,26 @@ func (o *Company) Load() {
 }
 func (o *Company) Save() {
 	dao.InsertMateCode(o.MetaCodeNew, c.Config["stock"])
-
-	MetaCode_StockOld = SetMetaCode_StockOld(c.Config["stock"])
-
-	for i, v := range o.Detail.List {
-		if v.Code_id == 0 {
-			o.Detail.List[i].Code_id = MetaCode_StockOld[v.Code]
-		}
-	}
+	meta_code_stock = getMetaCode(c.Config["stock"])
 
 	StateMap := make(map[string]bool)
-
-	for i, v := range o.State.List {
+	for _, v := range o.State.List {
 		StateMap[v.Code] = v.Stop
-
-		if v.Code_id == 0 {
-			o.State.List[i].Code_id = MetaCode_StockOld[v.Code]
-		}
 	}
-
 	for i, v := range o.PubCompany.List {
-		if v.Code_id == 0 {
-			o.PubCompany.List[i].Code_id = MetaCode_StockOld[v.Code]
-		}
+		o.PubCompany.List[i].Code_id = meta_code_stock[v.Code]
 		o.PubCompany.List[i].Stop = StateMap[v.Code]
 	}
-
 	o.PubCompany.Save()
+	_, arr_company, _ := dao.SelectPublicCompany()
+
+	for i, v := range o.Detail.List {
+		o.Detail.List[i].Company = arr_company[v.Code]
+	}
+	for i, v := range o.State.List {
+		StateMap[v.Code] = v.Stop
+		o.State.List[i].Company = arr_company[v.Code]
+	}
 	o.Detail.Save()
 	o.State.Save()
 
@@ -134,24 +143,6 @@ func (o *Company) Save() {
 
 type CompanyList struct {
 	List []model.Company
-}
-
-//회사 코드목록 조회
-func (o *CompanyList) GetCompanyCode() {
-	list, err := dao.GetCompanyCode()
-	ChkErr(err)
-	o.List = list
-
-}
-
-//마켓 코드목록
-func (o *CompanyList) GetMarketCode() {
-	for i := range model.MarketList {
-		o.List = append(o.List, model.Company{
-			Code: model.MarketList[i],
-			//Name: model.MarketListName[i],
-		})
-	}
 }
 
 func (o *CompanyList) Save() {
@@ -193,7 +184,7 @@ func (o *StateList) Load() {
 		row := sheet.Row(i)
 		_, content := model.RowGet(row)
 		state := model.StringToCompanyState(content)
-		state.Code_id = MetaCode_StockOld[state.Code]
+		state.Code_id = meta_code_stock[state.Code]
 		o.List = append(o.List, state)
 	}
 }

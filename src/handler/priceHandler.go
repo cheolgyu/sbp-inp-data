@@ -27,7 +27,7 @@ func PriceHandler() {
 
 	// 종목가격
 	cpd_price := CodePriceData{}
-	cpd_price.Save(arr_MetaCode_Stock[:1])
+	cpd_price.Save(arr_MetaCode_Stock)
 
 	// 마켓가격
 	cpd_market := CodePriceData{}

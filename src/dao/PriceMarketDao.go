@@ -8,6 +8,7 @@ import (
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/lib/pq"
 )
 
 type GetDownloadDate struct {
@@ -48,19 +49,36 @@ func (o *InsertPriceMarket) Insert() error {
 	if o.Upsert {
 		q_insert += ` ON CONFLICT ("code_id","dt") DO UPDATE SET op=$6 ,cp=$7 ,lp=$8 ,hp=$9 ,vol=$10 ,fb_rate=$11, o2c=utils.get_o2c($6,$7), l2h=utils.get_o2c($8,$9) `
 	}
-	stmt, err := db.Conn.Prepare(q_insert)
+	stmt, res_err := db.Conn.Prepare(q_insert)
 
 	for _, item := range o.List {
-		_, err = stmt.Exec(o.Code.Id, item.Dt, item.Dt_y, item.Dt_m, item.Dt_q4,
+		_, res_err = stmt.Exec(o.Code.Id, item.Dt, item.Dt_y, item.Dt_m, item.Dt_q4,
 			item.OpenPrice, item.ClosePrice, item.LowPrice, item.HighPrice, item.Volume, item.ForeignerBurnoutRate)
-		if err != nil {
+		if res_err != nil {
 			err_item := fmt.Sprintf("%+v\n", item)
 			log.Println("err_item:", err_item)
-			log.Fatalln("쿼리:InsertPriceMarket: Insert:", err, item, q_insert)
+
+			if err, ok := res_err.(*pq.Error); ok {
+				// 당일 데이터 넣을때는 오류가 안나지만 이전일자의 가격정보를 넣을때 오류가 발생함.
+				if err.Constraint == "price_dt_fkey" {
+					err := InsertOpening(item.Dt)
+					if err != nil {
+						log.Fatalln("쿼리:InsertPriceMarket:InsertOpening Insert:", err)
+					} else {
+						res_err = nil
+					}
+
+				} else {
+					log.Println("pq error:", err.Code.Name())
+					log.Fatalln("쿼리:InsertPriceMarket: Insert:", err)
+				}
+				//fmt.Sprintf("%+v", err)
+			}
+
 			//panic(err)
 		}
 	}
 	stmt.Close()
 
-	return err
+	return res_err
 }

@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/cheolgyu/stock-write/src/db"
@@ -66,7 +65,7 @@ func GetConfig_Upper_Code(upper_code string) ([]model.Config, error) {
 
 func GetCode(code_type int) ([]model.Code, error) {
 	var res []model.Code
-	rows, err := db.Conn.Query("select id, code, code_type from meta.code where code_type=" + fmt.Sprintf("%v", code_type) + " order by id  ")
+	rows, err := db.Conn.Query("select id, code, code_type from meta.code where code_type=$1 order by id  ", code_type)
 	if err != nil {
 		log.Fatalln(err)
 		panic(err)
@@ -121,6 +120,28 @@ func Before_closing() error {
 	_, err := client.Exec(q_insert)
 	if err != nil {
 		log.Println("Before_closing :Prepare 오류: ")
+		log.Fatal(err)
+		panic(err)
+	}
+
+	return err
+}
+
+/*
+1. insert  meta.opening
+*/
+func InsertOpening(dt int) error {
+	client := db.Conn
+	q_insert := ` insert into meta.opening (dt,yyyy,mm,dd)
+	select $1::numeric
+	   , substring($1::text,1,4)::numeric as yy
+	   , substring($1::text,5,2)::numeric as mm
+	   , substring($1::text,7,2)::numeric as dd
+	 on conflict do nothing ; 
+	`
+	_, err := client.Exec(q_insert, dt)
+	if err != nil {
+		log.Println("InsertOpening :Prepare 오류: ")
 		log.Fatal(err)
 		panic(err)
 	}

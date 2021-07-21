@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -109,31 +110,34 @@ func InsertCompany(list []model.Company) error {
 	return err
 }
 
-func GetCompanyCode() ([]model.Company, error) {
-	var res []model.Company
-	rows, err := db.Conn.Query("select code,name from company.code order by code asc ")
+func SelectPublicCompany() ([]model.Company, map[string]model.Company, error) {
+	query := `select code_id, code, name, code_type, market_type, stop from  public.company `
+	res := []model.Company{}
+	res_map := make(map[string]model.Company)
+
+	rows, err := db.Conn.QueryContext(context.Background(), query)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 		panic(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var name string
-		var code string
-		if err := rows.Scan(&code, &name); err != nil {
+		item := model.Company{}
+
+		if err := rows.Scan(&item.Code_id, &item.Code, &item.Name, &item.Code_type, &item.Market_type, &item.Stop); err != nil {
 			log.Fatal(err)
 			panic(err)
 		}
-		res = append(res, model.Company{
-			Code: code,
-			//Name: name,
-		})
+		res = append(res, item)
+		res_map[item.Code] = item
+
 	}
 	// Check for errors from iterating over rows.
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 		panic(err)
 	}
-	return res, err
+
+	return res, res_map, err
 }

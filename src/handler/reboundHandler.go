@@ -81,7 +81,6 @@ type code_rebound struct {
 	arr_rebound_price_type []rebound_price_type
 }
 
-// BOUND_POINT구하기.
 func (o *code_rebound) insert(wg_db *sync.WaitGroup) {
 	defer wg_db.Done()
 	o.insert_hist_rebound()
@@ -170,7 +169,7 @@ type rebound_price_type struct {
 	PointList  []model.Point
 }
 
-// GTYPE별 각각의 가격 목록 조회.
+// price_type별 각각의 가격 목록 조회.
 func (o *rebound_price_type) get_price() {
 
 	pmlist, err := dao.GetPriceByLastReBound(o.Code.Id, o.price_type.Id)
@@ -180,7 +179,7 @@ func (o *rebound_price_type) get_price() {
 	o.PriceList = pmlist
 }
 
-// GTYPE별 각각의 BOUND_POINT 구하기
+// price_type별 각각의 RE_BOUND_POINT 구하기
 func (o *rebound_price_type) get_rebound_point() {
 	/*
 		변화 구분 0: eq 1 증가 -1 감소
@@ -190,7 +189,6 @@ func (o *rebound_price_type) get_rebound_point() {
 	*/
 
 	count := len(o.PriceList)
-	//last_x1 := uint(o.PriceList[count-1].Date)
 	if count < 2 {
 		return
 	}
@@ -199,14 +197,9 @@ func (o *rebound_price_type) get_rebound_point() {
 	chg_start_x := uint(o.PriceList[0].Dt)
 	chg_start_y := o.get_price_value(0)
 
-	// chg_end_x := uint(o.PriceList[1].Date)
-	// chg_end_y := o.SwitchPrice(1)
-
 	chg_tick := 0
 
 	for i := 0; i < count; i++ {
-
-		//log.Println("===============================================================", i, count)
 		chg_tick++
 		n := i + 1
 		if n == count {
@@ -216,63 +209,47 @@ func (o *rebound_price_type) get_rebound_point() {
 		x1 := uint(o.PriceList[i].Dt)
 		y1 := o.get_price_value(i)
 
-		//x2 := uint(o.PriceList[n].Date)
 		y2 := o.get_price_value(n)
 
-		//log.Println("i=", i, ",n=", n, "len=", count)
 		g_way := change_graph_direction(y1, y2)
 		chg := is_rebound(chg_value, g_way)
-		// log.Println("x1, y1,", x1, y1,
-		// 	",x2,y2=", x2, y2, " ,chage=", chg, " ,chg_value", chg_value, " cur g way =", g_way)
 
 		if chg {
-			// log.Println("____________________________")
-			// log.Println("______________chage_save____")
-			// log.Println("____________________________")
-
 			var bp = model.Point{}
 			bp.Set(chg_start_x, chg_start_y, x1, y1, uint(chg_tick))
 			o.PointList = append(o.PointList, bp)
-			//log.Println("____________________________", chg_start_x, chg_start_y, x1, y1)
-			// init
+
 			chg_tick = 0
 			chg_value = g_way
 			chg_start_x = x1
 			chg_start_y = y1
 
 		}
-		// chg_end_x = x2
-		// chg_end_y = y2
-
-		//log.Println(" end i_____  ,", chg_start_x, chg_start_y, chg_end_x, chg_end_y)
 
 	}
 
-	// log.Println("____________________________")
-	// log.Println("______________end loop _____")
-	// log.Println("____________________________")
-	// log.Println("____________________________", chg_start_x, chg_start_y, chg_end_x, chg_end_y)
-
 }
 
-//is_rebound_point
-// func GetBoundGType_Swith_Gway(y1 float32, y2 float32, ago_g_way string) bool {
-// 	if ago_g_way == "" || ago_g_way == "eq" {
-// 		if y1 < y2 {
-// 			ago_g_way = "up"
-// 		} else if y1 > y2 {
-// 			ago_g_way = "down"
-// 		}
-// 	}
-// 	//log.Println("ago_g_way = ", ago_g_way)
-// 	exit1 := ago_g_way == "down" && y1 < y2
-// 	exit2 := ago_g_way == "up" && y1 > y2
+func (o *rebound_price_type) get_price_value(i int) float32 {
+	switch o.price_type.Id {
+	case price_type_config["low"]:
+		return float32(o.PriceList[i].LowPrice)
+	case price_type_config["high"]:
+		return float32(o.PriceList[i].HighPrice)
+	case price_type_config["close"]:
+		return float32(o.PriceList[i].ClosePrice)
+	case price_type_config["open"]:
+		return float32(o.PriceList[i].OpenPrice)
+	default:
+		panic(errors.New("머머머머ㅓ머지?"))
+	}
+}
 
-// 	if exit1 || exit2 {
-// 		return true
-// 	}
-// 	return false
-// }
+// GTYPE별 BOUND 저장.
+func (o *rebound_price_type) insert_hist_rebound() {
+	err := dao.InsertHistReBound(o.Code.Id, o.price_type.Id, o.PointList, upsert_bound)
+	ChkErr(err)
+}
 
 func is_rebound(ago_g_way int, cur_g_way int) bool {
 
@@ -296,25 +273,4 @@ func change_graph_direction(y1 float32, y2 float32) int {
 		panic("머냐")
 	}
 	return g_way
-}
-
-func (o *rebound_price_type) get_price_value(i int) float32 {
-	switch o.price_type.Id {
-	case price_type_config["low"]:
-		return float32(o.PriceList[i].LowPrice)
-	case price_type_config["high"]:
-		return float32(o.PriceList[i].HighPrice)
-	case price_type_config["close"]:
-		return float32(o.PriceList[i].ClosePrice)
-	case price_type_config["open"]:
-		return float32(o.PriceList[i].OpenPrice)
-	default:
-		panic(errors.New("머머머머ㅓ머지?"))
-	}
-}
-
-// GTYPE별 BOUND 저장.
-func (o *rebound_price_type) insert_hist_rebound() {
-	err := dao.InsertHistReBound(o.Code.Id, o.price_type.Id, o.PointList, upsert_bound)
-	ChkErr(err)
 }

@@ -174,33 +174,33 @@ INSERT INTO hist.vol(
 -------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------
 
---stock
-INSERT INTO public.tb_code (code_id, code,code_type,name,market_type,stop)
-select 
-	mc.id
-    , mc.code
-    , mc.code_type
-	, cc.name
-	, (select c.id from meta.config c where c.upper_code='market_type' and c.code = cd.market) as market_type
-	,cs.stop
-    from  company.code cc 
-		left join meta.code mc  on cc.code= mc.code 
-		left join company.detail cd  on cc.code= cd.code 
-		left join company.state cs  on cc.code= cs.code 
+-- --stock
+-- INSERT INTO public.company (code_id, code,code_type,name,market_type,stop)
+-- select 
+-- 	mc.id
+--     , mc.code
+--     , mc.code_type
+-- 	, cc.name
+-- 	, (select c.id from meta.config c where c.upper_code='market_type' and c.code = cd.market) as market_type
+-- 	,cs.stop
+--     from  company.code cc 
+-- 		left join meta.code mc  on cc.code= mc.code 
+-- 		left join company.detail cd  on cc.code= cd.code 
+-- 		left join company.state cs  on cc.code= cs.code 
 	
-    order by cc.code asc
-on conflict do nothing; 
---market
-INSERT INTO public.tb_code (code_id, code,code_type,name,market_type,stop)
-select 
-    mc.id
-    , mc.code
-    , mc.code_type
-	, (select name from meta.config c where  c.code = mc.code) as name
-	, (select id from meta.config c where  c.code = mc.code) as market_type
-	, true
-    from  meta.code mc
-		where mc.code_type = (select c.id from meta.config c where c.code='market' )
-    order by market_type asc
-on conflict do nothing; 
+--     order by cc.code asc
+-- on conflict do nothing; 
+-- --market
+-- INSERT INTO public.company (code_id, code,code_type,name,market_type,stop)
+-- select 
+--     mc.id
+--     , mc.code
+--     , mc.code_type
+-- 	, (select name from meta.config c where  c.code = mc.code) as name
+-- 	, (select id from meta.config c where  c.code = mc.code) as market_type
+-- 	, true
+--     from  meta.code mc
+-- 		where mc.code_type = (select c.id from meta.config c where c.code='market' )
+--     order by market_type asc
+-- on conflict do nothing; 
 

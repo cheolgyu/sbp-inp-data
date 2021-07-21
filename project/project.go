@@ -24,9 +24,13 @@ func SetConfig() {
 		log.Println(err)
 		panic(err)
 	}
+	log.Println(config)
 	c.Config = config
 }
 
+/*
+2021/07/22 04:49:08 main.go:21: [걸린시간] Elipsed Time: 6m44.255434s
+*/
 func (p *Project) Run() {
 
 	uf := utils.File{}
@@ -34,7 +38,7 @@ func (p *Project) Run() {
 
 	//dao.Before_closing()
 	//handler.CompanyHandler()
-	//handler.PriceHandler()
+	handler.PriceHandler()
 	handler.ReBoundHandler()
 
 }
