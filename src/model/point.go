@@ -9,13 +9,15 @@ import (
 // x1,y1 좌표가 bound_point
 //x2,y2 는 현재 계산일
 type Point struct {
-	X1        uint
-	Y1        float32
-	X2        uint
-	Y2        float32
-	X_tick    uint
-	Y_minus   float32
-	Y_Percent float32
+	Code_id    int
+	Price_type int
+	X1         uint
+	Y1         float32
+	X2         uint
+	Y2         float32
+	X_tick     uint
+	Y_minus    float32
+	Y_Percent  float32
 }
 
 func (o *Point) Set(x1 uint, y1 float32, x2 uint, y2 float32, x_tick uint) {

@@ -33,12 +33,12 @@ var DownloadPrice bool
 const FILE_FLAG_APPEND = os.O_RDWR | os.O_CREATE | os.O_APPEND
 const FILE_FLAG_TRUNC = os.O_RDWR | os.O_CREATE | os.O_TRUNC
 
-const G_TYPE_LOW = "low"
-const G_TYPE_HIGH = "high"
-const G_TYPE_CLOSE = "close"
-const G_TYPE_OPEN = "open"
+// const G_TYPE_LOW = "low"
+// const G_TYPE_HIGH = "high"
+// const G_TYPE_CLOSE = "close"
+// const G_TYPE_OPEN = "open"
 
-var G_TYPE map[string]string
+//var G_TYPE map[string]string
 
 const SCHEMA_NAME_PUBLIC = "public"
 const TABLE_NAME_BOUND_STOCK = "bound_stock"
@@ -66,15 +66,17 @@ var DB_MAX_CONN = 30
 
 var Config map[string]int
 
+const UPPER_CODE_PRICE_TYPE = "price_type"
+
 func init() {
 	DownloadCompany = false
 	DownloadPrice = false
 
-	G_TYPE = make(map[string]string)
-	G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
-	G_TYPE[G_TYPE_LOW] = G_TYPE_LOW
-	G_TYPE[G_TYPE_HIGH] = G_TYPE_HIGH
-	G_TYPE[G_TYPE_OPEN] = G_TYPE_OPEN
+	//G_TYPE = make(map[string]string)
+	// G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
+	// G_TYPE[G_TYPE_LOW] = G_TYPE_LOW
+	// G_TYPE[G_TYPE_HIGH] = G_TYPE_HIGH
+	// G_TYPE[G_TYPE_OPEN] = G_TYPE_OPEN
 
 	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
 }

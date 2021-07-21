@@ -1,8 +1,8 @@
 package model
 
 // table public.bound
-type Bound struct {
-	Code string
+type TbReBound struct {
+	Code_id int
 
 	Cp_X1        uint
 	Cp_Y1        float32

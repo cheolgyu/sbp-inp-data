@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"log"
 	"sort"
 	"sync"
@@ -11,47 +12,52 @@ import (
 )
 
 var upsert_bound bool
+var Arr_price_type []model.Config
+var Map_price_type map[string]int
 
 func init() {
 	upsert_bound = true
 }
 
 func BoundHandler() {
-	log.Println(" BoundHandler  start")
-	bp := Bound{Obj: c.PRICE}
-	bp.Save()
+	Map_price_type = make(map[string]int)
+	arr_price_type, err := dao.GetConfig_Upper_Code(c.UPPER_CODE_PRICE_TYPE)
+	ChkErr(err)
+	Arr_price_type = arr_price_type
+	for i := range Arr_price_type {
+		Map_price_type[Arr_price_type[i].Code] = Arr_price_type[i].Id
+	}
 
-	bm := Bound{Obj: c.MARKET}
-	bm.Save()
+	arr_MetaCode_Stock, err := dao.GetCode(c.Config["stock"])
+	ChkErr(err)
+
+	arr_MetaCode_Market, err := dao.GetCode(c.Config["market"])
+	ChkErr(err)
+
+	log.Println(" BoundHandler  start")
+	bp := Bound{}
+	bp.Save(arr_MetaCode_Stock)
+
+	bm := Bound{}
+	bm.Save(arr_MetaCode_Market)
 	log.Println(" BoundHandler  end")
 }
 
 type Bound struct {
-	Obj string
 }
 
 // BOUND_POINT 저장.
-func (o *Bound) Save() {
-
-	//코드목록 조회
-	cl := CompanyList{}
-	if o.Obj == c.PRICE {
-		cl.GetCompanyCode()
-	} else {
-		cl.GetMarketCode()
-	}
+func (o *Bound) Save(list []model.Code) {
 
 	wg := sync.WaitGroup{}
 	wg_db := sync.WaitGroup{}
 	done := make(chan bool)
 
-	for i := range cl.List {
-		cc := cl.List[i]
-		//log.Println("==", i, "==", cc.Code, "시작")
+	for i := range list {
+		cc := list[i]
 		//가격목록 가져왔다.
 		bc := BoundCode{
-			Obj:  o.Obj,
-			Code: cc.Code}
+			Code: cc}
 		wg.Add(1)
 		bc.GetPrice(&wg, done)
 		//<-done
@@ -68,8 +74,7 @@ func (o *Bound) Save() {
 }
 
 type BoundCode struct {
-	Obj            string
-	Code           string
+	model.Code
 	BoundCodeGtype []BoundCodeGtype
 }
 
@@ -83,15 +88,15 @@ func (o *BoundCode) SaveBound(wg_db *sync.WaitGroup) {
 func (o *BoundCode) SaveHistBound() {
 	for i := range o.BoundCodeGtype {
 		o.BoundCodeGtype[i].GetBoundGType()
-		o.BoundCodeGtype[i].SaveBoundGType(o.Code)
+		o.BoundCodeGtype[i].SaveBoundGType()
 		//log.Println(o.BoundCodeGtype[i].PointList)
-		log.Println("save-hist-bound:", o.Code, " g-type:", o.BoundCodeGtype[i].Gtype, ",price-len:", len(o.BoundCodeGtype[i].PriceList), ",bound-len:", len(o.BoundCodeGtype[i].PointList))
+		//log.Println("save-hist-bound:", o.Code, " g-type:", o.BoundCodeGtype[i].Gtype, ",price-len:", len(o.BoundCodeGtype[i].PriceList), ",bound-len:", len(o.BoundCodeGtype[i].PointList))
 	}
 }
 
 func (o *BoundCode) SavePublicBound() {
-	b := model.Bound{}
-	b.Code = o.Code
+	b := model.TbReBound{}
+	b.Code_id = o.Code.Id
 
 	for i := range o.BoundCodeGtype {
 		if len(o.BoundCodeGtype[i].PointList) > 0 {
@@ -99,8 +104,8 @@ func (o *BoundCode) SavePublicBound() {
 			sort.Slice(list, func(i, j int) bool {
 				return list[i].X1 > list[j].X1
 			})
-			switch o.BoundCodeGtype[i].Gtype {
-			case c.G_TYPE_CLOSE:
+			switch o.BoundCodeGtype[i].price_type.Id {
+			case Map_price_type["close"]:
 				b.Cp_X1 = list[0].X1
 				b.Cp_Y1 = list[0].Y1
 				b.Cp_X2 = list[0].X2
@@ -108,7 +113,7 @@ func (o *BoundCode) SavePublicBound() {
 				b.Cp_X_tick = list[0].X_tick
 				b.Cp_Y_minus = list[0].Y_minus
 				b.Cp_Y_Percent = list[0].Y_Percent
-			case c.G_TYPE_OPEN:
+			case Map_price_type["open"]:
 				b.Op_X1 = list[0].X1
 				b.Op_Y1 = list[0].Y1
 				b.Op_X2 = list[0].X2
@@ -116,7 +121,7 @@ func (o *BoundCode) SavePublicBound() {
 				b.Op_X_tick = list[0].X_tick
 				b.Op_Y_minus = list[0].Y_minus
 				b.Op_Y_Percent = list[0].Y_Percent
-			case c.G_TYPE_LOW:
+			case Map_price_type["low"]:
 				b.Lp_X1 = list[0].X1
 				b.Lp_Y1 = list[0].Y1
 				b.Lp_X2 = list[0].X2
@@ -137,40 +142,38 @@ func (o *BoundCode) SavePublicBound() {
 		}
 	}
 
-	err := dao.InsertPublicBound(o.Obj, b, upsert_bound)
+	err := dao.InsertPublicBound(b, upsert_bound)
 	ChkErr(err)
 }
 
 // CODE에 해당하는 가격목록 조회.
 func (o *BoundCode) GetPrice(wg *sync.WaitGroup, done chan bool) {
 	defer wg.Done()
-	for i := range c.G_TYPE {
-		g := c.G_TYPE[i]
-		//		log.Println("Load===========,", o.Code, ",G_TYPE:", g)
+	for i := range Arr_price_type {
 		gcg := BoundCodeGtype{
-			Obj:   o.Obj,
-			Gtype: g,
+			Code:       o.Code,
+			price_type: Arr_price_type[i],
 		}
-		gcg.GetPrice(o.Code)
+		gcg.GetPrice()
 		o.BoundCodeGtype = append(o.BoundCodeGtype, gcg)
-		log.Println("get-price,", o.Code, ",G_TYPE:", g, ",len=:", len(gcg.PriceList))
+		//log.Println("get-price,", o.Code, ",G_TYPE:", g, ",len=:", len(gcg.PriceList))
 	}
 	//done <- true
 }
 
 type BoundCodeGtype struct {
-	Obj       string
-	Gtype     string
-	PriceList []model.PriceMarket
-	PointList []model.Point
+	model.Code
+	price_type model.Config
+	PriceList  []model.PriceMarket
+	PointList  []model.Point
 }
 
 // GTYPE별 각각의 가격 목록 조회.
-func (o *BoundCodeGtype) GetPrice(code string) {
+func (o *BoundCodeGtype) GetPrice() {
 
-	pmlist, err := dao.GetPriceByLastBound(o.Obj, code, o.Gtype)
+	pmlist, err := dao.GetPriceByLastBound(o.Code.Id, o.price_type.Id)
 	if err != nil {
-		log.Println("오류:GetPriceByLastBound ", code, o.Gtype)
+		log.Println("오류:GetPriceByLastBound :", o.Code.Id, o.price_type.Id)
 	}
 	o.PriceList = pmlist
 }
@@ -293,22 +296,22 @@ func GetChageValue(y1 float32, y2 float32) int {
 }
 
 func (o *BoundCodeGtype) SwitchPrice(i int) float32 {
-	switch o.Gtype {
-	case c.G_TYPE_LOW:
+	switch o.price_type.Id {
+	case Map_price_type["low"]:
 		return float32(o.PriceList[i].LowPrice)
-	case c.G_TYPE_HIGH:
+	case Map_price_type["high"]:
 		return float32(o.PriceList[i].HighPrice)
-	case c.G_TYPE_CLOSE:
+	case Map_price_type["close"]:
 		return float32(o.PriceList[i].ClosePrice)
-	default:
-		//c.G_TYPE_OPEN
+	case Map_price_type["open"]:
 		return float32(o.PriceList[i].OpenPrice)
-
+	default:
+		panic(errors.New("머머머머ㅓ머지?"))
 	}
 }
 
 // GTYPE별 BOUND 저장.
-func (o *BoundCodeGtype) SaveBoundGType(code string) {
-	err := dao.InsertHistBound(o.Obj, code, o.Gtype, o.PointList, upsert_bound)
+func (o *BoundCodeGtype) SaveBoundGType() {
+	err := dao.InsertHistBound(o.Code.Id, o.price_type.Id, o.PointList, upsert_bound)
 	ChkErr(err)
 }

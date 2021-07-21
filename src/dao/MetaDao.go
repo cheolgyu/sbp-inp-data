@@ -35,6 +35,31 @@ func GetConfig() (map[string]int, error) {
 	return res, err
 }
 
+func GetConfig_Upper_Code(upper_code string) ([]model.Config, error) {
+
+	var res []model.Config
+	rows, err := db.Conn.Query("select id, upper_code, upper_name, code, name from meta.config where upper_code = $1 order by id  ")
+	if err != nil {
+		log.Fatalln(err)
+		panic(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var row model.Config
+		if err := rows.Scan(&row.Id, &row.Upper_code, &row.Upper_name, &row.Code, &row.Name); err != nil {
+			log.Fatal(err)
+			panic(err)
+		}
+	}
+	// Check for errors from iterating over rows.
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+		panic(err)
+	}
+	return res, err
+}
+
 func GetCode(code_type int) ([]model.Code, error) {
 	var res []model.Code
 	rows, err := db.Conn.Query("select id, code, code_type from meta.code where code_type=" + fmt.Sprintf("%v", code_type) + " order by id  ")
