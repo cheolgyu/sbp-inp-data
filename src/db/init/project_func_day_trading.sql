@@ -154,7 +154,7 @@ with tbo as (
 		  , array_agg(hp.lp) 
 		  , array_agg(hp.hp) 
 	   from 
-		  	tbo, public.tb_code pc 
+		  	tbo, only public.company pc 
 		  	left join hist.PRICE hp  on hp.code_id = pc.code_id 
 		  
 	   where 1=1
@@ -178,7 +178,7 @@ select
 	  ,tb.std_l2h
 	  ,tb.std_o2c
   from tb 
-  left join  public.tb_code pc on tb.code_id = pc.code_id 
+  left join  public.company pc on tb.code_id = pc.code_id 
   left join meta.config mc on pc.market_type = mc.id
   where 1=1
   and market_type =any ($6)
@@ -199,5 +199,12 @@ select
 END;
 $$
 LANGUAGE plpgsql;
-select * from project.func_day_trading(10,10,1,'avg_l2h','desc',ARRAY[	7,9]);
+
+	-- inp_term 		integer 
+	-- ,inp_limit 		integer 
+	-- ,inp_offset 	integer
+	-- ,inp_sort 		VARCHAR 
+	-- ,inp_desc 		VARCHAR
+	-- ,inp_market_arr integer[]
+select * from project.func_day_trading(10,10,1,'avg_l2h','desc',ARRAY[	7,8,9]);
 

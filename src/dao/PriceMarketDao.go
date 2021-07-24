@@ -66,6 +66,13 @@ func (o *InsertPriceMarket) Insert() error {
 						log.Fatalln("쿼리:InsertPriceMarket:InsertOpening Insert:", err)
 					} else {
 						res_err = nil
+
+						_, res_err = stmt.Exec(o.Code.Id, item.Dt, item.Dt_y, item.Dt_m, item.Dt_q4,
+							item.OpenPrice, item.ClosePrice, item.LowPrice, item.HighPrice, item.Volume, item.ForeignerBurnoutRate)
+						if res_err != nil {
+							err_item := fmt.Sprintf("%+v\n", item)
+							log.Println("err_item2222222222222-------:", err_item)
+						}
 					}
 
 				} else {

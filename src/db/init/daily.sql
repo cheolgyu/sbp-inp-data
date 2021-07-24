@@ -40,18 +40,19 @@ BEGIN
 --------------------
 -- insert  project.func_lines
 --------------------
-select 1 from project.func_lines();
+PERFORM from project.func_lines();
 --------------------
 -- insert  project.func_monthly
 --------------------
-select 1 from project.func_monthly();
+PERFORM from project.func_monthly();
 --------------------
 --------------------
 -- update  public.info
 --------------------
-UPDATE public.info SET  updated= now() WHERE name = 'updated'
+UPDATE public.info SET  updated= now() WHERE name = 'updated' ;
 --------------------
 
 END;
 $$
 LANGUAGE plpgsql;
+select 1  from public.after_closing()

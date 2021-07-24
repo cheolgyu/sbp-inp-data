@@ -72,7 +72,7 @@ BEGIN
 			select  
 				code_id ,code, name, market_type
 				,(select  name from meta.config where upper_code='market_type' and id = market_type) as market_name
-			from public.tb_code pc 
+			from only public.company pc 
 			where stop is not false
 				and code_type = (select  id from meta.config where upper_code='code_type' and code ='stock')
 			order by code asc

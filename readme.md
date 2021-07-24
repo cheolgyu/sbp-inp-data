@@ -7,7 +7,47 @@
 | stock-read-pub-api  | api                   |
 | stock-read-pub-site | web-site              |
 
++ 회사-상세 null 로들어감.
++ + find_market 함수 detail 기준 meta.code 작성시
++ + detail에는 없고 state에만 있는 경우 state의 코드에 해당되는 market 찾기
++ + 네이법 웹스크롤링 market 가져와 insert 하기
++ 월별 거래량 테이블 갱신 체크
++ 코스닥 view_market 데이터 0 나옴
++ 
+```
+   차트 라인 : 
+      public.after_closing()
+         FUNCTION project.func_lines();
+            INSERT INTO project.tb_line
 
+   월별 거래량:
+      public.after_closing()
+         FUNCTION  project.func_monthly()
+            INSERT INTO project.tb_monthly_peek
+
+   단타:
+      FUNCTION  project.func_day_trading(
+         inp_term 		integer  -- 기간
+         ,inp_limit 		integer  
+         ,inp_offset 	integer
+         ,inp_sort 		VARCHAR 
+         ,inp_desc 		VARCHAR
+         ,inp_market_arr integer[]
+      )
+
+   public.company
+      상속 public.company_detail
+      상속 public.company_state
+
+   hist.rebound
+   public.rebound 
+   hist.price
+
+   meta.opening
+   meta.config
+   meta.code
+
+```
 ---
 todo
 ```

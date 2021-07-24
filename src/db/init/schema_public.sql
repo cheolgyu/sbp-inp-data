@@ -58,7 +58,7 @@
         "warning" BOOLEAN ,
         "risk" BOOLEAN 
     ) INHERITS (public.company);
-    ALTER TABLE public.company_detail ADD CONSTRAINT company_state_code_key UNIQUE (code_id, code);
+    ALTER TABLE public.company_state ADD CONSTRAINT company_state_code_key UNIQUE (code_id, code);
 
     --COMMENT ON COLUMN "public"."state"."code" IS '종목코드';
     --COMMENT ON COLUMN "public"."state"."stop" IS '매매거래정지';

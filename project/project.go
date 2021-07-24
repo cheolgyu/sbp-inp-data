@@ -37,8 +37,9 @@ func (p *Project) Run() {
 	uf.Init()
 
 	//dao.Before_closing()
-	//handler.CompanyHandler()
-	handler.PriceHandler()
-	handler.ReBoundHandler()
-
+	handler.ExecCompanyHandler()
+	//handler.PriceHandler()
+	//handler.ReBoundHandler()
+	//dao.After_closing()
+	// api 에서 사용할 view+table 확인 + api 수정
 }

@@ -16,7 +16,7 @@ func InsertCompanyState(list []model.CompanyState) error {
 	q_insert += ` "clear", "managed", "ventilation", "unfaithful","low_liquidity",  `
 	q_insert += `   "lack_listed", "overheated", "caution","warning","risk"  )`
 	q_insert += `	VALUES ( $1 ,$2 ,$3 ,$4 ,$5,$6    ,$7,$8,$9,$10,$11  ,$12,$13,$14,$15,$16 ) `
-	q_insert += ` ON CONFLICT ("code_id") DO UPDATE SET `
+	q_insert += ` ON CONFLICT (code_id, code) DO UPDATE SET `
 	q_insert += ` name=$3, code_type=$4, market_type=$5, stop=$6 ,`
 	q_insert += `	clear=$7 ,managed=$8 ,ventilation=$9 ,unfaithful=$10 ,low_liquidity=$11, `
 	q_insert += ` lack_listed=$12 ,overheated=$13 ,caution=$14 ,warning=$15 ,risk=$16 `
@@ -36,7 +36,8 @@ func InsertCompanyState(list []model.CompanyState) error {
 			item.Lack_listed, item.Overheated, item.Caution, item.Warning, item.Risk,
 		)
 		if err != nil {
-			log.Println("쿼리:InsertCompanyState:stmt.Exec 오류: ", item)
+			err_item := fmt.Sprintf("%+v", item)
+			log.Println("쿼리:InsertCompanyState:stmt.Exec 오류: ", err_item)
 			log.Fatal(err)
 			panic(err)
 		}

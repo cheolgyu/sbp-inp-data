@@ -35,13 +35,15 @@ select * from only public.company where code_id =1; -- 1줄나옴. only 키워�
 
 3. select list code && Splitting old and new code
 
-4. update public.tb_code, company.detail, company.state
+4. update public.company, company.detail, company.state
 
 */
 var meta_code_stock map[string]int
+var arr_company map[string]model.Company
+var meta_code_new map[string]int
 
 func init() {
-
+	meta_code_new = make(map[string]int)
 }
 
 func getMetaCode(code_type int) map[string]int {
@@ -56,27 +58,119 @@ func getMetaCode(code_type int) map[string]int {
 	//log.Println("code_stock=", len(code_stock))
 }
 
-func CompanyHandler() {
+func ExecCompanyHandler() {
 	meta_code_stock = getMetaCode(c.Config["stock"])
 
 	log.Println(" CompanyHandler  start")
 
-	handler := Company{}
-	handler.Load()
-	handler.Save()
+	handler := CompanyHandler{}
+	handler.init()
+
+	handler.DetailList.download()
+	handler.StateList.download()
+	handler.insertNewMetaCode()
+	handler.mergeCompanyList()
+	handler.CompanyList.insert()
+
+	_, _arr_company_update, _ := dao.SelectPublicCompany()
+	arr_company = _arr_company_update
+
+	handler.DetailList.insert()
+	handler.StateList.insert()
 
 	log.Println(" CompanyHandler  end")
 }
 
-type Company struct {
+type CompanyHandler struct {
 	// k: code, v : id
-	MetaCodeNew []string
-	PubCompany  CompanyList
-	Detail      DetailList
-	State       StateList
+	CompanyList
+	DetailList
+	StateList
+
+	StateMap map[string]bool
 }
 
-func (o *Company) Load() {
+func (o *CompanyHandler) init() {
+	o.StateMap = make(map[string]bool)
+	o.CompanyList.Map = make(map[string]model.Company)
+}
+
+func (o *CompanyHandler) insertNewMetaCode() {
+	keys := make([]string, 0, len(meta_code_new))
+	for k := range meta_code_new {
+		keys = append(keys, k)
+	}
+
+	log.Println("welcome new code  ", keys)
+
+	dao.InsertMateCode(keys, c.Config["stock"])
+	meta_code_stock = getMetaCode(c.Config["stock"])
+}
+
+/*
+
+기존은 detail.xlsx을 기준으로 meta.code와 company를 구성하였지만.
+
+state.xlsx 에만 신규 상장된 종목이 있을경우 에도 구성하기위해 추가함.
+
+Market_type: 9999,
+
+*/
+func (o *CompanyHandler) mergeCompanyList() {
+
+	for _, v := range o.StateList.List {
+		mc := model.Company{
+			Code_id:     meta_code_stock[v.Code],
+			Code:        v.Code,
+			Name:        v.Name,
+			Code_type:   c.Config["stock"],
+			Market_type: 9999,
+			Stop:        v.Stop,
+		}
+		o.CompanyList.Map[v.Code] = mc
+	}
+
+	for _, v := range o.DetailList.List {
+
+		detail_mc := model.Company{
+			Code_id:     meta_code_stock[v.Code],
+			Code:        v.Code,
+			Name:        v.Name,
+			Code_type:   c.Config["stock"],
+			Market_type: c.Config[v.Market],
+		}
+
+		state_mc, exist := o.CompanyList.Map[v.Code]
+		if exist {
+			detail_mc.Stop = state_mc.Stop
+		}
+
+		o.CompanyList.Map[v.Code] = detail_mc
+
+	}
+
+	for _, v := range o.CompanyList.Map {
+		o.CompanyList.List = append(o.CompanyList.List, v)
+	}
+}
+
+type CompanyList struct {
+	List []model.Company
+	Map  map[string]model.Company
+}
+
+func (o *CompanyList) insert() {
+
+	err := dao.InsertCompany(o.List)
+	ChkErr(err)
+
+}
+
+type DetailList struct {
+	List []model.CompanyDetail
+}
+
+func (o *DetailList) download() {
 	f_download := c.DOWNLOAD_DIR_COMPANY_DETAIL + c.DOWNLOAD_FILENAME_COMPANY_DETAIL
 	if c.DownloadCompany {
 		download_data_krx := download.Data_krx{
@@ -96,66 +190,20 @@ func (o *Company) Load() {
 		row := sheet.Row(i)
 		_, content := model.RowGet(row)
 		detail := model.StringToCompanyDetail(content)
+
 		if _, exist := meta_code_stock[detail.Code]; !exist {
-			o.MetaCodeNew = append(o.MetaCodeNew, detail.Code)
-		} else {
-			detail.Code_id = meta_code_stock[detail.Code]
+			meta_code_new[detail.Code] = 1
 		}
-
-		o.Detail.List = append(o.Detail.List, detail)
-
-		o.PubCompany.List = append(o.PubCompany.List, model.Company{
-			Code:        detail.Code,
-			Name:        detail.Name,
-			Code_type:   c.Config["stock"],
-			Market_type: c.Config[detail.Market],
-		})
+		o.List = append(o.List, detail)
 	}
-
-	o.State.Load()
-}
-func (o *Company) Save() {
-	dao.InsertMateCode(o.MetaCodeNew, c.Config["stock"])
-	meta_code_stock = getMetaCode(c.Config["stock"])
-
-	StateMap := make(map[string]bool)
-	for _, v := range o.State.List {
-		StateMap[v.Code] = v.Stop
-	}
-	for i, v := range o.PubCompany.List {
-		o.PubCompany.List[i].Code_id = meta_code_stock[v.Code]
-		o.PubCompany.List[i].Stop = StateMap[v.Code]
-	}
-	o.PubCompany.Save()
-	_, arr_company, _ := dao.SelectPublicCompany()
-
-	for i, v := range o.Detail.List {
-		o.Detail.List[i].Company = arr_company[v.Code]
-	}
-	for i, v := range o.State.List {
-		StateMap[v.Code] = v.Stop
-		o.State.List[i].Company = arr_company[v.Code]
-	}
-	o.Detail.Save()
-	o.State.Save()
 
 }
 
-type CompanyList struct {
-	List []model.Company
-}
+func (o *DetailList) insert() {
+	for i, v := range o.List {
+		o.List[i].Company = arr_company[v.Code]
+	}
 
-func (o *CompanyList) Save() {
-	err := dao.InsertCompany(o.List)
-	ChkErr(err)
-
-}
-
-type DetailList struct {
-	List []model.CompanyDetail
-}
-
-func (o *DetailList) Save() {
 	err := dao.InsertCompanyDetail(o.List)
 	ChkErr(err)
 }
@@ -164,7 +212,7 @@ type StateList struct {
 	List []model.CompanyState
 }
 
-func (o *StateList) Load() {
+func (o *StateList) download() {
 	f_download := c.DOWNLOAD_DIR_COMPANY_STATE + c.DOWNLOAD_FILENAME_COMPANY_STATE
 	if c.DownloadCompany {
 		download_data_krx := download.Data_krx{
@@ -184,11 +232,21 @@ func (o *StateList) Load() {
 		row := sheet.Row(i)
 		_, content := model.RowGet(row)
 		state := model.StringToCompanyState(content)
-		state.Code_id = meta_code_stock[state.Code]
+
+		if _, exist := meta_code_stock[state.Code]; !exist {
+			meta_code_new[state.Code] = 1
+		}
+
 		o.List = append(o.List, state)
+
 	}
 }
-func (o *StateList) Save() {
+func (o *StateList) insert() {
+
+	for i, v := range o.List {
+		o.List[i].Company = arr_company[v.Code]
+	}
+
 	err := dao.InsertCompanyState(o.List)
 	ChkErr(err)
 }

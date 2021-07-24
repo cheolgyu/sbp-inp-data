@@ -127,6 +127,19 @@ func Before_closing() error {
 	return err
 }
 
+func After_closing() error {
+	client := db.Conn
+	q_insert := ` SELECT 1 FROM public.after_closing() ;`
+	_, err := client.Exec(q_insert)
+	if err != nil {
+		log.Println("after_closing :Prepare 오류: ")
+		log.Fatal(err)
+		panic(err)
+	}
+
+	return err
+}
+
 /*
 1. insert  meta.opening
 */
