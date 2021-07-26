@@ -10,10 +10,22 @@
 <!-- + 회사-상세 null 로들어감.
 + + find_market 함수 detail 기준 meta.code 작성시
 + + detail에는 없고 state에만 있는 경우 state의 코드에 해당되는 market 찾기
-+ + 네이법 웹스크롤링 market 가져와 insert 하기 -->
-+ 월별 거래량 테이블 갱신 체크
-+ 코스닥 view_market 데이터 0 나옴
++ + 네이법 웹스크롤링 market 가져와 insert 하기 
++ 월별 거래량 참조 테이블 갱신 체크 ==> FUNCTION project.func_monthly() 에서 
++ + truncate table project.tb_monthly_peek cascade; 해서 갱신됨.
 + 
++ 코스닥 view_market 데이터 0 나옴
+  + hist.price는 이상없음.
+  + hist.rebound 규칙 :   이전 줄의 x2는 다음줄의 x1값 이여야됨.
+  + 하지만 데이터 입력시 규칙적으로 입력 되지 않았음.
+
+-->
+---------
+## table role 
+```
+hist.rebound 규칙 :   이전 줄의 x2는 다음줄의 x1값 이여야됨.
+```
+----------
 ```
    차트 라인 : 
       public.after_closing()
