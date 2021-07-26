@@ -7,10 +7,10 @@
 | stock-read-pub-api  | api                   |
 | stock-read-pub-site | web-site              |
 
-+ 회사-상세 null 로들어감.
+<!-- + 회사-상세 null 로들어감.
 + + find_market 함수 detail 기준 meta.code 작성시
 + + detail에는 없고 state에만 있는 경우 state의 코드에 해당되는 market 찾기
-+ + 네이법 웹스크롤링 market 가져와 insert 하기
++ + 네이법 웹스크롤링 market 가져와 insert 하기 -->
 + 월별 거래량 테이블 갱신 체크
 + 코스닥 view_market 데이터 0 나옴
 + 

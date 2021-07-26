@@ -12,6 +12,7 @@ const DOWNLOAD_URL_COMPANY_STATE_CODE = "http://data.krx.co.kr/comm/fileDn/Gener
 const DOWNLOAD_URL_COMPANY_STATE_DATA = "http://data.krx.co.kr/comm/fileDn/download_excel/download.cmd"
 const DOWNLOAD_URL_COMPANY_STATE_PARAMS = "mktId=ALL&share=1&csvxls_isNo=false&name=fileDown&url=dbms/MDC/STAT/standard/MDCSTAT02001"
 const DOWNLOAD_URL_PRICE = "https://api.finance.naver.com/siseJson.naver?symbol=%s&requestType=1&startTime=%s&endTime=%s&timeframe=day"
+const DOWNLOAD_URL_FIND_MARKET = "https://finance.naver.com/item/coinfo.nhn?code="
 
 const DOWNLOAD_DIR_COMPANY_DETAIL = "data/download/company_detail/"
 const DOWNLOAD_DIR_COMPANY_STATE = "data/download/company_state/"

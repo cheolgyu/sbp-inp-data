@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/cheolgyu/stock-write/src/c"
@@ -113,7 +114,7 @@ func (o *CompanyHandler) insertNewMetaCode() {
 
 state.xlsx 에만 신규 상장된 종목이 있을경우 에도 구성하기위해 추가함.
 
-Market_type: 9999,
+Market_type: -1,
 
 */
 func (o *CompanyHandler) mergeCompanyList() {
@@ -124,7 +125,7 @@ func (o *CompanyHandler) mergeCompanyList() {
 			Code:        v.Code,
 			Name:        v.Name,
 			Code_type:   c.Config["stock"],
-			Market_type: 9999,
+			Market_type: -1,
 			Stop:        v.Stop,
 		}
 		o.CompanyList.Map[v.Code] = mc
@@ -150,6 +151,17 @@ func (o *CompanyHandler) mergeCompanyList() {
 	}
 
 	for _, v := range o.CompanyList.Map {
+		if v.Market_type < 0 {
+			find_market_item := fmt.Sprintf("%+v", v)
+			log.Println("mergeCompanyList: find_market_item: ", find_market_item)
+
+			market_nm, err := download.Find_market(v.Code)
+			ChkErr(err)
+			getConfig, err := dao.GetConfigByCode(market_nm)
+			ChkErr(err)
+			v.Market_type = getConfig.Id
+
+		}
 		o.CompanyList.List = append(o.CompanyList.List, v)
 	}
 }

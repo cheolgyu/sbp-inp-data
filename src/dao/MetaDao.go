@@ -88,6 +88,17 @@ func GetCode(code_type int) ([]model.Code, error) {
 	return res, err
 }
 
+func GetConfigByCode(code string) (model.Config, error) {
+	var item model.Config
+	err := db.Conn.QueryRow("select id, upper_code, upper_name, code, name from meta.config where code=$1 order by id  ", code).Scan(
+		&item.Id, &item.Upper_code, &item.Upper_name, &item.Code, &item.Name)
+	if err != nil {
+		log.Fatalln(err)
+		//panic(err)
+	}
+	return item, err
+}
+
 func InsertMateCode(list []string, code_type int) error {
 	client := db.Conn
 	q_insert := `INSERT INTO meta.code("code", "code_type") VALUES( $1, $2 )`
