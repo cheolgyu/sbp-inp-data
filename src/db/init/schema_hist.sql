@@ -54,9 +54,9 @@ DROP TABLE IF  EXISTS hist.rebound  CASCADE;
 CREATE TABLE IF NOT EXISTS hist.rebound  (
 	"code_id" integer not null REFERENCES "meta"."code"(id),
 	"price_type" integer not null REFERENCES "meta"."config"(id),
-   	"x1" numeric(8, 0) not null REFERENCES "meta"."opening"(dt),
+   	"x1" numeric(8, 0) not null REFERENCES "meta"."opening"(dt) CHECK (x1 < x2),
     "y1" numeric(20, 2),
-    "x2" numeric(8, 0) not null REFERENCES "meta"."opening"(dt),
+    "x2" numeric(8, 0) not null REFERENCES "meta"."opening"(dt) CHECK (x1 < x2),
     "y2" numeric(20, 2),
     "x_tick" numeric(20, 0),
     "y_minus" numeric(20, 2),
