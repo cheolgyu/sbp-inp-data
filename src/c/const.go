@@ -22,9 +22,6 @@ const DOWNLOAD_FILENAME_COMPANY_STATE = "company_state.xlsx"
 const DOWNLOAD_DIR_PRICE = "data/download/price/"
 const DOWNLOAD_DIR_MARKET = "data/download/market/"
 
-const BOUND = "bound"
-const PRICE = "price"
-const MARKET = "market"
 const COMPANY_DETAIL = "company_detail"
 const COMPANY_STATE = "company_state"
 
@@ -33,28 +30,6 @@ var DownloadPrice bool
 
 const FILE_FLAG_APPEND = os.O_RDWR | os.O_CREATE | os.O_APPEND
 const FILE_FLAG_TRUNC = os.O_RDWR | os.O_CREATE | os.O_TRUNC
-
-// const G_TYPE_LOW = "low"
-// const G_TYPE_HIGH = "high"
-// const G_TYPE_CLOSE = "close"
-// const G_TYPE_OPEN = "open"
-
-//var G_TYPE map[string]string
-
-const SCHEMA_NAME_PUBLIC = "public"
-const TABLE_NAME_BOUND_STOCK = "bound_stock"
-const TABLE_NAME_BOUND_MARKET = "bound_market"
-
-const SCHEMA_NAME_COMPANY_CODE = "company"
-const TABLE_NAME_COMPANY_CODE = "code"
-const TABLE_NAME_COMPANY_DETAIL = "detail"
-const TABLE_NAME_COMPANY_STATE = "state"
-
-const SCHEMA_NAME_HISTORY = "hist"
-const TABLE_NAME_HISTORY_BOUND_STOCK = "bound_stock"
-const TABLE_NAME_HISTORY_BOUND_MARKET = "bound_market"
-const TABLE_NAME_HISTORY_PRICE_STOCK = "price_stock"
-const TABLE_NAME_HISTORY_PRICE_MARKET = "price_market"
 
 const INFO_NAME_UPDATED = "updated"
 
@@ -70,14 +45,8 @@ var Config map[string]int
 const UPPER_CODE_PRICE_TYPE = "price_type"
 
 func init() {
-	DownloadCompany = false
-	DownloadPrice = false
-
-	//G_TYPE = make(map[string]string)
-	// G_TYPE[G_TYPE_CLOSE] = G_TYPE_CLOSE
-	// G_TYPE[G_TYPE_LOW] = G_TYPE_LOW
-	// G_TYPE[G_TYPE_HIGH] = G_TYPE_HIGH
-	// G_TYPE[G_TYPE_OPEN] = G_TYPE_OPEN
+	DownloadCompany = true
+	DownloadPrice = true
 
 	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
 }
