@@ -38,7 +38,7 @@ where qu.market = 1  offset 6115  limit 1
  -- ==> 317 msec 
 
 --  select 1 from project.func_lines();
-
+-- Successfully run. Total query runtime: 5 min 41 secs.
 ----------------------------------------
 ----------------------------------------
 ----------------------------------------
@@ -57,6 +57,7 @@ declare
 	y3_price integer;
 	arr_g_type  TEXT[]  :=  array['open','close','low','high'];
 	i_price_type integer;   
+	cnt integer := 0;   
 BEGIN
  -- code get
 	select array_agg(id) as id
@@ -73,7 +74,7 @@ BEGIN
 				code_id ,code, name, market_type
 				,(select  name from meta.config where upper_code='market_type' and id = market_type) as market_name
 			from only public.company pc 
-			where stop is not false
+			where stop is not true
 				and code_type = (select  id from meta.config where upper_code='code_type' and code ='stock')
 			order by code asc
 		) t
@@ -81,23 +82,32 @@ BEGIN
 	loop
 		FOREACH i_price_type IN ARRAY r_p.id
 		LOOP
-			--RAISE NOTICE 'Iterator: %', i_price_type ;
+			
 			EXECUTE format(' SELECT * FROM  project.func_lines_get_last_point(%L ,%L) ', row.code_id, i_price_type ) INTO r2;
-			IF r2.x1 != null then
-				EXECUTE format(' SELECT * FROM  project.func_lines_get_next_point(%L ,%L    ,%L ,%L ,%L ,%L ) ', row.code ,row.MARKET_NUM   ,r2.x1 ,r2.y1 ,r2.x2 ,r2.y2 ) INTO x3 ,y3;
+			--RAISE NOTICE 'Iterator: %', r2.x1 ;
+			IF r2.x1 > 0 then
+
+				select cnt +1 into cnt;
+				EXECUTE format(' SELECT * FROM  project.func_lines_get_next_point(%L ,%L    ,%L ,%L ,%L ,%L ) ', row.code_id ,row.MARKET_NUM   ,
+					r2.x1 ,r2.y1 ,r2.x2 ,r2.y2 ) INTO x3 ,y3;
+
 				IF y3 > 0 then
+
 					EXECUTE format(' SELECT * FROM  project.func_lines_convert_y3(%L ,%L ) ', row.MARKET_NUM ,y3::integer ) INTO y3_price;
-					EXECUTE format(' SELECT * FROM  project.func_lines_update_tb_daily_line( %L,%L,  %L ,%L ,%L ,%L ,%L ,%L) '
-						, row.code ,g_type 
-						,x1::numeric  ,y1::numeric  ,x2::numeric  ,y2::numeric  ,x3::numeric ,y3_price::numeric ) ;
+					EXECUTE format(' SELECT * FROM  project.func_lines_update_tb_daily_line( %L,%L,%L,  %L ,%L ,%L ,%L ,%L ,%L) '
+						, row.code_id , row.code ,i_price_type 
+						,r2.x1::numeric  ,r2.y1::numeric  ,r2.x2::numeric  ,r2.y2::numeric  ,x3::numeric ,y3_price::numeric ) ;
+
 				END IF;
+
 			END IF;
 		END LOOP;
 	end loop;	
+	RAISE NOTICE 'Iterator: %', cnt ;
   
 END;  $$
 LANGUAGE plpgsql;
--- select 1 from project.func_lines();
+ select 1 from project.func_lines();
 
 ----------------------------------------
 ----------------------------------------
