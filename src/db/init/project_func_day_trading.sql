@@ -178,7 +178,7 @@ select
 	  ,tb.std_l2h
 	  ,tb.std_o2c
   from tb 
-  left join  public.company pc on tb.code_id = pc.code_id 
+  left join  only public.company pc on tb.code_id = pc.code_id 
   left join meta.config mc on pc.market_type = mc.id
   where 1=1
   and market_type =any ($6)
