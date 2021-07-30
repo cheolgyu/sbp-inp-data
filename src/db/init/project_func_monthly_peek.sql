@@ -62,6 +62,110 @@
 
 
 */
+
+
+
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+CREATE OR REPLACE FUNCTION  project.func_monthly()
+  RETURNS void AS
+  $$
+  BEGIN
+  -- code  
+  ---------------------------------------------------
+  truncate table project.tb_monthly_peek cascade;
+  
+  INSERT INTO project.tb_monthly_peek( code_id, is_peek, peek, peek_range, peek_percent, list)
+    SELECT * from project.func_monthly_peek_list();
+  ---------------------------------------------------
+  END;
+  $$
+  LANGUAGE plpgsql;
+
+  ----------------------------------------
+select * from project.func_monthly();
+
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+---------------------------------------------------
+CREATE OR REPLACE FUNCTION  project.func_monthly_peek_list()
+  RETURNS table (
+      code_id integer,
+	    is_peek boolean,
+      peek numeric, 
+      peek_range numeric[], 
+      peek_percent numeric, 
+      list json
+  ) AS
+  $$
+  DECLARE
+	  res boolean  := false;
+  BEGIN
+  -- code  
+  ---------------------------------------------------
+    return query 
+with tb as (
+        select * from hist.vol t 
+      ) 
+      , tb_code_total as ( select tb.code_id, avg(tb.vol),sum(tb.vol) from tb group by tb.code_id)
+      ,tb_month_per as( 
+		  select  tb.code_id, tb.dt_m, round(utils.get_percent(tb.vol, tb_code_total.sum),2) 
+		  from tb left join  tb_code_total on tb.code_id = tb_code_total.code_id  )
+     , tb_month_per_agg as( 
+		 select  t.code_id,JSON_AGG(json_build_object(t.dt_m, t.round)) as agg 
+		 from tb_month_per t
+		 where t.dt_m is not null 
+	 	 group by t.code_id )
+	 , tb_over_month as ( 
+		 select tb.code_id, tb.dt_m 
+		 from tb left join  tb_code_total on tb.code_id = tb_code_total.code_id 
+		 where tb.vol > tb_code_total.avg )
+	  , tb_over_month_agg as ( 
+		  select t.code_id, array_agg(t.dt_m::integer) as agg, max(t.dt_m), count(t.dt_m) 
+		  from tb_over_month t
+		group by t.code_id
+	  )
+SELECT
+	tmp.code_id ,
+    project.func_monthly_rules(tomg.agg) AS is_peek,
+    tomg.max :: numeric AS peek,
+    tomg.agg :: numeric [ ] AS peek_range,
+    --tomg.count AS peek_range_cnt,
+    tmp.round :: numeric AS peek_percent,
+    tmpg.agg AS list
+FROM
+	tb_month_per tmp 
+	left join tb_month_per_agg tmpg on tmp.code_id = tmpg.code_id
+	left join tb_over_month_agg tomg on tmp.code_id = tomg.code_id
+	
+WHERE
+    tmp.dt_m = tomg.max
+    AND ( tomg.count <= 4 and tomg.count >= 3)
+    ;
+  ---------------------------------------------------
+  END;
+  $$
+  LANGUAGE plpgsql;
+
+  ----------------------------------------
+select * from project.func_monthly_peek_list();
 ---------------------------------------------------
 ---------------------------------------------------
 ---------------------------------------------------
@@ -118,109 +222,7 @@ select * from (
         union all
     select * from project.func_monthly_rules(array[11,12,1])
 )t;
-
-
 ---------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
-CREATE OR REPLACE FUNCTION  project.func_monthly()
-  RETURNS void AS
-  $$
-  BEGIN
-  -- code  
-  ---------------------------------------------------
-  truncate table project.tb_monthly_peek cascade;
-  
-  INSERT INTO project.tb_monthly_peek( code_id, is_peek, peek, peek_range, peek_percent, list)
-    SELECT * from project.func_monthly_peek_list();
-  ---------------------------------------------------
-  END;
-  $$
-  LANGUAGE plpgsql;
-
-  ----------------------------------------
-select * from project.func_monthly();
-
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
----------------------------------------------------
-CREATE OR REPLACE FUNCTION  project.func_monthly_peek_list()
-  RETURNS table (
-      code_id integer,
-	  is_peek boolean,
-      peek numeric, 
-      peek_range numeric[], 
-      peek_percent numeric, 
-      list json
-  ) AS
-  $$
-  DECLARE
-	  res boolean  := false;
-  BEGIN
-  -- code  
-  ---------------------------------------------------
-    return query 
-with tb as (
-        select * from hist.vol t 
-      ) 
-      , tb_code_total as ( select tb.code_id, avg(tb.vol),sum(tb.vol) from tb group by tb.code_id)
-      ,tb_month_per as( 
-		  select  tb.code_id, tb.dt_m, round(utils.get_percent(tb.vol, tb_code_total.sum),2) 
-		  from tb left join  tb_code_total on tb.code_id = tb_code_total.code_id  )
-     , tb_month_per_agg as( 
-		 select  t.code_id,JSON_AGG(json_build_object(t.dt_m, t.round)) as agg 
-		 from tb_month_per t
-		 where t.dt_m is not null 
-	 	 group by t.code_id )
-	 , tb_over_month as ( 
-		 select tb.code_id, tb.dt_m 
-		 from tb left join  tb_code_total on tb.code_id = tb_code_total.code_id 
-		 where tb.vol > tb_code_total.avg )
-	  , tb_over_month_agg as ( 
-		  select t.code_id, array_agg(t.dt_m::integer) as agg, max(t.dt_m), count(t.dt_m) 
-		  from tb_over_month t
-		group by t.code_id
-	  )
-SELECT
-	tmp.code_id ,
-    project.monthly_rules(tomg.agg) AS is_peek,
-    tomg.max :: numeric AS peek,
-    tomg.agg :: numeric [ ] AS peek_range,
-    --tomg.count AS peek_range_cnt,
-    tmp.round :: numeric AS peek_percent,
-    tmpg.agg AS list
-FROM
-	tb_month_per tmp 
-	left join tb_month_per_agg tmpg on tmp.code_id = tmpg.code_id
-	left join tb_over_month_agg tomg on tmp.code_id = tomg.code_id
-	
-WHERE
-    tmp.dt_m = tomg.max
-    AND tomg.count <= 4
-    ;
-  ---------------------------------------------------
-  END;
-  $$
-  LANGUAGE plpgsql;
-
-  ----------------------------------------
-select * from project.func_monthly_peek_list( );---------------------------------------------------
 ---------------------------------------------------
 ---------------------------------------------------
 ---------------------------------------------------
