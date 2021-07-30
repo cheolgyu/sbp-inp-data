@@ -117,5 +117,6 @@ SELECT MP.CODE_id as mp_code,
 	MP.LIST
 FROM project.tb_monthly_peek MP
 	left join only  public.company pc on MP.code_id = pc.code_id
+WHERE mp.is_peek is true
 --where peek =  extract(month FROM now()::timestamp)
 order by peek_percent desc 
