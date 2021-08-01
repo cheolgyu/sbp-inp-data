@@ -138,6 +138,13 @@ func Before_closing() error {
 	return err
 }
 
+/*
+insert  project.func_lines
+
+insert  project.func_monthly
+
+update  public.info
+*/
 func After_closing() error {
 	client := db.Conn
 	q_insert := ` SELECT 1 FROM public.after_closing() ;`
