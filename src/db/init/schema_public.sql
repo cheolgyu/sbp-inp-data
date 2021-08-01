@@ -8,7 +8,8 @@
         name                VARCHAR(20) NOT NULL UNIQUE,
         code_type           integer NOT NULL REFERENCES "meta"."config"(id) CHECK (code_type > 0),
         market_type         integer NOT NULL  REFERENCES "meta"."config"(id) CHECK (market_type > 0),
-        stop                BOOLEAN  
+        stop                BOOLEAN  ,
+        primary key(code_id) 
     );
 
 
@@ -32,7 +33,7 @@
         "face_value" text ,
         "listed_stocks" text 
     )  INHERITS (public.company);
-    ALTER TABLE public.company_detail ADD CONSTRAINT company_detail_code_key UNIQUE (code_id, code);
+    ALTER TABLE public.company_detail ADD CONSTRAINT company_detail_pkey PRIMARY KEY  (code_id);
 
     COMMENT ON COLUMN "public"."company_detail"."full_code" IS '표준코드';
     COMMENT ON COLUMN "public"."company_detail"."full_name_kr" IS '한글 종목명';
@@ -58,7 +59,7 @@
         "warning" BOOLEAN ,
         "risk" BOOLEAN 
     ) INHERITS (public.company);
-    ALTER TABLE public.company_state ADD CONSTRAINT company_state_code_key UNIQUE (code_id, code);
+    ALTER TABLE public.company_state ADD CONSTRAINT company_state_pkey PRIMARY KEY  (code_id);
 
     --COMMENT ON COLUMN "public"."state"."code" IS '종목코드';
     --COMMENT ON COLUMN "public"."state"."stop" IS '매매거래정지';

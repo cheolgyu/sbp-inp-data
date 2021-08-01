@@ -16,7 +16,7 @@ func InsertCompanyState(list []model.CompanyState) error {
 	q_insert += ` "clear", "managed", "ventilation", "unfaithful","low_liquidity",  `
 	q_insert += `   "lack_listed", "overheated", "caution","warning","risk"  )`
 	q_insert += `	VALUES ( $1 ,$2 ,$3 ,$4 ,$5,$6    ,$7,$8,$9,$10,$11  ,$12,$13,$14,$15,$16 ) `
-	q_insert += ` ON CONFLICT (code_id, code) DO UPDATE SET `
+	q_insert += ` ON CONFLICT (code_id) DO UPDATE SET `
 	q_insert += ` name=$3, code_type=$4, market_type=$5, stop=$6 ,`
 	q_insert += `	clear=$7 ,managed=$8 ,ventilation=$9 ,unfaithful=$10 ,low_liquidity=$11, `
 	q_insert += ` lack_listed=$12 ,overheated=$13 ,caution=$14 ,warning=$15 ,risk=$16 `
@@ -54,7 +54,7 @@ func InsertCompanyDetail(list []model.CompanyDetail) error {
 	q_insert += `VALUES (  $1 ,$2 ,$3 ,$4 ,$5,$6  `
 	q_insert += `  ,$7,$8,$9,$10,$11 `
 	q_insert += `  ,$12,$13,$14,$15,$16)`
-	q_insert += `ON CONFLICT (code_id, code) DO UPDATE SET`
+	q_insert += `ON CONFLICT (code_id) DO UPDATE SET`
 	q_insert += `  name=$3, code_type=$4, market_type=$5, stop=$6,`
 	q_insert += `   full_code=$7, full_name_kr=$8, full_name_eng=$9, listing_date=$10, market=$11, `
 	q_insert += `  securities_classification=$12, department=$13, stock_type=$14, face_value=$15, listed_stocks=$16`
