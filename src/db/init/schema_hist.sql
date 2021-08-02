@@ -10,7 +10,7 @@
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
---  CREATE SCHEMA "hist";
+ CREATE SCHEMA "hist";
 -- 선언적 파티션
 -- https://uiandwe.tistory.com/1318
 -- 조회 속도가 상상을 초월하네. 
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS hist.rebound  (
     "x_tick" numeric(20, 0),
     "y_minus" numeric(20, 2),
     "y_percent" numeric(20, 2)
-) PARTITION  BY  RANGE (x2); 
+) PARTITION  BY  RANGE (x1); 
 CREATE INDEX ON hist.rebound (code_id);
 ALTER TABLE hist.rebound ADD CONSTRAINT hist_rebound_code_id_price_type_x1_key PRIMARY KEY (code_id, price_type,x1);
 
@@ -84,14 +84,7 @@ CREATE TABLE IF NOT EXISTS hist.rebound_2017 PARTITION OF hist.rebound FOR VALUE
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-DROP TABLE IF  EXISTS hist.vol CASCADE ;
-CREATE TABLE IF NOT EXISTS hist.vol  (
-	"code_id" integer not null REFERENCES "meta"."code"(id),
-	"dt_m" numeric(2, 0) not null ,
-	"vol" numeric(20, 0)	
-);
-CREATE INDEX ON hist.vol (code_id);
-CREATE INDEX ON hist.vol (dt_m);
+
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------

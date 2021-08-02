@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"sync"
 
@@ -11,6 +12,9 @@ import (
 )
 
 var upsert_price bool
+var pwg sync.WaitGroup = sync.WaitGroup{}
+var pwg_db sync.WaitGroup = sync.WaitGroup{}
+var pdone_load chan bool = make(chan bool)
 
 func init() {
 	upsert_price = true
@@ -41,9 +45,6 @@ type downLoadParam struct {
 	startDate string
 	endDate   string
 	item      model.Code
-
-	wg *sync.WaitGroup
-	ch chan bool
 }
 
 func (o *CodePriceData) Save(list []model.Code) {
@@ -52,10 +53,6 @@ func (o *CodePriceData) Save(list []model.Code) {
 	down := dao.GetDownloadDate{}
 	startDate, endDate, err := down.Get()
 	ChkErr(err)
-
-	wg := sync.WaitGroup{}
-	wg_db := sync.WaitGroup{}
-	done_load := make(chan bool)
 
 	for i := range list {
 
@@ -66,32 +63,28 @@ func (o *CodePriceData) Save(list []model.Code) {
 			item:      list[i],
 			startDate: startDate,
 			endDate:   endDate,
-
-			wg: &wg,
-			ch: done_load,
 		}
-		wg.Add(1)
+		pwg.Add(1)
 		cp := CodePriceSave{}
-		err = cp.Download(p)
-		ChkErr(err)
-		// 멈춤
-		//<-done_load
+		go cp.Download(p)
 
-		wg_db.Add(1)
-		err = cp.Insert(&wg_db)
-		ChkErr(err)
+		// 멈춤
+		<-pdone_load
+
+		pwg_db.Add(1)
+		go cp.Insert()
 
 		//ec2.컨테이너 자꾸 죽음.
 		if i%10 == 0 {
-			wg.Wait()
-			wg_db.Wait()
+			pwg.Wait()
+			pwg_db.Wait()
 		}
 		//defer wg.Done()
 
 		//}(i)
 	}
-	wg_db.Wait()
-	wg.Wait()
+	pwg_db.Wait()
+	pwg.Wait()
 }
 
 type CodePriceSave struct {
@@ -99,8 +92,11 @@ type CodePriceSave struct {
 	PriceMarketList []model.PriceMarket
 }
 
-func (o *CodePriceSave) Download(p downLoadParam) error {
-	defer p.wg.Done()
+func (o *CodePriceSave) Download(p downLoadParam) {
+	defer pwg.Done()
+
+	itme := fmt.Sprintf("다운로드: %+v\n", p)
+	log.Println("Download param:", itme)
 
 	o.Code = p.item
 	nc := download.NaverChart{
@@ -109,15 +105,16 @@ func (o *CodePriceSave) Download(p downLoadParam) error {
 		Code:      p.item,
 	}
 	res, err := nc.Run()
-
+	ChkErr(err)
 	o.PriceMarketList = res
-	return err
+
+	pdone_load <- true
 	//멈춤
 	//p.ch <- true
 }
 
-func (o *CodePriceSave) Insert(wg_db *sync.WaitGroup) error {
-	defer wg_db.Done()
+func (o *CodePriceSave) Insert() {
+	defer pwg_db.Done()
 
 	insert := dao.InsertPriceMarket{
 		Code:   o.Code,
@@ -125,8 +122,7 @@ func (o *CodePriceSave) Insert(wg_db *sync.WaitGroup) error {
 		List:   o.PriceMarketList,
 	}
 	err := insert.Insert()
-	return err
-
+	ChkErr(err)
 }
 
 func ChkErr(err error) {

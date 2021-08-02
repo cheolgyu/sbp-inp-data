@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
 	"log"
@@ -77,24 +76,24 @@ func (o *NaverChart) Parse() ([]model.PriceMarket, error) {
 			if strings.Contains(re_str, ",") {
 				arr := strings.Split(re_str, ",")
 				arr[0] = strings.Replace(arr[0], " ", "", -1)
-				dd, e := strconv.ParseInt(arr[0], 0, 64)
-				if e != nil {
+				//dd, e := strconv.ParseInt(arr[0], 0, 64)
+				// if e != nil {
 
-					log.Printf("??....%v..", arr[0])
-					//panic(e)
-					return nil, e
-				}
-				ddd, e := strconv.ParseInt(c.PRICE_DEFAULT_START_DATE, 0, 64)
-				if e != nil {
-					return nil, e
-				}
+				// 	log.Printf("??....%v..", arr[0])
+				// 	//panic(e)
+				// 	return nil, e
+				// }
+				// ddd, e := strconv.ParseInt(c.PRICE_DEFAULT_START_DATE, 0, 64)
+				// if e != nil {
+				// 	return nil, e
+				// }
 
-				if dd > ddd {
-					p := model.PriceMarket{}
-					p.StringToPrice(re_str)
-					res = append(res, p)
+				//if dd > ddd {
+				p := model.PriceMarket{}
+				p.StringToPrice(re_str)
+				res = append(res, p)
 
-				}
+				//}
 			}
 
 		}

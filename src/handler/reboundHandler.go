@@ -58,6 +58,8 @@ type ReBound struct {
 func (o *ReBound) Save(list []model.Code) {
 
 	for i := range list {
+		item := fmt.Sprintf("%+v\n", list[i])
+		log.Println("item:", item)
 		cc := list[i]
 		//가격목록 가져왔다.
 		bc := code_rebound{Code: cc}
@@ -65,7 +67,7 @@ func (o *ReBound) Save(list []model.Code) {
 		go bc.get_price()
 		<-done
 		wg_db.Add(1)
-		bc.insert()
+		go bc.insert()
 		if i%10 == 0 {
 			wg.Wait()
 			wg_db.Wait()

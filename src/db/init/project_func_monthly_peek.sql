@@ -82,7 +82,18 @@ CREATE OR REPLACE FUNCTION  project.func_monthly()
   BEGIN
   -- code  
   ---------------------------------------------------
+  truncate table project.tb_monthly_peek_volume cascade;
   truncate table project.tb_monthly_peek cascade;
+
+  INSERT INTO project.tb_monthly_peek_volume(
+    code_id, dt_m, vol)
+    SELECT HP.CODE_ID,
+      HP.DT_M,
+      SUM(HP.VOL) AS CND_VAR
+    FROM HIST.PRICE HP
+    WHERE 1 = 1
+    GROUP BY CODE_ID,DT_M	;
+
   
   INSERT INTO project.tb_monthly_peek( code_id, is_peek, peek, peek_range, peek_percent, list)
     SELECT * from project.func_monthly_peek_list();
@@ -122,7 +133,7 @@ CREATE OR REPLACE FUNCTION  project.func_monthly_peek_list()
   ---------------------------------------------------
     return query 
 with tb as (
-        select * from hist.vol t 
+        select * from project.tb_monthly_peek_volume t 
       ) 
       , tb_code_total as ( select tb.code_id, avg(tb.vol),sum(tb.vol) from tb group by tb.code_id)
       ,tb_month_per as( 

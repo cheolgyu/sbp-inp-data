@@ -66,18 +66,7 @@ CREATE TABLE "utils"."log" (
 );  
 
 
---  hist.price_stock  o2c,l2h 추가 
-update hist.price_stock t
-set (o2c,l2h) = (
-	select  round((cp-op)/NULLIF(op,0) *100,2) as o2c, round((hp-lp)/NULLIF(lp,0) *100 ,2) as l2h
-	from hist.price_stock where code = t.code and p_date = t.p_date
-);
---  hist.price_stock  yy-mm-dd 추가 
-update hist.price_stock t
-set (yy,mm,dd) = (
-	select   substring(p_date::text,1,4)::numeric as yy, substring(p_date::text,5,2)::numeric as mm, substring(p_date::text,7,2)::numeric as dd
-	from hist.price_stock where code = t.code and p_date = t.p_date
-);
+
 
 --  remove.price_stock  분기 추가 
 -- ALTER TABLE remove.price_stock ADD COLUMN q4 numeric(1,0);

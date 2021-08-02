@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -44,7 +45,8 @@ func convert_g4(num int) (int, error) {
 }
 
 func parseUint(str string) (int, error) {
-	res, err := strconv.ParseUint(str, 0, 32)
+	// 08 일경우 오류 발생.
+	res, err := strconv.Atoi(str)
 	return int(res), err
 }
 
@@ -68,6 +70,8 @@ func (o *PriceMarket) StringToPrice(str string) {
 	if res, err := parseUint(s0[4:6]); err == nil {
 		o.Dt_m = res
 	} else if err != nil {
+		log.Println("err:", str)
+		log.Println("err:", str)
 		panic(err)
 	}
 

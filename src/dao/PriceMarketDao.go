@@ -59,6 +59,7 @@ func (o *InsertPriceMarket) Insert() error {
 			log.Println("err_item:", err_item)
 
 			if err, ok := res_err.(*pq.Error); ok {
+				log.Println("과거 가격정보 insert시 해당 날짜의 opening de가 없음. ")
 				// 당일 데이터 넣을때는 오류가 안나지만 이전일자의 가격정보를 넣을때 오류가 발생함.
 				if err.Constraint == "price_dt_fkey" {
 					err := InsertOpening(item.Dt)
