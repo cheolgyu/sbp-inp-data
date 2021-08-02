@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS hist.price_2021 PARTITION OF hist.price FOR VALUES FR
 CREATE TABLE IF NOT EXISTS hist.price_2020 PARTITION OF hist.price FOR VALUES FROM (20200101) TO (20201231);
 CREATE TABLE IF NOT EXISTS hist.price_2019 PARTITION OF hist.price FOR VALUES FROM (20190101) TO (20191231);
 CREATE TABLE IF NOT EXISTS hist.price_2018 PARTITION OF hist.price FOR VALUES FROM (20180101) TO (20181231);
+CREATE TABLE IF NOT EXISTS hist.price_2017 PARTITION OF hist.price FOR VALUES FROM (20170101) TO (20171231);
 
 
 
@@ -63,13 +64,14 @@ CREATE TABLE IF NOT EXISTS hist.rebound  (
     "y_percent" numeric(20, 2)
 ) PARTITION  BY  RANGE (x2); 
 CREATE INDEX ON hist.rebound (code_id);
-ALTER TABLE hist.rebound ADD CONSTRAINT hist_rebound_code_id_price_type_x1_key PRIMARY KEY (code_id, price_type, x2);
+ALTER TABLE hist.rebound ADD CONSTRAINT hist_rebound_code_id_price_type_x1_key PRIMARY KEY (code_id, price_type,x1);
 
 
 CREATE TABLE IF NOT EXISTS hist.rebound_2021 PARTITION OF hist.rebound FOR VALUES FROM (20210101) TO (20211231);
 CREATE TABLE IF NOT EXISTS hist.rebound_2020 PARTITION OF hist.rebound FOR VALUES FROM (20200101) TO (20201231);
 CREATE TABLE IF NOT EXISTS hist.rebound_2019 PARTITION OF hist.rebound FOR VALUES FROM (20190101) TO (20191231);
 CREATE TABLE IF NOT EXISTS hist.rebound_2018 PARTITION OF hist.rebound FOR VALUES FROM (20180101) TO (20181231);
+CREATE TABLE IF NOT EXISTS hist.rebound_2017 PARTITION OF hist.rebound FOR VALUES FROM (20170101) TO (20171231);
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------

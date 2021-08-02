@@ -1,7 +1,9 @@
 package model
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -20,7 +22,7 @@ type Point struct {
 	Y_Percent  float32
 }
 
-func (o *Point) Set(x1 uint, y1 float32, x2 uint, y2 float32, x_tick uint) {
+func (o *Point) Set(x1 uint, y1 float32, x2 uint, y2 float32, x_tick uint) (err error) {
 	o.X1 = x1
 	o.Y1 = y1
 	o.X2 = x2
@@ -33,7 +35,12 @@ func (o *Point) Set(x1 uint, y1 float32, x2 uint, y2 float32, x_tick uint) {
 	if strings.Contains(test, "Inf") {
 		o.Y_Percent = 0
 	}
-
+	if x1 > x2 {
+		txt := fmt.Sprintf("Point= %v \n", o)
+		log.Println(txt)
+		err = errors.New("rebound 규칙1. 에 어긋남. x1 < x2")
+	}
+	return err
 }
 
 func StringToPoint(str string) Point {

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/cheolgyu/stock-write/src/db"
@@ -9,12 +10,12 @@ import (
 )
 
 const q_last_rebound = `SELECT  dt, op, hp, lp, cp FROM hist.price WHERE CODE_ID =$1  AND  dt >=  ` +
-	`(SELECT  COALESCE(MAX(X1),0) AS X1  FROM hist.rebound WHERE CODE_ID =$1  AND PRICE_TYPE=$2 ) `
+	`(SELECT  COALESCE(MAX(X1),0) AS X1  FROM hist.rebound WHERE CODE_ID =$1  AND PRICE_TYPE=$2 ) order by dt asc `
 
 const q_insert_hist_rebound = `INSERT INTO hist.rebound ` +
 	`(code_id, price_type, x1, y1, x2, y2, x_tick, y_minus, y_percent) ` +
 	`VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ` +
-	`ON CONFLICT (code_id,price_type,x2) DO UPDATE SET ` +
+	`ON CONFLICT (code_id,price_type,x1) DO UPDATE SET ` +
 	`x1=$3, y1=$4, x2=$5, y2=$6, x_tick=$7, y_minus=$8, y_percent=$9 `
 
 const q_insert_public_rebound = `INSERT INTO  public.tb_rebound (` +
@@ -69,6 +70,9 @@ func InsertHistReBound(code_id int, price_type_id int, list []model.Point, upser
 	for _, item := range list {
 		_, err := stmt.Exec(code_id, price_type_id, item.X1, item.Y1, item.X2, item.Y2, item.X_tick, item.Y_minus, item.Y_Percent)
 		if err != nil {
+			txt := fmt.Sprintf("code_id= %v ,price_type_id= %v , item= %+v \n", code_id, price_type_id, item)
+			log.Println(txt)
+
 			log.Println("쿼리:stmt.Exec 오류: ", code_id, price_type_id)
 			log.Fatal(err)
 			panic(err)

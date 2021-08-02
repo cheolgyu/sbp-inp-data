@@ -16,6 +16,10 @@ var upsert_bound bool
 var price_type_arr []model.Config
 var price_type_config map[string]int
 
+var wg sync.WaitGroup = sync.WaitGroup{}
+var wg_db sync.WaitGroup = sync.WaitGroup{}
+var done chan bool = make(chan bool)
+
 func init() {
 
 	upsert_bound = true
@@ -53,19 +57,15 @@ type ReBound struct {
 // BOUND_POINT 저장.
 func (o *ReBound) Save(list []model.Code) {
 
-	wg := sync.WaitGroup{}
-	wg_db := sync.WaitGroup{}
-	done := make(chan bool)
-
 	for i := range list {
 		cc := list[i]
 		//가격목록 가져왔다.
 		bc := code_rebound{Code: cc}
 		wg.Add(1)
-		bc.get_price(&wg, done)
-		//<-done
+		go bc.get_price()
+		<-done
 		wg_db.Add(1)
-		bc.insert(&wg_db)
+		bc.insert()
 		if i%10 == 0 {
 			wg.Wait()
 			wg_db.Wait()
@@ -81,7 +81,7 @@ type code_rebound struct {
 	arr_rebound_price_type []rebound_price_type
 }
 
-func (o *code_rebound) insert(wg_db *sync.WaitGroup) {
+func (o *code_rebound) insert() {
 	defer wg_db.Done()
 	o.insert_hist_rebound()
 	o.insert_public_rebound()
@@ -147,7 +147,7 @@ func (o *code_rebound) insert_public_rebound() {
 }
 
 // CODE에 해당하는 가격목록 조회.
-func (o *code_rebound) get_price(wg *sync.WaitGroup, done chan bool) {
+func (o *code_rebound) get_price() {
 	defer wg.Done()
 	for i := range price_type_arr {
 		gcg := rebound_price_type{
@@ -156,10 +156,10 @@ func (o *code_rebound) get_price(wg *sync.WaitGroup, done chan bool) {
 		}
 		gcg.get_price()
 		o.arr_rebound_price_type = append(o.arr_rebound_price_type, gcg)
-		txt := fmt.Sprintf("len= %+v  ,Code.Id: %+v  ,price_type:  %+v", len(gcg.PriceList), o.Code.Id, price_type_arr[i])
-		log.Println(txt)
+		// txt := fmt.Sprintf("len= %+v  ,Code.Id: %+v  ,price_type:  %+v", len(gcg.PriceList), o.Code.Id, price_type_arr[i])
+		// log.Println(txt)
 	}
-	//done <- true
+	done <- true
 }
 
 type rebound_price_type struct {
@@ -173,6 +173,7 @@ type rebound_price_type struct {
 func (o *rebound_price_type) get_price() {
 
 	pmlist, err := dao.GetPriceByLastReBound(o.Code.Id, o.price_type.Id)
+
 	if err != nil {
 		log.Println("오류:GetPriceByLastReBound :", o.Code.Id, o.price_type.Id)
 	}
@@ -200,6 +201,8 @@ func (o *rebound_price_type) get_rebound_point() {
 	chg_tick := 0
 
 	for i := 0; i < count; i++ {
+		//		log.Println("chg_start_x, chg_start_y,chg_tick", chg_start_x, chg_start_y, chg_tick)
+
 		chg_tick++
 		n := i + 1
 		if n == count {
@@ -216,7 +219,13 @@ func (o *rebound_price_type) get_rebound_point() {
 
 		if chg {
 			var bp = model.Point{}
-			bp.Set(chg_start_x, chg_start_y, x1, y1, uint(chg_tick))
+			var err = bp.Set(chg_start_x, chg_start_y, x1, y1, uint(chg_tick))
+			if err != nil {
+				txt := fmt.Sprintf("o.PointList= %+v \n", o.PointList)
+				log.Println(txt)
+				panic(err)
+			}
+
 			o.PointList = append(o.PointList, bp)
 
 			chg_tick = 0
