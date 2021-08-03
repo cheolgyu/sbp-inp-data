@@ -88,6 +88,31 @@ func GetCode(code_type int) ([]model.Code, error) {
 	return res, err
 }
 
+func GetCodeAll() ([]model.Code, error) {
+	var res []model.Code
+	rows, err := db.Conn.Query("select id, code, code_type from meta.code where id = 330  order by id  ")
+	if err != nil {
+		log.Fatalln(err)
+		panic(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		c := model.Code{}
+		if err := rows.Scan(&c.Id, &c.Code, &c.Code_type); err != nil {
+			log.Fatal(err)
+			panic(err)
+		}
+		res = append(res, c)
+	}
+	// Check for errors from iterating over rows.
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+		panic(err)
+	}
+	return res, err
+}
+
 func GetConfigByCode(code string) (model.Config, error) {
 	var item model.Config
 	err := db.Conn.QueryRow("select id, upper_code, upper_name, code, name from meta.config where code=$1 order by id  ", code).Scan(

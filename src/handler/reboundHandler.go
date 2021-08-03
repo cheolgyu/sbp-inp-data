@@ -36,18 +36,13 @@ func init() {
 
 func ReBoundHandler() {
 
-	code_stock, err := dao.GetCode(c.Config["stock"])
-	ChkErr(err)
-
-	code_market, err := dao.GetCode(c.Config["market"])
+	code_list, err := dao.GetCodeAll()
 	ChkErr(err)
 
 	log.Println(" BoundHandler  start")
 	bp := ReBound{}
-	bp.Save(code_stock)
+	bp.Save(code_list)
 
-	bm := ReBound{}
-	bm.Save(code_market)
 	log.Println(" BoundHandler  end")
 }
 
@@ -60,14 +55,17 @@ func (o *ReBound) Save(list []model.Code) {
 	for i := range list {
 		item := fmt.Sprintf("%+v\n", list[i])
 		log.Println("item:", item)
+
 		cc := list[i]
-		//가격목록 가져왔다.
 		bc := code_rebound{Code: cc}
+
 		wg.Add(1)
-		go bc.get_price()
-		<-done
+		bc.get_price()
+
+		//<-done
+
 		wg_db.Add(1)
-		go bc.insert()
+		bc.insert()
 		if i%10 == 0 {
 			wg.Wait()
 			wg_db.Wait()

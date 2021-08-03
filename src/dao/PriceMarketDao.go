@@ -1,38 +1,55 @@
 package dao
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 	"log"
 
-	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/lib/pq"
 )
 
-type GetDownloadDate struct {
+type PriceMarketList struct {
 }
 
-func (o *GetDownloadDate) Get() (string, string, error) {
-	var start_date string
-	var end_date string
-	info_nm := c.INFO_NAME_UPDATED
-
-	query := "select to_char( COALESCE(updated, '" + c.PRICE_DEFAULT_START_DATE + "'), 'YYYYMMDD') as start , to_char( now(), 'YYYYMMDD') as end from public.info where name = $1 "
+func (o *PriceMarketList) Get() ([]model.DownloadInfo, error) {
+	var res []model.DownloadInfo
+	query := `
+select 
+	mc.id,mc.code, mc.code_type
+	,coalesce(max( hp.dt),19560303)::text as start_dt 
+	--,to_char( now(), 'YYYYMMDD')::text as end_dt
+	,'20210803' as end_dt
+ from meta.code mc left join hist.price hp on mc.id = hp.code_id
+ where mc.code_type = 2
+ group by mc.id, mc.code_type
+`
 	log.Println(query)
-	err := db.Conn.QueryRow(query, info_nm).Scan(&start_date, &end_date)
-	switch {
-	case err == sql.ErrNoRows:
-		log.Println("조회 결과가 없습니다.")
-	case err != nil:
-		log.Fatalln("쿼리 오류:", err)
+	rows, err := db.Conn.QueryContext(context.Background(), query)
+	if err != nil {
+		log.Fatal(err)
 		panic(err)
-	default:
-		log.Println("다운로드 기간: ", start_date, " ~ ", end_date)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		item := model.DownloadInfo{}
+
+		if err := rows.Scan(&item.Code.Id, &item.Code.Code, &item.Code.Code_type, &item.StartDt, &item.EndDt); err != nil {
+			log.Fatal(err)
+			panic(err)
+		}
+		res = append(res, item)
+
+	}
+	// Check for errors from iterating over rows.
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+		panic(err)
 	}
 
-	return start_date, end_date, err
+	return res, err
 }
 
 type InsertPriceMarket struct {
@@ -59,9 +76,10 @@ func (o *InsertPriceMarket) Insert() error {
 			log.Println("err_item:", err_item)
 
 			if err, ok := res_err.(*pq.Error); ok {
-				log.Println("과거 가격정보 insert시 해당 날짜의 opening de가 없음. ")
+
 				// 당일 데이터 넣을때는 오류가 안나지만 이전일자의 가격정보를 넣을때 오류가 발생함.
 				if err.Constraint == "price_dt_fkey" {
+					log.Println("과거 가격정보 insert시 해당 날짜의 opening de가 없음. ")
 					err := InsertOpening(item.Dt)
 					if err != nil {
 						log.Fatalln("쿼리:InsertPriceMarket:InsertOpening Insert:", err)

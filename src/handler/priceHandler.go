@@ -5,7 +5,6 @@ import (
 	"log"
 	"sync"
 
-	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/dao"
 	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/cheolgyu/stock-write/src/utils/download"
@@ -23,19 +22,11 @@ func PriceHandler() {
 
 	log.Println(" PriceHandler  start")
 
-	arr_MetaCode_Stock, err := dao.GetCode(c.Config["stock"])
+	list := dao.PriceMarketList{}
+	down_info, err := list.Get()
 	ChkErr(err)
-
-	arr_MetaCode_Market, err := dao.GetCode(c.Config["market"])
-	ChkErr(err)
-
-	// 종목가격
-	cpd_price := CodePriceData{}
-	cpd_price.Save(arr_MetaCode_Stock)
-
-	// 마켓가격
-	cpd_market := CodePriceData{}
-	cpd_market.Save(arr_MetaCode_Market)
+	exe := CodePriceData{}
+	exe.Save(down_info)
 	log.Println(" PriceHandler  end")
 }
 
@@ -47,12 +38,7 @@ type downLoadParam struct {
 	item      model.Code
 }
 
-func (o *CodePriceData) Save(list []model.Code) {
-	var err error = nil
-
-	down := dao.GetDownloadDate{}
-	startDate, endDate, err := down.Get()
-	ChkErr(err)
+func (o *CodePriceData) Save(list []model.DownloadInfo) {
 
 	for i := range list {
 
@@ -60,9 +46,9 @@ func (o *CodePriceData) Save(list []model.Code) {
 		//func(i int) {
 
 		p := downLoadParam{
-			item:      list[i],
-			startDate: startDate,
-			endDate:   endDate,
+			item:      list[i].Code,
+			startDate: list[i].StartDt,
+			endDate:   list[i].EndDt,
 		}
 		pwg.Add(1)
 		cp := CodePriceSave{}
@@ -114,6 +100,9 @@ func (o *CodePriceSave) Download(p downLoadParam) {
 }
 
 func (o *CodePriceSave) Insert() {
+	itme := fmt.Sprintf("Insert: %+v ,LEN= %+v\n", o.Code, len(o.PriceMarketList))
+	log.Println("Download param:", itme)
+
 	defer pwg_db.Done()
 
 	insert := dao.InsertPriceMarket{

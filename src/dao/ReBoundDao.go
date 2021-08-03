@@ -68,6 +68,10 @@ func InsertHistReBound(code_id int, price_type_id int, list []model.Point, upser
 	}
 	defer stmt.Close()
 	for _, item := range list {
+
+		txt := fmt.Sprintf("insert: code_id= %v ,price_type_id= %v , item= %+v ", code_id, price_type_id, item)
+		log.Println(txt)
+
 		_, err := stmt.Exec(code_id, price_type_id, item.X1, item.Y1, item.X2, item.Y2, item.X_tick, item.Y_minus, item.Y_Percent)
 		if err != nil {
 			txt := fmt.Sprintf("code_id= %v ,price_type_id= %v , item= %+v \n", code_id, price_type_id, item)

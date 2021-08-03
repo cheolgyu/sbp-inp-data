@@ -41,12 +41,6 @@ ALTER TABLE hist.price ADD CONSTRAINT hist_price_code_id_dt_key UNIQUE (code_id,
 
 
 
-CREATE TABLE IF NOT EXISTS hist.price_2021 PARTITION OF hist.price FOR VALUES FROM (20210101) TO (20211231);
-CREATE TABLE IF NOT EXISTS hist.price_2020 PARTITION OF hist.price FOR VALUES FROM (20200101) TO (20201231);
-CREATE TABLE IF NOT EXISTS hist.price_2019 PARTITION OF hist.price FOR VALUES FROM (20190101) TO (20191231);
-CREATE TABLE IF NOT EXISTS hist.price_2018 PARTITION OF hist.price FOR VALUES FROM (20180101) TO (20181231);
-CREATE TABLE IF NOT EXISTS hist.price_2017 PARTITION OF hist.price FOR VALUES FROM (20170101) TO (20171231);
-
 
 
 
@@ -67,11 +61,31 @@ CREATE INDEX ON hist.rebound (code_id);
 ALTER TABLE hist.rebound ADD CONSTRAINT hist_rebound_code_id_price_type_x1_key PRIMARY KEY (code_id, price_type,x1);
 
 
-CREATE TABLE IF NOT EXISTS hist.rebound_2021 PARTITION OF hist.rebound FOR VALUES FROM (20210101) TO (20211231);
-CREATE TABLE IF NOT EXISTS hist.rebound_2020 PARTITION OF hist.rebound FOR VALUES FROM (20200101) TO (20201231);
-CREATE TABLE IF NOT EXISTS hist.rebound_2019 PARTITION OF hist.rebound FOR VALUES FROM (20190101) TO (20191231);
-CREATE TABLE IF NOT EXISTS hist.rebound_2018 PARTITION OF hist.rebound FOR VALUES FROM (20180101) TO (20181231);
-CREATE TABLE IF NOT EXISTS hist.rebound_2017 PARTITION OF hist.rebound FOR VALUES FROM (20170101) TO (20171231);
+-- 1956년 부터 2021+10 년까지
+
+CREATE OR REPLACE FUNCTION hist.create_table()
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+declare
+	start_y integer  := 1956;
+	end_y integer  := 2031;
+BEGIN
+	 LOOP
+        
+        EXIT WHEN start_y = end_y;
+        
+           execute format('CREATE TABLE IF NOT EXISTS hist.price_%s PARTITION OF hist.price FOR VALUES FROM (%s0101) TO (%s1231); ', start_y , start_y , start_y );
+		   execute format('CREATE TABLE IF NOT EXISTS hist.rebound_%s PARTITION OF hist.rebound FOR VALUES FROM (%s0101) TO (%s1231); ', start_y , start_y , start_y );
+		SELECT start_y+1 INTO start_y;
+    END LOOP;
+
+END;
+$function$
+;
+select * from hist.create_table();
+
+
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------

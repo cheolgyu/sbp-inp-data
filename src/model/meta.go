@@ -13,3 +13,9 @@ type Code struct {
 	Code      string
 	Code_type int
 }
+
+type DownloadInfo struct {
+	Code    Code
+	StartDt string
+	EndDt   string
+}

@@ -29,6 +29,14 @@
     code                VARCHAR(10) NOT NULL UNIQUE,
     code_type           integer NOT NULL REFERENCES "meta"."config"(id)
   );
+
+INSERT INTO meta.code (code,code_type)
+select t1.code ,t2.id
+from  
+	(select code from  meta.config where upper_code='market_type' )  t1
+	,(select id from  meta.config where upper_code='code_type' and code='market')  t2
+order by code asc
+on conflict do nothing; 
   
 
 

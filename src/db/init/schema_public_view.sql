@@ -63,8 +63,8 @@ ORDER BY B.CP_Y_PERCENT DESC;
 --------------------------------------------
 ----------------------
 --------------------------------------------
-DROP VIEW IF EXISTS "view_MARKET";
-CREATE VIEW PUBLIC.view_MARKET AS
+DROP VIEW IF EXISTS "view_market";
+CREATE VIEW PUBLIC.view_market AS
 SELECT mc.id,mc.code,mcf.name,
 	B.CP_X1,
 	B.CP_Y1,
