@@ -90,7 +90,7 @@ func GetCode(code_type int) ([]model.Code, error) {
 
 func GetCodeAll() ([]model.Code, error) {
 	var res []model.Code
-	rows, err := db.Conn.Query("select id, code, code_type from meta.code where id = 330  order by id  ")
+	rows, err := db.Conn.Query("select id, code, code_type from meta.code   order by id  ")
 	if err != nil {
 		log.Fatalln(err)
 		panic(err)

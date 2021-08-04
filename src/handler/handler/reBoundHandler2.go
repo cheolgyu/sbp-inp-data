@@ -19,24 +19,21 @@ var wg_price sync.WaitGroup = sync.WaitGroup{}
 func init() {
 
 	ch_price_rebound = make(chan Calculate)
-	ch_price_insert = make(chan ReboundInsert)
+	ch_price_sql_write = make(chan ReboundSqlWrite)
 
 	wg_price = sync.WaitGroup{}
 	wg_price_rebound = sync.WaitGroup{}
 	wg_price_insert = sync.WaitGroup{}
 
-	go ChannelCalculate(ch_price_rebound)
-	go ChannelReboundInsert(ch_price_insert)
+	go ChannelReboundCalculate(ch_price_rebound)
+	go ChannelReboundSqlWrite(ch_price_sql_write)
 
 	upsert_bound = true
 
 	_price_type_arr, err := dao.GetConfig_Upper_Code(c.UPPER_CODE_PRICE_TYPE)
 	ChkErr(err)
-	//////////////////////////////////////////////
-	///////////////////_price_type_arr[:1]
-	///////////////////////////
-	//////////////////////////////////////////////
-	price_type_arr = _price_type_arr[:1]
+
+	price_type_arr = _price_type_arr
 
 	price_type_config = make(map[string]int)
 	for i := range price_type_arr {
@@ -45,6 +42,8 @@ func init() {
 }
 
 func ReBoundHandler() {
+
+	ChannelReboundSqlWriteInit()
 
 	code_list, err := dao.GetCodeAll()
 	ChkErr(err)
@@ -62,8 +61,10 @@ type ReBound struct {
 // BOUND_POINT 저장.
 func (o *ReBound) Save(list []model.Code) {
 
+	ReboundSqlWriteStart()
+
 	for i := range list {
-		item := fmt.Sprintf("%+v\n", list[i])
+		item := fmt.Sprintf("index=%v ,  %+v\n", i, list[i])
 		log.Println("item:", item)
 
 		cc := list[i]
@@ -73,17 +74,21 @@ func (o *ReBound) Save(list []model.Code) {
 		wg_price_insert.Add(1)
 		wg_price_rebound.Add(1)
 		go bc.get_price()
+		// if i%10 == 0 {
+		// 	wg_price_insert.Wait()
+		// }
 
 	}
 	wg_price.Wait()
 	wg_price_rebound.Wait()
 	wg_price_insert.Wait()
-
+	ReboundSqlWriteEnd()
+	ReboundSqlExec()
 }
 
 type code_rebound struct {
 	model.Code
-	arr_rebound_price_type []rebound_price_type
+	//arr_rebound_price_type []rebound_price_type
 }
 
 // CODE에 해당하는 가격목록 조회.
@@ -101,8 +106,8 @@ func (o *code_rebound) get_price() {
 		gcg.get_price()
 		//o.arr_rebound_price_type = append(o.arr_rebound_price_type, gcg)
 		item.list = append(item.list, gcg)
-		txt := fmt.Sprintf(" gcg  %+v", gcg)
-		log.Println(txt)
+		// txt := fmt.Sprintf(" gcg  %+v", gcg)
+		// log.Println(txt)
 	}
 	//done <- true
 	ch_price_rebound <- item

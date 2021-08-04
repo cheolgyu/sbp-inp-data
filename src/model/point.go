@@ -23,6 +23,10 @@ type Point struct {
 }
 
 func (o *Point) Set(x1 uint, y1 float32, x2 uint, y2 float32, x_tick uint) (err error) {
+	if x_tick > 1 {
+		x_tick = x_tick - 1
+	}
+
 	o.X1 = x1
 	o.Y1 = y1
 	o.X2 = x2

@@ -43,6 +43,7 @@ func (o *File) Init() {
 		c.DOWNLOAD_DIR_COMPANY_STATE,
 		c.DOWNLOAD_DIR_PRICE,
 		c.DOWNLOAD_DIR_MARKET,
+		c.SQL_DIR_DAILY,
 	}
 
 	for _, item := range mkdir {

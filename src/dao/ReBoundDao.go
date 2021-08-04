@@ -2,11 +2,12 @@ package dao
 
 import (
 	"context"
-	"fmt"
 	"log"
 
+	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/gchaincl/dotsql"
 )
 
 const q_last_rebound = `SELECT  dt, op, hp, lp, cp FROM hist.price WHERE CODE_ID =$1  AND  dt >=  ` +
@@ -58,30 +59,18 @@ func GetPriceByLastReBound(code_id int, price_type_id int) ([]model.PriceMarket,
 	return res_market, err
 }
 
-func InsertHistReBound(code_id int, price_type_id int, list []model.Point, upsert bool) error {
+func InsertHistReBound() error {
 	client := db.Conn
-	stmt, err := client.Prepare(q_insert_hist_rebound)
-	if err != nil {
-		log.Println("쿼리:Prepare 오류: ", code_id, price_type_id)
+	var dot *dotsql.DotSql
+	var err error
+
+	if dot, err = dotsql.LoadFromFile(c.SQL_FILE_DAILY_REBOUND); err != nil {
 		log.Fatal(err)
 		panic(err)
+	} else {
+		_, err = dot.Exec(client, c.DOTSQL_NAME_REBOUND)
 	}
-	defer stmt.Close()
-	for _, item := range list {
 
-		txt := fmt.Sprintf("insert: code_id= %v ,price_type_id= %v , item= %+v ", code_id, price_type_id, item)
-		log.Println(txt)
-
-		_, err := stmt.Exec(code_id, price_type_id, item.X1, item.Y1, item.X2, item.Y2, item.X_tick, item.Y_minus, item.Y_Percent)
-		if err != nil {
-			txt := fmt.Sprintf("code_id= %v ,price_type_id= %v , item= %+v \n", code_id, price_type_id, item)
-			log.Println(txt)
-
-			log.Println("쿼리:stmt.Exec 오류: ", code_id, price_type_id)
-			log.Fatal(err)
-			panic(err)
-		}
-	}
 	return err
 }
 

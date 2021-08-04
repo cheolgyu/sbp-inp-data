@@ -18,7 +18,7 @@ type Calculate struct {
 	list []rebound_price_type
 }
 
-func ChannelCalculate(ch chan Calculate) {
+func ChannelReboundCalculate(ch chan Calculate) {
 	log.Println("run  ChannelCalculate")
 	// loop over the data from the channel
 	for v := range ch {
@@ -27,11 +27,11 @@ func ChannelCalculate(ch chan Calculate) {
 		log.Println(txt)
 
 		v.exec()
-		ri := ReboundInsert{
+		ri := ReboundSqlWrite{
 			Code: v.Code,
 			list: v.list,
 		}
-		ch_price_insert <- ri
+		ch_price_sql_write <- ri
 
 	}
 }
@@ -71,13 +71,20 @@ func (o *rebound_price_type) get_rebound_point() {
 	chg_start_y := o.get_price_value(0)
 
 	chg_tick := 0
+	//log.Println("chg_start_x, chg_start_y,chg_tick", chg_start_x, chg_start_y, chg_tick)
 
 	for i := 0; i < count; i++ {
-		log.Println("chg_start_x, chg_start_y,chg_tick", chg_start_x, chg_start_y, chg_tick)
+
+		// log.Println("iiiiiiiiiiiiiiiiiii==================>>>>>>%s", i)
+		// txt := fmt.Sprintf("loop %+v", o.PriceList[i])
+		// log.Println(txt)
 
 		chg_tick++
 		n := i + 1
+		last_save := false
 		if n == count {
+			//log.Println("마지막은 저장해야지")
+			last_save = true
 			n = i
 		}
 
@@ -88,9 +95,13 @@ func (o *rebound_price_type) get_rebound_point() {
 
 		g_way := change_graph_direction(y1, y2)
 		chg := is_rebound(chg_value, g_way)
+		//log.Println("g_way, chg_value, chg", g_way, chg_value, chg)
 
-		if chg {
-			var bp = model.Point{}
+		if chg || last_save {
+			var bp = model.Point{
+				Code_id:    o.Code.Id,
+				Price_type: o.price_type.Id,
+			}
 			var err = bp.Set(chg_start_x, chg_start_y, x1, y1, uint(chg_tick))
 			if err != nil {
 				txt := fmt.Sprintf("o.PointList= %+v \n", o.PointList)
@@ -139,6 +150,9 @@ func (o *rebound_price_type) get_price_value(i int) float32 {
 
 func is_rebound(ago_g_way int, cur_g_way int) bool {
 
+	if cur_g_way == 0 {
+		return false
+	}
 	if ago_g_way == cur_g_way {
 		return false
 	} else {
