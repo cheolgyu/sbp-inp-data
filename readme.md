@@ -12,6 +12,9 @@ hadler2.ReBoundHandler()
          publid.table 추가
             sql.file 코드별 쓰기
                main.go:21: [걸린시간] Elipsed Time: 1m3.9043521s
+               
+               rebound 전체 기간 
+                  main.go:21: [걸린시간] Elipsed Time: 9m14.6355342s
 
 
 
