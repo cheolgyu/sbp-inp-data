@@ -43,8 +43,6 @@ func init() {
 
 func ReBoundHandler() {
 
-	ChannelReboundSqlWriteInit()
-
 	code_list, err := dao.GetCodeAll()
 	ChkErr(err)
 
@@ -61,8 +59,6 @@ type ReBound struct {
 // BOUND_POINT 저장.
 func (o *ReBound) Save(list []model.Code) {
 
-	ReboundSqlWriteStart()
-
 	for i := range list {
 		item := fmt.Sprintf("index=%v ,  %+v\n", i, list[i])
 		log.Println("item:", item)
@@ -74,21 +70,16 @@ func (o *ReBound) Save(list []model.Code) {
 		wg_price_insert.Add(1)
 		wg_price_rebound.Add(1)
 		go bc.get_price()
-		// if i%10 == 0 {
-		// 	wg_price_insert.Wait()
-		// }
 
 	}
 	wg_price.Wait()
 	wg_price_rebound.Wait()
 	wg_price_insert.Wait()
-	ReboundSqlWriteEnd()
-	ReboundSqlExec()
+
 }
 
 type code_rebound struct {
 	model.Code
-	//arr_rebound_price_type []rebound_price_type
 }
 
 // CODE에 해당하는 가격목록 조회.
@@ -104,12 +95,10 @@ func (o *code_rebound) get_price() {
 			price_type: price_type_arr[i],
 		}
 		gcg.get_price()
-		//o.arr_rebound_price_type = append(o.arr_rebound_price_type, gcg)
 		item.list = append(item.list, gcg)
 		// txt := fmt.Sprintf(" gcg  %+v", gcg)
 		// log.Println(txt)
 	}
-	//done <- true
 	ch_price_rebound <- item
 }
 

@@ -1,5 +1,22 @@
 # 프로적트 소개
 
+hadler2.ReBoundHandler()   
+   dotsql:  11m44.7095008s   
+   sqlx:  +dotsql  main.go:21: [걸린시간] Elipsed Time: 10m15.7448583s
+   sqlx:  +dotsqlx main.go:21: [걸린시간] Elipsed Time: 8m24.2705107s  
+         publid.table 제외
+            sql.file 한파일에서 쓰기
+               main.go:21: [걸린시간] Elipsed Time: 6m55.794887s
+            sql.file 코드별 쓰기
+               main.go:21: [걸린시간] Elipsed Time: 37.9139104s 
+         publid.table 추가
+            sql.file 코드별 쓰기
+               main.go:21: [걸린시간] Elipsed Time: 1m3.9043521s
+
+
+
+   pgx: 
+
 | item                | desc                  |
 | ------------------- | --------------------- |
 | stock-write         | 데이터베이스 업데이트 |

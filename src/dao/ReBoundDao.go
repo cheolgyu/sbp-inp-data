@@ -8,6 +8,7 @@ import (
 	"github.com/cheolgyu/stock-write/src/db"
 	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/gchaincl/dotsql"
+	"github.com/swithek/dotsqlx"
 )
 
 const q_last_rebound = `SELECT  dt, op, hp, lp, cp FROM hist.price WHERE CODE_ID =$1  AND  dt >=  ` +
@@ -59,16 +60,17 @@ func GetPriceByLastReBound(code_id int, price_type_id int) ([]model.PriceMarket,
 	return res_market, err
 }
 
-func InsertHistReBound() error {
+func InsertHistReBound(fnm string) error {
 	client := db.Conn
 	var dot *dotsql.DotSql
 	var err error
 
-	if dot, err = dotsql.LoadFromFile(c.SQL_FILE_DAILY_REBOUND); err != nil {
+	if dot, err = dotsql.LoadFromFile(fnm); err != nil {
 		log.Fatal(err)
 		panic(err)
 	} else {
-		_, err = dot.Exec(client, c.DOTSQL_NAME_REBOUND)
+		dotx := dotsqlx.Wrap(dot)
+		_, err = dotx.Exec(client, c.DOTSQL_NAME_REBOUND)
 	}
 
 	return err

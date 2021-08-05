@@ -16,30 +16,35 @@ import (
 
 var ch_price_sql_write chan ReboundSqlWrite //= make(chan ReboundSqlWrite)
 var wg_price_insert sync.WaitGroup
-var sql_rebound_file *os.File
-var uf utils.File
-var first bool
 
-func ChannelReboundSqlWriteInit() {
+//var sql_rebound_file *os.File
+var uf utils.File
+
+//var first bool
+
+func ChannelReboundSqlWriteInit(code string) (f *os.File, file_name string, first bool) {
+	file_name = c.SQL_FILE_DAILY_REBOUND + code + ".sql"
 	first = true
 	uf = utils.File{}
-	sql_rebound_file = uf.CreateFile(c.SQL_FILE_DAILY_REBOUND)
+
+	f = uf.CreateFile(file_name)
+	return f, file_name, first
 }
 
-func ReboundSqlWriteStart() {
+func ReboundSqlWriteStart(f *os.File) {
 	sqlname := "-- name: " + c.DOTSQL_NAME_REBOUND + " \n"
-	uf.Write(sql_rebound_file, sqlname+" INSERT INTO hist.rebound (code_id, price_type, x1, y1, x2, y2, x_tick, y_minus, y_percent) VALUES ")
+	uf.Write(f, sqlname+" INSERT INTO hist.rebound (code_id, price_type, x1, y1, x2, y2, x_tick, y_minus, y_percent) VALUES ")
 }
 
-func ReboundSqlWriteEnd() {
+func ReboundSqlWriteEnd(f *os.File) {
 	set := "x1=EXCLUDED.x1, y1=EXCLUDED.y1, x2=EXCLUDED.x2, y2=EXCLUDED.y2, x_tick=EXCLUDED.x_tick, y_minus=EXCLUDED.y_minus, y_percent=EXCLUDED.y_percent;"
-	uf.Write(sql_rebound_file, " ON CONFLICT (code_id, price_type ,x1) DO UPDATE SET "+set)
+	uf.Write(f, " ON CONFLICT (code_id, price_type ,x1) DO UPDATE SET "+set)
 }
 
-func ReboundSqlExec() {
+func ReboundSqlExec(fnm string) {
 	defer ElapsedTime("걸린시간:ReboundSqlExec:", "start")()
 
-	dao.InsertHistReBound()
+	dao.InsertHistReBound(fnm)
 }
 
 func ElapsedTime(tag string, msg string) func() {
@@ -63,47 +68,29 @@ func ChannelReboundSqlWrite(ch chan ReboundSqlWrite) {
 
 	for v := range ch {
 
+		f, fnm, first := ChannelReboundSqlWriteInit(v.Code.Code)
+		ReboundSqlWriteStart(f)
+
 		for i := range v.list {
 			v.point_list = append(v.point_list, v.list[i].PointList...)
 		}
 
+		v.write(f, first)
+
+		ReboundSqlWriteEnd(f)
+		f.Close()
+		ReboundSqlExec(fnm)
+
+		v.insert_public_rebound()
+
 		txt := fmt.Sprintf("ch_price_sql_write < len=%v , item= %+v", len(v.point_list), v.Code)
 		log.Println(txt)
 
-		v.exec()
+		wg_price_insert.Done()
 	}
 }
 
-func (o *ReboundSqlWrite) exec() {
-
-	defer wg_price_insert.Done()
-	o.write(sql_rebound_file)
-
-	//log.Println("저장 point len", len(point_list))
-
-	// err := dao.InsertHistReBound(point_list, upsert_bound)
-	// ChkErr(err)
-	// o.insert_public_rebound()
-	if finfo, err := sql_rebound_file.Stat(); err != nil {
-		panic(err)
-	} else {
-		var mb5 int64 = 5242880
-		if mb5 < finfo.Size() {
-			log.Println("rebound.sql 사이즈가 커 일부분 저장 시작 : ", finfo.Size())
-			ReboundSqlWriteEnd()
-			ReboundSqlExec()
-			ChannelReboundSqlWriteInit()
-			ReboundSqlWriteStart()
-
-			//wg_price_insert.Wait()
-		}
-	}
-
-}
-
-func (o *ReboundSqlWrite) write(f *os.File) {
-	// (code_id, price_type, x1, y1, x2, y2, x_tick, y_minus, y_percent)
-	//o.Code.Id,
+func (o *ReboundSqlWrite) write(f *os.File, first bool) {
 	for _, v := range o.point_list {
 		item := ""
 		if !first {
@@ -113,11 +100,6 @@ func (o *ReboundSqlWrite) write(f *os.File) {
 		uf.Write(f, item)
 		first = false
 	}
-
-}
-
-// GTYPE별 BOUND 저장.
-func (o *rebound_price_type) insert_hist_rebound() {
 
 }
 
