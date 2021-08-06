@@ -106,7 +106,7 @@ CREATE TABLE "utils"."quote_unit" (
     "price" integer NOT NULL,
     PRIMARY KEY ( "market","price")
 );
-
+CREATE INDEX ON utils.quote_unit (market, price); 
 
 CREATE or replace FUNCTION utils.insert_quot_unit_kospi()
 RETURNS void AS $$

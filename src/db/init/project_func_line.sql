@@ -39,6 +39,8 @@ where qu.market = 1  offset 6115  limit 1
 
 --  select 1 from project.func_lines();
 -- Successfully run. Total query runtime: 5 min 41 secs.
+-- Successfully run. Total query runtime: 7 min 49 secs.
+
 ----------------------------------------
 ----------------------------------------
 ----------------------------------------
@@ -58,6 +60,9 @@ declare
 	arr_g_type  TEXT[]  :=  array['open','close','low','high'];
 	i_price_type integer;   
 	cnt integer := 0;   
+	log_start_dt timestamp;
+	log_end_sec integer;
+	log_txt TEXT;
 BEGIN
  -- code get
 	select array_agg(id) as id
@@ -84,7 +89,11 @@ BEGIN
 		LOOP
 			
 			EXECUTE format(' SELECT * FROM  project.func_lines_get_last_point(%L ,%L) ', row.code_id, i_price_type ) INTO r2;
-			--RAISE NOTICE 'Iterator: %', r2.x1 ;
+			
+			select now() into log_start_dt;
+			
+			
+
 			IF r2.x1 > 0 then
 
 				select cnt +1 into cnt;
@@ -101,6 +110,18 @@ BEGIN
 				END IF;
 
 			END IF;
+
+			EXECUTE format(' select  CAST(EXTRACT(MINUTE FROM (%L - now()) ) AS INTEGER) ', log_start_dt ) INTO log_end_sec;
+			IF log_end_sec < 0 then
+				-- 9748
+				-- RAISE NOTICE 'Iterator: ====================================================== '
+				-- RAISE NOTICE 'Iterator: % ', row.code;
+				-- RAISE NOTICE 'Iterator: % ', row.code_id;
+				-- RAISE NOTICE 'Iterator: % ', i_price_type;
+				-- RAISE NOTICE 'Iterator: % ', log_end_sec;
+				-- EXIT ;
+			END IF;
+
 		END LOOP;
 	end loop;	
 	RAISE NOTICE 'Iterator: %', cnt ;
