@@ -5,8 +5,22 @@
 
 
 ## 방법
-1. 테이블 저장: 코드의 전체년도의 피크월 존재, 피크월, 주변월, 전체월.json{월: 퍼센트} 
-2. 뷰 저장: select count(피크월) group by 피크월  count 가 1이면 피크윌이 공통값.   
+0. vscode를 켠다. 
+1. 쿼리를 짠다.
+   1. 종목가지고 tb_monthly_peek 를 찾아서 기준을 찾아서 계삲해서 넣기
+      1. 종목select 후 종목에 대한 tb_monthly_peek의 시작기준 조회 
+         1. 한번에 query로 
+            1. tb_monthly_peek 생성 이건 년도단위 피크월
+            2. tb_monthly_peek_volume 생성 이건 년도의 월별 거래량합
+            3. 매일 tb_mpv의 년도의 월에 vol 추가하고
+            4. tb_mp에 종목의 해당년도의 값 업데이트 하기.
+            5. 
+      2. 시작기준 부터 hist.price 조회
+      3. 조회 결과 golang으로 계산
+      4. insert
+2. 맞나 확인한다.
+3. 테이블 저장: 코드의 전체년도의 피크월 존재, 피크월, 주변월, 전체월.json{월: 퍼센트} 
+4. 뷰 저장: select count(피크월) group by 피크월  count 가 1이면 피크윌이 공통값.   
     where row수가  1이 아니것의 의미는 => 여러 년도를 비교한것. 그러므로 조회에서 로우수도 조회
 
 ## 계산 범위
