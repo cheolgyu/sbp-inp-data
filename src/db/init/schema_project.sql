@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS project.tb_line (
 ----------------------------------------
 DROP TABLE IF  EXISTS project.tb_monthly_peek;
 CREATE TABLE IF NOT EXISTS project.tb_monthly_peek (
-    code_id                  integer NOT NULL REFERENCES "meta"."code"(id)
+    code_id  integer NOT NULL REFERENCES "meta"."code"(id)
+   ,"vol_dt"  numeric(6, 0)  NOT NULL REFERENCES "project"."tb_monthly_peek_volume"(dt)
    ,"is_peek" boolean
    ,"peek" numeric(2, 0) 
    ,"peek_range" numeric(2, 0)[]
@@ -51,11 +52,13 @@ CREATE TABLE IF NOT EXISTS project.tb_monthly_peek (
 DROP TABLE IF  EXISTS project.tb_monthly_peek_volume CASCADE ;
 CREATE TABLE IF NOT EXISTS project.tb_monthly_peek_volume  (
 	"code_id" integer not null REFERENCES "meta"."code"(id),
-	"dt_m" numeric(2, 0) not null ,
-	"vol" numeric(20, 0)	
+   ,"dt" numeric(6, 0)  
+   ,"dt_y" numeric(4, 0) not null REFERENCES "meta"."code"(id),
+   ,"dt_m" numeric(2, 0)
+   ,"vol" numeric(20, 0)
+   , PRIMARY KEY(code_id, dt)
 );
-CREATE INDEX ON project.tb_monthly_peek_volume (code_id);
-CREATE INDEX ON project.tb_monthly_peek_volume (dt_m);
+CREATE INDEX ON project.tb_monthly_peek_volume (dt);
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
