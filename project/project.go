@@ -5,7 +5,6 @@ import (
 
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/dao"
-	hadler2 "github.com/cheolgyu/stock-write/src/handler/handler"
 	"github.com/cheolgyu/stock-write/src/utils"
 )
 
@@ -39,7 +38,7 @@ func (p *Project) Run() {
 	//dao.Before_closing()
 	//handler.ExecCompanyHandler()
 	//handler.PriceHandler()
-	hadler2.ReBoundHandler()
+	//hadler2.ReBoundHandler()
 	//dao.After_closing()
 	// api 에서 사용할 view+table 확인 + api 수정
 }
