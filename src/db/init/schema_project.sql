@@ -51,9 +51,9 @@ CREATE TABLE IF NOT EXISTS project.tb_monthly_peek (
 
 DROP TABLE IF  EXISTS project.tb_monthly_peek_volume CASCADE ;
 CREATE TABLE IF NOT EXISTS project.tb_monthly_peek_volume  (
-	"code_id" integer not null REFERENCES "meta"."code"(id),
+	"code_id" integer not null REFERENCES "meta"."code"(id)
    ,"dt" numeric(6, 0)  
-   ,"dt_y" numeric(4, 0) not null REFERENCES "meta"."code"(id),
+   ,"dt_y" numeric(4, 0) not null REFERENCES "meta"."code"(id)
    ,"dt_m" numeric(2, 0)
    ,"vol" numeric(20, 0)
    , PRIMARY KEY(code_id, dt)
