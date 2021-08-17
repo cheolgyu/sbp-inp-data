@@ -7,14 +7,21 @@
 ## 방법
 0. vscode를 켠다. 
 1. 쿼리를 짠다.
-   1. 종목가지고 tb_monthly_peek 를 찾아서 기준을 찾아서 계삲해서 넣기
-      1. 종목select 후 종목에 대한 tb_monthly_peek의 시작기준 조회 
-         1. 한번에 query로 
-            1. tb_monthly_peek 생성 이건 년도단위 피크월
-            2. tb_monthly_peek_volume 생성 이건 년도의 월별 거래량합
-            3. 매일 tb_mpv의 년도의 월에 vol 추가하고
-            4. tb_mp에 종목의 해당년도의 값 업데이트 하기.
-            5. 
+   1. meta.code에 해당되는 tb_monthly_peek의  기준칼럼(마지막 저장일)을 찾아서 계산해서 넣기
+      1. meta.code와 tb_monthly_peek의 기준칼럼(마지막 저장일)을 조회
+         1. table 생성 tb_monthly_peek tbmp, tb_monthly_peek_volume tbmpv
+            1. 차이점: 
+               1. tbmp는 매일 업데이트된 tbmpv의 거래럍을 가지고 정보를 도출한다.
+               2. tbmpv는 단순히 매일 거래량을 업데이트한다.  
+         2. tbmp     => 종목의 년도별 피크월, 사용자 조회= 마지막 테이블 
+         3. tbmpv    => 년도의 월별 거래량합, tb_monthly_peek의 보조
+            1. 종목코드, 년도, 월, 거래량, 마지막계산일
+            2. 장마감시 거래량 업데이트 용
+
+
+         4. 매일 tb_mpv의 년도의 월에 vol 추가하고
+         5. tb_mp에 종목의 해당년도의 값 업데이트 하기.
+         6. 
       2. 시작기준 부터 hist.price 조회
       3. 조회 결과 golang으로 계산
       4. insert

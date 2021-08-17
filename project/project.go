@@ -5,6 +5,7 @@ import (
 
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/dao"
+	"github.com/cheolgyu/stock-write/src/handler/project/peek"
 	"github.com/cheolgyu/stock-write/src/utils"
 )
 
@@ -40,5 +41,6 @@ func (p *Project) Run() {
 	//handler.PriceHandler()
 	//hadler2.ReBoundHandler()
 	//dao.After_closing()
+	peek.MonthlyPeekHandler()
 	// api 에서 사용할 view+table 확인 + api 수정
 }
