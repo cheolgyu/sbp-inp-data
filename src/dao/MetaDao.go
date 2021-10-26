@@ -188,11 +188,20 @@ func After_closing() error {
 */
 func InsertOpening(dt int) error {
 	client := db.Conn
-	q_insert := ` insert into meta.opening (dt,yyyy,mm,dd)
-	select $1::numeric
-	   , substring($1::text,1,4)::numeric as yy
-	   , substring($1::text,5,2)::numeric as mm
-	   , substring($1::text,7,2)::numeric as dd
+	q_insert := ` insert into meta.opening (dt,yyyy,mm,dd,week,quarter)
+	select 
+	dt::numeric
+	,extract(YEAR from to_dt)::numeric as yy
+	,extract(MONTH from to_dt)::numeric as mm
+	,extract(DAY from to_dt)::numeric as dd
+	,extract(week from to_dt)::numeric as week
+	,extract(quarter from to_dt)::numeric as quarter
+	from (
+		select 
+        $1::numeric as dt,
+        to_date($1::text , 'YYYYMMDD') to_dt
+
+	   )t
 	 on conflict do nothing ; 
 	`
 	_, err := client.Exec(q_insert, dt)

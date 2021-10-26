@@ -8,15 +8,22 @@ BEGIN
 --------------------
 -- insert  meta.opening
 --------------------
-insert into meta.opening (dt,yyyy,mm,dd)
-select dt
-   , substring(dt::text,1,4)::numeric as yy
-   , substring(dt::text,5,2)::numeric as mm
-   , substring(dt::text,7,2)::numeric as dd
-from (
-	select max(dt) as dt
-    from  HIST.price hp
-) t on conflict do nothing ; 
+insert into meta.opening (dt,yyyy,mm,dd,week,quarter)
+  select 
+     dt::numeric
+   ,extract(YEAR from to_dt)::numeric as yy
+   ,extract(MONTH from to_dt)::numeric as mm
+   ,extract(DAY from to_dt)::numeric as dd
+   ,extract(week from to_dt)::numeric as week
+   ,extract(quarter from to_dt)::numeric as quarter
+
+    from (
+        select 
+        max(dt) as dt,
+        to_date(max(dt)::text , 'YYYYMMDD') to_dt
+        from  HIST.price  
+   ) t 
+    on conflict do nothing ; 
 
 
 END;

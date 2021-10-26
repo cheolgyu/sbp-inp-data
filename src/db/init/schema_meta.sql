@@ -40,12 +40,15 @@ on conflict do nothing;
   
 
 
-DROP TABLE IF  EXISTS meta.opening;
+DROP TABLE IF  EXISTS meta.opening ;
 CREATE TABLE meta.opening (
   "dt" numeric(8, 0) PRIMARY KEY,
   "yyyy" numeric(4, 0) not null,
   "mm" numeric(2, 0) not null,
-  "dd" numeric(2, 0) not null
+  "dd" numeric(2, 0) not null,
+  "week" numeric(2, 0) not null,
+  "quarter" numeric(1, 0) not null
+  
 );
 
 /*
