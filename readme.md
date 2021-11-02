@@ -1,83 +1,16 @@
-# 프로적트 소개
-
-hadler2.ReBoundHandler()   
-   dotsql:  11m44.7095008s   
-   sqlx:  +dotsql  main.go:21: [걸린시간] Elipsed Time: 10m15.7448583s
-   sqlx:  +dotsqlx main.go:21: [걸린시간] Elipsed Time: 8m24.2705107s  
-         publid.table 제외
-            sql.file 한파일에서 쓰기
-               main.go:21: [걸린시간] Elipsed Time: 6m55.794887s
-            sql.file 코드별 쓰기
-               main.go:21: [걸린시간] Elipsed Time: 37.9139104s 
-         publid.table 추가
-            sql.file 코드별 쓰기
-               main.go:21: [걸린시간] Elipsed Time: 1m3.9043521s
-               
-               rebound 전체 기간 
-                  main.go:21: [걸린시간] Elipsed Time: 9m14.6355342s
+# 주식정보 저장
 
 
-
-   pgx: 
-
-| item                | desc                  |
-| ------------------- | --------------------- |
-| stock-write         | 데이터베이스 업데이트 |
-| stock-write-ticke   | stock-write 실행 용   |
-| stock-read-pub-api  | api                   |
-| stock-read-pub-site | web-site              |
-
-<!-- + 회사-상세 null 로들어감.
-+ + find_market 함수 detail 기준 meta.code 작성시
-+ + detail에는 없고 state에만 있는 경우 state의 코드에 해당되는 market 찾기
-+ + 네이법 웹스크롤링 market 가져와 insert 하기 
-+ 월별 거래량 참조 테이블 갱신 체크 ==> FUNCTION project.func_monthly() 에서 
-+ + truncate table project.tb_monthly_peek cascade; 해서 갱신됨.
-+ 
-+ 코스닥 view_market 데이터 0 나옴
-  + hist.price는 이상없음.
-  + hist.rebound 규칙 :   이전 줄의 x2는 다음줄의 x1값 이여야됨.
-  + 하지만 데이터 입력시 규칙적으로 입력 되지 않았음.
-
--->
----------
-## table role 
+### table info 
 ```
-hist.rebound 규칙 :   이전 줄의 x2는 다음줄의 x1값 이여야됨.
-```
-----------
-```
-   차트 라인 : 
-      public.after_closing()
-         FUNCTION project.func_lines();
-            INSERT INTO project.tb_line
-
-   월별 거래량:
-      public.after_closing()
-         FUNCTION  project.func_monthly()
-            INSERT INTO project.tb_monthly_peek
-
-   단타:
-      FUNCTION  project.func_day_trading(
-         inp_term 		integer  -- 기간
-         ,inp_limit 		integer  
-         ,inp_offset 	integer
-         ,inp_sort 		VARCHAR 
-         ,inp_desc 		VARCHAR
-         ,inp_market_arr integer[]
-      )
-
    public.company
       상속 public.company_detail
       상속 public.company_state
 
-   hist.rebound
-   public.rebound 
-   hist.price
-
-   meta.opening
-   meta.config
-   meta.code
+   hist.price 파티션테이블
+   meta.opening 장열림일자 정보
+   meta.config  설정값
+   meta.code   종목코드,마켓코드
 
 ```
 ---
@@ -94,10 +27,7 @@ FROM alpine:3.14 를 FROM scratch 로 수정하기.
 
 ```
 
-```
-stock-write 안에 stock-write-ticker 넣을까?
 
-```
 
 - [ ] info
   - [ ] 업데이트하기
@@ -118,6 +48,8 @@ stock-write 안에 stock-write-ticker 넣을까?
       
       유지관리
          오래된 데이터는 제거해야된다. 유지관리에 비용이크다. 별도의 파일로 빼고. 요청시 파일에서 읽어오기로.
+
+         => 용량큰 hist 스키마는 저렴한 저장소 이용하기.
       
       파티션분할
          파티션테이블과 상속 테이블이 두개로 나눠 있고 상속테이블이 현재 어플에 맞는것 같고.
