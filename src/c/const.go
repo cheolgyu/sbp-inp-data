@@ -20,9 +20,6 @@ const DOWNLOAD_FILENAME_COMPANY_STATE = "company_state.xlsx"
 
 const DOWNLOAD_DIR_PRICE = "data/download/price/"
 const DOWNLOAD_DIR_MARKET = "data/download/market/"
-const SQL_DIR_DAILY = "data/sql-daily/"
-const SQL_FILE_DAILY_REBOUND = SQL_DIR_DAILY
-const DOTSQL_NAME_REBOUND = "insert-hist.rebound-table"
 
 const COMPANY_DETAIL = "company_detail"
 const COMPANY_STATE = "company_state"
@@ -43,8 +40,6 @@ const XLSX_SPLIT = "!,_"
 var DB_MAX_CONN = 30
 
 var Config map[string]int
-
-const UPPER_CODE_PRICE_TYPE = "price_type"
 
 func init() {
 	DownloadCompany = true

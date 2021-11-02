@@ -43,7 +43,6 @@ func (p *Project) Run() {
 	handler.PriceHandler(1)
 	// 종목
 	handler.PriceHandler(2)
-	//rebound.ReBoundHandler()
 	//dao.After_closing()
 	//peek.MonthlyPeekHandler()
 

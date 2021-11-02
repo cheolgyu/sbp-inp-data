@@ -12,10 +12,6 @@
 ------------------------------------------------------------------------------
  CREATE SCHEMA "hist";
 -- 선언적 파티션
--- https://uiandwe.tistory.com/1318
--- 조회 속도가 상상을 초월하네. 
--- 트리거 파티션 2~3초 인데 이건 300msc	
--- 선언적 파티션으로 hist.bound도 변경하기.
 
 
 DROP TABLE IF  EXISTS hist.price CASCADE ;
@@ -40,30 +36,9 @@ ALTER TABLE hist.price ADD CONSTRAINT hist_price_code_id_dt_key UNIQUE (code_id,
 
 
 
-
-
-
-
-
-DROP TABLE IF  EXISTS hist.rebound  CASCADE;
-CREATE TABLE IF NOT EXISTS hist.rebound  (
-	"code_id" integer not null REFERENCES "meta"."code"(id),
-	"price_type" integer not null REFERENCES "meta"."config"(id),
-   	"x1" numeric(8, 0) not null REFERENCES "meta"."opening"(dt) CHECK (x1 < x2),
-    "y1" numeric(20, 2),
-    "x2" numeric(8, 0) not null REFERENCES "meta"."opening"(dt) CHECK (x1 < x2),
-    "y2" numeric(20, 2),
-    "x_tick" numeric(20, 0),
-    "y_minus" numeric(20, 2),
-    "y_percent" numeric(20, 2)
-) PARTITION  BY  RANGE (x1); 
-CREATE INDEX ON hist.rebound (code_id);
-ALTER TABLE hist.rebound ADD CONSTRAINT hist_rebound_code_id_price_type_x1_key PRIMARY KEY (code_id, price_type,x1);
-
-
 -- 1956년 부터 2021+10 년까지
 
-CREATE OR REPLACE FUNCTION hist.create_table()
+CREATE OR REPLACE FUNCTION hist.create_table_price()
  RETURNS void
  LANGUAGE plpgsql
 AS $function$
@@ -76,138 +51,12 @@ BEGIN
         EXIT WHEN start_y = end_y;
         
            execute format('CREATE TABLE IF NOT EXISTS hist.price_%s PARTITION OF hist.price FOR VALUES FROM (%s0101) TO (%s1231); ', start_y , start_y , start_y );
-		   execute format('CREATE TABLE IF NOT EXISTS hist.rebound_%s PARTITION OF hist.rebound FOR VALUES FROM (%s0101) TO (%s1231); ', start_y , start_y , start_y );
 		SELECT start_y+1 INTO start_y;
     END LOOP;
 
 END;
 $function$
 ;
-select * from hist.create_table();
-
-
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
--- 트리거  파티션
---  DROP SCHEMA IF EXISTS "remove" CASCADE;
---  CREATE SCHEMA "remove";
-
--- DROP TABLE IF  EXISTS remove.price_stock ;
--- CREATE TABLE IF NOT EXISTS remove.price_stock (
--- 	"code_id" integer REFERENCES "meta"."code"(id),
--- 	"dt" numeric(8, 0) REFERENCES "meta"."opening"(dt),
---     "op" numeric(20, 2),
--- 	"hp" numeric(20, 2),
--- 	"lp" numeric(20, 2),
--- 	"cp" numeric(20, 2),
--- 	"vol" numeric(20, 0),
---     "fb_rate" numeric(20, 2),
--- 	"o2c" numeric(10, 2),
--- 	"l2h" numeric(10, 2),
--- 	PRIMARY KEY(code_id, dt)
--- ) ;
-
--- -- https://postgresql.kr/blog/postgresql_partition_table.html
--- -- https://uiandwe.tistory.com/1318
-
--- DROP TABLE IF  EXISTS remove.price ;
--- CREATE TABLE IF NOT EXISTS remove.price  (
--- 	"code_id" integer REFERENCES "meta"."code"(id),
--- 	"dt" numeric(8, 0) REFERENCES "meta"."opening"(dt),
---     "op" numeric(20, 2),
--- 	"hp" numeric(20, 2),
--- 	"lp" numeric(20, 2),
--- 	"cp" numeric(20, 2),
--- 	"vol" numeric(20, 0),
---     "fb_rate" numeric(20, 2),
--- 	"o2c" numeric(10, 2),
--- 	"l2h" numeric(10, 2),
--- 	PRIMARY KEY(code_id, dt)
--- ) ;
-
-
-
--- CREATE OR REPLACE FUNCTION remove.price_insert_dynamic()
---  RETURNS trigger
---  LANGUAGE plpgsql
--- AS $function$
--- declare
--- 	yyyy TEXT;	
--- 	cnt integer;
--- BEGIN
---   execute format('select substring($1.dt::TEXT,0,5)  ') using new INTO yyyy;
---   execute format('CREATE TABLE IF NOT EXISTS remove.price_%s () INHERITS (remove.price); ', yyyy );
-  
---   execute format('SELECT COUNT(CODE_ID) FROM REMOVE.price_%s WHERE CODE_ID = %s AND DT =%s;',yyyy, new.code_id,new.dt) using new INTO cnt ;
---   IF cnt = 0 then
--- 	execute format('insert into remove.price_%s select $1.*',yyyy) using new;
---   ELSE
--- 	execute format('update  remove.price_%s   
--- 	SET  op=$1.op, hp=$1.hp, lp=$1.lp, cp=$1.cp, vol=$1.vol, fb_rate=$1.fb_rate, o2c=$1.o2c, l2h=$1.l2h 
--- 	where CODE_ID = %s AND DT =%s
--- 	',yyyy, new.code_id,new.dt) using new;
---   end if;
-
-
---   RETURN null;
--- END;
--- $function$
--- ;
-
--- CREATE TRIGGER tr_price_insert
---   BEFORE INSERT ON remove.price 
---   FOR EACH ROW EXECUTE PROCEDURE remove.price_insert_dynamic();
-/*
-INSERT INTO remove.price(
-	code_id, dt, op, hp, lp, cp, vol, fb_rate, o2c, l2h)
-	VALUES (1, 20201212, 12, 13, 14, 15, 16, 17, 18, 19);
-
--- 7분 걸림.
--- price
-insert into remove.price
-    (code_id, dt, op, hp, lp, cp, vol, fb_rate, o2c, l2h)
-SELECT 
-	(select id from meta.code mc where code = hps.code)
-	, (select dt from meta.opening  where dt = hps.p_date)
-	, op, hp, lp, cp, vol, fb_rate, o2c, l2h
-FROM hist.price_stock hps ;
-
--- market
-insert into remove.price
-    (code_id, dt, op, hp, lp, cp, vol, fb_rate, o2c, l2h)
-SELECT 
-	(select id from meta.code mc where code = hps.code)
-	, (select dt from meta.opening  where dt = hps.p_date)
-	, op, hp, lp, cp, vol, fb_rate, o2c, l2h
-FROM hist.price_market hps ;
-
-SELECT tableoid::regclass,code_id, dt, op, hp, lp, cp, vol, fb_rate, o2c, l2h
-	FROM remove.price
-	limit 10;
-*/	
-
+select * from hist.create_table_price();
 
 
