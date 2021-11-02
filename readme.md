@@ -1,5 +1,11 @@
 # 주식정보 저장
 
+### 다운사이트
+      가격정보
+         네이버증권에 차트에서 값가져옴.
+      회사정보
+         data.krx.co.kr
+
 
 ### table info 
 ```
@@ -9,7 +15,7 @@
 
    hist.price 파티션테이블
    meta.opening 장열림일자 정보
-   meta.config  설정값
+   meta.config  설정값(코드 구분값)
    meta.code   종목코드,마켓코드
 
 ```
