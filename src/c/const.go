@@ -2,7 +2,6 @@ package c
 
 import (
 	"os"
-	"time"
 )
 
 const DOWNLOAD_URL_COMPANY_DETAIL_CODE = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd"
@@ -49,7 +48,7 @@ const UPPER_CODE_PRICE_TYPE = "price_type"
 
 func init() {
 	DownloadCompany = true
-	DownloadPrice = true
+	DownloadPrice = false
 
-	PRICE_DEFAULT_START_DATE = time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
+	PRICE_DEFAULT_START_DATE = "19560303" //time.Now().AddDate(-3, 0, 0).Format(PRICE_DATE_FORMAT)
 }

@@ -19,10 +19,9 @@ func (o *PriceMarketList) Get() ([]model.DownloadInfo, error) {
 select 
 	mc.id,mc.code, mc.code_type
 	,coalesce(max( hp.dt),19560303)::text as start_dt 
-	--,to_char( now(), 'YYYYMMDD')::text as end_dt
-	,'20210803' as end_dt
+	,to_char( now(), 'YYYYMMDD')::text as end_dt
  from meta.code mc left join hist.price hp on mc.id = hp.code_id
- where mc.code_type = 2
+ where mc.code_type = 1
  group by mc.id, mc.code_type
 `
 	log.Println(query)
@@ -72,7 +71,7 @@ func (o *InsertPriceMarket) Insert() error {
 		_, res_err = stmt.Exec(o.Code.Id, item.Dt, item.Dt_y, item.Dt_m, item.Dt_q4,
 			item.OpenPrice, item.ClosePrice, item.LowPrice, item.HighPrice, item.Volume, item.ForeignerBurnoutRate)
 		if res_err != nil {
-			err_item := fmt.Sprintf("%+v\n", item)
+			err_item := fmt.Sprintf("%+v   %+v \n", o.Code.Id, item)
 			log.Println("err_item:", err_item)
 
 			if err, ok := res_err.(*pq.Error); ok {
@@ -82,7 +81,8 @@ func (o *InsertPriceMarket) Insert() error {
 					log.Println("과거 가격정보 insert시 해당 날짜의 opening de가 없음. ")
 					err := InsertOpening(item.Dt)
 					if err != nil {
-						log.Fatalln("쿼리:InsertPriceMarket:InsertOpening Insert:", err)
+
+						log.Fatalln("쿼리:InsertPriceMarket:InsertOpening Insert:", err, item.Dt)
 					} else {
 						res_err = nil
 
@@ -95,6 +95,7 @@ func (o *InsertPriceMarket) Insert() error {
 					}
 
 				} else {
+					log.Printf("%+v", item)
 					log.Println("pq error:", err.Code.Name())
 					log.Fatalln("쿼리:InsertPriceMarket: Insert:", err)
 				}

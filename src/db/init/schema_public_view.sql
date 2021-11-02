@@ -100,23 +100,3 @@ LEFT JOIN public.tb_rebound B ON mc.id = B.code_id
 where mc.code_type = (select id from meta.config where code ='market')
 order by mcf.id;
 
-
-DROP VIEW IF EXISTS "view_monthly_peek";
-CREATE VIEW PUBLIC.view_monthly_peek AS
-SELECT MP.CODE_id as mp_code,
-	pc.code_id,
-	pc.code,
-	pc.name,
-	pc.code_type,
-	(select name from meta.config where id = pc.code_type ) as code_type_name,
-	pc.market_type,
-	(select name from meta.config where id = pc.market_type ) as market_type_name,
-	MP.PEEK,
-	MP.peek_range,
-	MP.PEEK_PERCENT,
-	MP.LIST
-FROM project.tb_monthly_peek MP
-	left join only  public.company pc on MP.code_id = pc.code_id
-WHERE mp.is_peek is true
---where peek =  extract(month FROM now()::timestamp)
-order by peek_percent desc 

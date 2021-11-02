@@ -48,10 +48,7 @@ BEGIN
 -- insert  project.func_lines
 --------------------
 PERFORM from project.func_lines();
---------------------
--- insert  project.func_monthly
---------------------
-PERFORM from project.func_monthly();
+
 --------------------
 --------------------
 -- update  public.info

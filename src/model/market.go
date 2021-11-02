@@ -116,6 +116,9 @@ func (o *PriceMarket) StringToPrice(str string) {
 	}
 
 	str_fr := strings.Replace(arr[6], ",", "", -1)
+	if str_fr == "" {
+		str_fr = "0"
+	}
 	o.ForeignerBurnoutRate = str_fr
 
 }
