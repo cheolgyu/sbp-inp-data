@@ -18,12 +18,12 @@ var pdone_load chan bool = make(chan bool)
 func init() {
 	upsert_price = true
 }
-func PriceHandler() {
+func PriceHandler(code_type int) {
 
 	log.Println(" PriceHandler  start")
 
 	list := dao.PriceMarketList{}
-	down_info, err := list.Get()
+	down_info, err := list.Get(code_type)
 	ChkErr(err)
 	exe := CodePriceData{}
 	exe.Save(down_info)

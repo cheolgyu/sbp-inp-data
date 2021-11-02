@@ -39,7 +39,10 @@ func (p *Project) Run() {
 
 	//dao.Before_closing()
 	//handler.ExecCompanyHandler()
-	handler.PriceHandler()
+	// 마켓
+	handler.PriceHandler(1)
+	// 종목
+	handler.PriceHandler(2)
 	//rebound.ReBoundHandler()
 	//dao.After_closing()
 	//peek.MonthlyPeekHandler()

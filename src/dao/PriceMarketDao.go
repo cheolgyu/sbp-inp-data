@@ -13,7 +13,7 @@ import (
 type PriceMarketList struct {
 }
 
-func (o *PriceMarketList) Get() ([]model.DownloadInfo, error) {
+func (o *PriceMarketList) Get(code_type int) ([]model.DownloadInfo, error) {
 	var res []model.DownloadInfo
 	query := `
 select 
@@ -21,8 +21,9 @@ select
 	,coalesce(max( hp.dt),19560303)::text as start_dt 
 	,to_char( now(), 'YYYYMMDD')::text as end_dt
  from meta.code mc left join hist.price hp on mc.id = hp.code_id
- where mc.code_type = 1
- group by mc.id, mc.code_type
+ where mc.code_type = `
+	query += fmt.Sprint(code_type)
+	query += ` group by mc.id, mc.code_type
 `
 	log.Println(query)
 	rows, err := db.Conn.QueryContext(context.Background(), query)
