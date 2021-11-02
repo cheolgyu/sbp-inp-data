@@ -3,10 +3,12 @@ package handler
 import (
 	"fmt"
 	"log"
+	"strings"
 
+	"github.com/cheolgyu/stock-write-model/model"
 	"github.com/cheolgyu/stock-write/src/c"
 	"github.com/cheolgyu/stock-write/src/dao"
-	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/cheolgyu/stock-write/src/utils"
 	"github.com/cheolgyu/stock-write/src/utils/download"
 	"github.com/tealeg/xlsx"
 )
@@ -200,8 +202,8 @@ func (o *DetailList) download() {
 	sheet := xlFile.Sheets[0]
 	for i := 1; i < sheet.MaxRow; i++ {
 		row := sheet.Row(i)
-		_, content := model.RowGet(row)
-		detail := model.StringToCompanyDetail(content)
+		_, content := utils.RowGet(row)
+		detail := stringToCompanyDetail(content)
 
 		if _, exist := meta_code_stock[detail.Code]; !exist {
 			meta_code_new[detail.Code] = 1
@@ -242,8 +244,8 @@ func (o *StateList) download() {
 	sheet := xlFile.Sheets[0]
 	for i := 1; i < sheet.MaxRow; i++ {
 		row := sheet.Row(i)
-		_, content := model.RowGet(row)
-		state := model.StringToCompanyState(content)
+		_, content := utils.RowGet(row)
+		state := stringToCompanyState(content)
 
 		if _, exist := meta_code_stock[state.Code]; !exist {
 			meta_code_new[state.Code] = 1
@@ -261,4 +263,57 @@ func (o *StateList) insert() {
 
 	err := dao.InsertCompanyState(o.List)
 	ChkErr(err)
+}
+
+func stringToCompanyDetail(str string) model.CompanyDetail {
+	arr := strings.Split(str, c.XLSX_SPLIT)
+	item := model.CompanyDetail{}
+	item.Full_code = arr[0]
+	item.Code = arr[1]
+	item.Full_name_kr = arr[2]
+	item.Name = arr[3]
+	item.Full_name_eng = arr[4]
+
+	item.Listing_date = arr[5]
+	item.Market = arr[6]
+	item.Securities_classification = arr[7]
+	item.Department = arr[8]
+	item.Stock_type = arr[9]
+
+	item.Face_value = arr[10]
+	item.Listed_stocks = arr[11]
+	return item
+}
+
+func stringToCompanyState(str string) model.CompanyState {
+	o := model.CompanyState{}
+	arr := strings.Split(str, c.XLSX_SPLIT)
+
+	txt_replace := strings.NewReplacer("'", " ")
+
+	o.Code = txt_replace.Replace(arr[0])
+	o.Name = txt_replace.Replace(arr[1])
+	o.Stop = ox(arr[2])
+	o.Clear = ox(arr[3])
+	o.Managed = ox(arr[4])
+
+	o.Ventilation = ox(arr[5])
+	o.Unfaithful = ox(arr[6])
+	o.Lack_listed = ox(arr[7])
+	o.Overheated = ox(arr[8])
+
+	o.Caution = ox(arr[9])
+	o.Warning = ox(arr[10])
+	o.Risk = ox(arr[11])
+	return o
+}
+
+func ox(ox string) bool {
+
+	if ox == "X" {
+		return false
+	} else {
+		return true
+	}
+
 }

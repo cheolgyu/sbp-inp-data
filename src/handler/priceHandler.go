@@ -5,8 +5,8 @@ import (
 	"log"
 	"sync"
 
+	"github.com/cheolgyu/stock-write-model/model"
 	"github.com/cheolgyu/stock-write/src/dao"
-	"github.com/cheolgyu/stock-write/src/model"
 	"github.com/cheolgyu/stock-write/src/utils/download"
 )
 

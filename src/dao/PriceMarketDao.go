@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/cheolgyu/stock-write/src/db"
-	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/cheolgyu/stock-write-common/db"
+	"github.com/cheolgyu/stock-write-model/model"
 	"github.com/lib/pq"
 )
 

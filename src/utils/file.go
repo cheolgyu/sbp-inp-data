@@ -7,6 +7,23 @@ import (
 	"github.com/cheolgyu/stock-write/src/c"
 )
 
+func init() {
+
+	mkdir := []string{
+		c.DOWNLOAD_DIR_COMPANY_DETAIL,
+		c.DOWNLOAD_DIR_COMPANY_STATE,
+		c.DOWNLOAD_DIR_PRICE,
+		c.DOWNLOAD_DIR_MARKET,
+	}
+
+	for _, item := range mkdir {
+		err := os.MkdirAll(item, 0755)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 type File struct{}
 
 func (o *File) Open(fileName string) *os.File {
@@ -33,23 +50,5 @@ func (o *File) CheckError(err error) {
 	if err != nil {
 		log.Fatalln(err)
 		panic(err)
-	}
-}
-
-func (o *File) Init() {
-
-	mkdir := []string{
-		c.DOWNLOAD_DIR_COMPANY_DETAIL,
-		c.DOWNLOAD_DIR_COMPANY_STATE,
-		c.DOWNLOAD_DIR_PRICE,
-		c.DOWNLOAD_DIR_MARKET,
-		c.SQL_DIR_DAILY,
-	}
-
-	for _, item := range mkdir {
-		err := os.MkdirAll(item, 0755)
-		if err != nil {
-			panic(err)
-		}
 	}
 }

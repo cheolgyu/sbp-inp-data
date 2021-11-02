@@ -87,6 +87,3 @@ CREATE TABLE "public"."info" (
     "updated" timestamp,
     CONSTRAINT "info_name" PRIMARY KEY ("name")
 ) WITH (oids = false);
-
-INSERT INTO "info" ("name", "updated") VALUES
-('updated',	NULL);

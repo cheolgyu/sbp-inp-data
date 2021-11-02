@@ -3,8 +3,9 @@ package dao
 import (
 	"log"
 
-	"github.com/cheolgyu/stock-write/src/db"
-	"github.com/cheolgyu/stock-write/src/model"
+	"github.com/cheolgyu/stock-write-common/db"
+	"github.com/cheolgyu/stock-write-model/model"
+	"github.com/cheolgyu/stock-write/src/c"
 )
 
 func GetConfig() (map[string]int, error) {
@@ -110,26 +111,6 @@ func Before_closing() error {
 }
 
 /*
-insert  project.func_lines
-
-insert  project.func_monthly
-
-update  public.info
-*/
-func After_closing() error {
-	client := db.Conn
-	q_insert := ` SELECT 1 FROM public.after_closing() ;`
-	_, err := client.Exec(q_insert)
-	if err != nil {
-		log.Println("after_closing :Prepare 오류: ")
-		log.Fatal(err)
-		panic(err)
-	}
-
-	return err
-}
-
-/*
 1. insert  meta.opening
 */
 func InsertOpening(dt int) error {
@@ -158,4 +139,16 @@ func InsertOpening(dt int) error {
 	}
 
 	return err
+}
+
+func Update_info() {
+	query := `INSERT INTO public.info( name, updated) VALUES ('`
+	query += c.INFO_NAME_UPDATED
+	query += `', now()) ON CONFLICT ("name") DO UPDATE SET  updated= now()  `
+
+	_, err := db.Conn.Exec(query)
+	if err != nil {
+		log.Fatalln(err, query)
+		panic(err)
+	}
 }

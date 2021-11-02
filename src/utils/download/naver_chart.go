@@ -11,8 +11,8 @@ import (
 	"log"
 	"strings"
 
+	"github.com/cheolgyu/stock-write-model/model"
 	"github.com/cheolgyu/stock-write/src/c"
-	"github.com/cheolgyu/stock-write/src/model"
 )
 
 type NaverChart struct {

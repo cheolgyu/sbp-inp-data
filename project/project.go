@@ -7,7 +7,7 @@ import (
 	"github.com/cheolgyu/stock-write/src/dao"
 	"github.com/cheolgyu/stock-write/src/handler"
 
-	"github.com/cheolgyu/stock-write/src/utils"
+	_ "github.com/cheolgyu/stock-write/src/utils"
 )
 
 type Project struct {
@@ -34,17 +34,12 @@ func SetConfig() {
 */
 func (p *Project) Run() {
 
-	uf := utils.File{}
-	uf.Init()
-
 	//dao.Before_closing()
-	//handler.ExecCompanyHandler()
+	handler.ExecCompanyHandler()
 	// 마켓
-	handler.PriceHandler(1)
-	// 종목
 	handler.PriceHandler(2)
-	//dao.After_closing()
-	//peek.MonthlyPeekHandler()
+	// // 종목
+	handler.PriceHandler(1)
+	dao.Update_info()
 
-	// api 에서 사용할 view+table 확인 + api 수정
 }

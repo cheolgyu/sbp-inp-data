@@ -30,7 +30,7 @@ var DownloadPrice bool
 const FILE_FLAG_APPEND = os.O_RDWR | os.O_CREATE | os.O_APPEND
 const FILE_FLAG_TRUNC = os.O_RDWR | os.O_CREATE | os.O_TRUNC
 
-const INFO_NAME_UPDATED = "updated"
+const INFO_NAME_UPDATED = "updated_stock_write"
 
 var PRICE_DATE_FORMAT = "20060102"
 var PRICE_DEFAULT_START_DATE = ""
