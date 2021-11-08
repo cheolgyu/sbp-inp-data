@@ -21,6 +21,9 @@
     ,('market_type','지수종류','KONEX','코넥스')
     ,('market_type','지수종류','FUT','선물')
     ,('market_type','지수종류','KPI200','코스피200')
+    ,('unit_type','단위종류','1','주')
+    ,('unit_type','단위종류','2','월')
+    ,('unit_type','단위종류','3','분기')
   on conflict do nothing;
 
   DROP TABLE IF  EXISTS meta.code CASCADE;
