@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/cheolgyu/stock-write/src/c"
+	"github.com/cheolgyu/sbp-inp-data/src/c"
 )
 
 /*

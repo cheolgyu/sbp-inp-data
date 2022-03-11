@@ -133,10 +133,10 @@ DB 구조 변경후
 
    | item                | lang   | dev   | prod  |
    | ------------------- | ------ | ----- | ----- |
-   | stock-write         | golang | local | ec2.1 |
-   | stock-write-ticke   | golang | local | ec2.1 |
+   | sbp-inp-data         | golang | local | ec2.1 |
+   | sbp-inp-data-ticke   | golang | local | ec2.1 |
    | database            | pg     | local | ec2.1 |
-   | stock-read-pub-api  | golang | local | ec2.1 |
+   | sf-pub-api  | golang | local | ec2.1 |
    | stock-read-pub-site | vuejs  | local | ec2.1 |
 
 ---   
@@ -149,14 +149,14 @@ DB 구조 변경후
    | 2021/06/19 | price | 13m41.4670019s | 1990년부터 | 데스크탑 절전 전 | mongo    |
 ---
 ## 설치
-stock-write
-   1. cd stock-write
+sbp-inp-data
+   1. cd sbp-inp-data
    2. go run . -run=init  (오래걸림: 모든 종목 시세데이터 가져옴.)
     
 ---
 ## 실행
 1. dbment
-   1. cd stock-write
+   1. cd sbp-inp-data
    2. go run . -run=daily
 
 
@@ -169,7 +169,7 @@ $env:GOARCH = 'amd64'
     
 ```
 1. dbment
-   1. cd stock-write
+   1. cd sbp-inp-data
    2. go build -o bin/dbment main.go 
 2. ticker
    1. cd backend/ticker    
@@ -276,7 +276,7 @@ db => 몽고디비로 바꾸기.+ db함수 다 바꿔야됨 오래걸림
 dbment -> mongo 에 쓰고 
 mongo의 일별 데이터만 redis 에 넣고    
 redis와 api 연결지어 출력하기   
---> mongo 브랜치-stock-write/test/mongo.go 에 일부분 작성함.
+--> mongo 브랜치-sbp-inp-data/test/mongo.go 에 일부분 작성함.
 
 ```
 ---
@@ -417,8 +417,8 @@ redis와 api 연결지어 출력하기
 
 + 프로젝트명 바꾸기.
    + STOCK
-      + stock-write
-      + stock-write-ticker
+      + sbp-inp-data
+      + sb-exe
       + stock-read-http-api
       + stock-read-http
 + front

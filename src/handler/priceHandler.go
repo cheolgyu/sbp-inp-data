@@ -5,9 +5,9 @@ import (
 	"log"
 	"sync"
 
-	"github.com/cheolgyu/stock-write-model/model"
-	"github.com/cheolgyu/stock-write/src/dao"
-	"github.com/cheolgyu/stock-write/src/utils/download"
+	"github.com/cheolgyu/sbm-struct/model"
+	"github.com/cheolgyu/sbp-inp-data/src/dao"
+	"github.com/cheolgyu/sbp-inp-data/src/utils/download"
 )
 
 var upsert_price bool

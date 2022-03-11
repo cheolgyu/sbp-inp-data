@@ -1,9 +1,9 @@
 package main
 
 import (
-	_ "github.com/cheolgyu/stock-write-common/env"
-	"github.com/cheolgyu/stock-write-common/logging"
-	"github.com/cheolgyu/stock-write/project"
+	_ "github.com/cheolgyu/sbm-base/env"
+	"github.com/cheolgyu/sbm-base/logging"
+	"github.com/cheolgyu/sbp-inp-data/project"
 )
 
 func main() {

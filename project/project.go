@@ -3,11 +3,11 @@ package project
 import (
 	"log"
 
-	"github.com/cheolgyu/stock-write/src/c"
-	"github.com/cheolgyu/stock-write/src/dao"
-	"github.com/cheolgyu/stock-write/src/handler"
+	"github.com/cheolgyu/sbp-inp-data/src/c"
+	"github.com/cheolgyu/sbp-inp-data/src/dao"
+	"github.com/cheolgyu/sbp-inp-data/src/handler"
 
-	_ "github.com/cheolgyu/stock-write/src/utils"
+	_ "github.com/cheolgyu/sbp-inp-data/src/utils"
 )
 
 type Project struct {
