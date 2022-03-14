@@ -136,7 +136,7 @@ DB 구조 변경후
    | input         | golang | local | ec2.1 |
    | input-ticke   | golang | local | ec2.1 |
    | database            | pg     | local | ec2.1 |
-   | sf-pub-api  | golang | local | ec2.1 |
+   | pubapi  | golang | local | ec2.1 |
    | stock-read-pub-site | vuejs  | local | ec2.1 |
 
 ---   
