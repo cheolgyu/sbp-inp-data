@@ -11,8 +11,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/cheolgyu/sbm-struct/model"
-	"github.com/cheolgyu/sbp-inp-data/src/c"
+	"github.com/cheolgyu/input/src/c"
+	"github.com/cheolgyu/model"
 )
 
 type NaverChart struct {

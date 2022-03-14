@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cheolgyu/sbp-inp-data/src/c"
+	"github.com/cheolgyu/input/src/c"
 	"github.com/tealeg/xlsx"
 )
 

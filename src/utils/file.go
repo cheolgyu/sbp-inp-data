@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cheolgyu/sbp-inp-data/src/c"
+	"github.com/cheolgyu/input/src/c"
 )
 
 func init() {

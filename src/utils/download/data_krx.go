@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/cheolgyu/sbp-inp-data/src/c"
+	"github.com/cheolgyu/input/src/c"
 )
 
 type Data_krx struct {

@@ -1,9 +1,9 @@
 package main
 
 import (
-	_ "github.com/cheolgyu/sbm-base/env"
-	"github.com/cheolgyu/sbm-base/logging"
-	"github.com/cheolgyu/sbp-inp-data/project"
+	_ "github.com/cheolgyu/base/env"
+	"github.com/cheolgyu/base/logging"
+	"github.com/cheolgyu/input/project"
 )
 
 func main() {

@@ -5,11 +5,11 @@ import (
 	"log"
 	"strings"
 
-	"github.com/cheolgyu/sbm-struct/model"
-	"github.com/cheolgyu/sbp-inp-data/src/c"
-	"github.com/cheolgyu/sbp-inp-data/src/dao"
-	"github.com/cheolgyu/sbp-inp-data/src/utils"
-	"github.com/cheolgyu/sbp-inp-data/src/utils/download"
+	"github.com/cheolgyu/input/src/c"
+	"github.com/cheolgyu/input/src/dao"
+	"github.com/cheolgyu/input/src/utils"
+	"github.com/cheolgyu/input/src/utils/download"
+	"github.com/cheolgyu/model"
 	"github.com/tealeg/xlsx"
 )
 

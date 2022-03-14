@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/cheolgyu/sbm-base/db"
-	"github.com/cheolgyu/sbm-struct/model"
+	"github.com/cheolgyu/base/db"
+	"github.com/cheolgyu/model"
 )
 
 func InsertCompanyState(list []model.CompanyState) error {
