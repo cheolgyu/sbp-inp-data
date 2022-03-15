@@ -3,7 +3,7 @@ package main
 import (
 	_ "github.com/cheolgyu/base/env"
 	"github.com/cheolgyu/base/logging"
-	"github.com/cheolgyu/input/project"
+	"github.com/cheolgyu/write/project"
 )
 
 func main() {

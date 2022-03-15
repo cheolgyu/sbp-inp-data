@@ -1,4 +1,4 @@
-module github.com/cheolgyu/input
+module github.com/cheolgyu/write
 
 go 1.16
 

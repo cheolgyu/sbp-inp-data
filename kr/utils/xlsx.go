@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cheolgyu/input/src/c"
+	"github.com/cheolgyu/write/kr/c"
 	"github.com/tealeg/xlsx"
 )
 

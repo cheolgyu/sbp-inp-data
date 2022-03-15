@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/cheolgyu/base/db"
-	"github.com/cheolgyu/input/src/c"
 	"github.com/cheolgyu/model"
+	"github.com/cheolgyu/write/kr/c"
 )
 
 func GetConfig() (map[string]int, error) {

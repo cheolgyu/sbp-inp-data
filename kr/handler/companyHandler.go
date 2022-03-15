@@ -5,11 +5,11 @@ import (
 	"log"
 	"strings"
 
-	"github.com/cheolgyu/input/src/c"
-	"github.com/cheolgyu/input/src/dao"
-	"github.com/cheolgyu/input/src/utils"
-	"github.com/cheolgyu/input/src/utils/download"
 	"github.com/cheolgyu/model"
+	"github.com/cheolgyu/write/kr/c"
+	"github.com/cheolgyu/write/kr/dao"
+	"github.com/cheolgyu/write/kr/utils"
+	"github.com/cheolgyu/write/kr/utils/download"
 	"github.com/tealeg/xlsx"
 )
 

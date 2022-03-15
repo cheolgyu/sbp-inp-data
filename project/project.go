@@ -3,11 +3,11 @@ package project
 import (
 	"log"
 
-	"github.com/cheolgyu/input/src/c"
-	"github.com/cheolgyu/input/src/dao"
-	"github.com/cheolgyu/input/src/handler"
+	"github.com/cheolgyu/write/kr/c"
+	"github.com/cheolgyu/write/kr/dao"
+	"github.com/cheolgyu/write/kr/handler"
 
-	_ "github.com/cheolgyu/input/src/utils"
+	_ "github.com/cheolgyu/write/kr/utils"
 )
 
 type Project struct {

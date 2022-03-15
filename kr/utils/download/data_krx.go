@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/cheolgyu/input/src/c"
+	"github.com/cheolgyu/write/kr/c"
 )
 
 type Data_krx struct {

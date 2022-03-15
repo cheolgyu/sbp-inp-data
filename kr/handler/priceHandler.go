@@ -5,9 +5,9 @@ import (
 	"log"
 	"sync"
 
-	"github.com/cheolgyu/input/src/dao"
-	"github.com/cheolgyu/input/src/utils/download"
 	"github.com/cheolgyu/model"
+	"github.com/cheolgyu/write/kr/dao"
+	"github.com/cheolgyu/write/kr/utils/download"
 )
 
 var upsert_price bool

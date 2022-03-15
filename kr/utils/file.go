@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cheolgyu/input/src/c"
+	"github.com/cheolgyu/write/kr/c"
 )
 
 func init() {
