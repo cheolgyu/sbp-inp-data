@@ -61,6 +61,12 @@ func getMetaCode(code_type int) map[string]int {
 	//log.Println("code_stock=", len(code_stock))
 }
 
+func add_meta_code(code string) {
+	if _, exist := meta_code_stock[code]; !exist {
+		meta_code_new[code] = 1
+	}
+}
+
 func ExecCompanyHandler() {
 	meta_code_stock = getMetaCode(c.Config["stock"])
 
@@ -185,7 +191,6 @@ type DetailList struct {
 }
 
 func (o *DetailList) download() {
-	f_download := c.DOWNLOAD_DIR_COMPANY_DETAIL + c.DOWNLOAD_FILENAME_COMPANY_DETAIL
 	if c.DownloadCompany {
 		download_data_krx := download.Data_krx{
 			Object: c.COMPANY_DETAIL,
@@ -193,7 +198,7 @@ func (o *DetailList) download() {
 		download_data_krx.Run()
 	}
 
-	xlFile, err := xlsx.OpenFile(f_download)
+	xlFile, err := xlsx.OpenFile(c.DOWNLOAD_COMPANY_DETAIL)
 	if err != nil {
 		log.Println("오류발생.CompanyHandler.xlFile.DOWNLOAD_DIR_COMPANY_DETAIL ")
 		log.Panic(err)
@@ -205,9 +210,8 @@ func (o *DetailList) download() {
 		_, content := utils.RowGet(row)
 		detail := stringToCompanyDetail(content)
 
-		if _, exist := meta_code_stock[detail.Code]; !exist {
-			meta_code_new[detail.Code] = 1
-		}
+		add_meta_code(detail.Code)
+
 		o.List = append(o.List, detail)
 	}
 
@@ -227,7 +231,7 @@ type StateList struct {
 }
 
 func (o *StateList) download() {
-	f_download := c.DOWNLOAD_DIR_COMPANY_STATE + c.DOWNLOAD_FILENAME_COMPANY_STATE
+
 	if c.DownloadCompany {
 		download_data_krx := download.Data_krx{
 			Object: c.COMPANY_STATE,
@@ -235,7 +239,7 @@ func (o *StateList) download() {
 		download_data_krx.Run()
 	}
 
-	xlFile, err := xlsx.OpenFile(f_download)
+	xlFile, err := xlsx.OpenFile(c.DOWNLOAD_COMPANY_STATE)
 	if err != nil {
 		log.Println("오류발생.CompanyHandler.xlFile.StateList ")
 		log.Panic(err)
@@ -247,9 +251,7 @@ func (o *StateList) download() {
 		_, content := utils.RowGet(row)
 		state := stringToCompanyState(content)
 
-		if _, exist := meta_code_stock[state.Code]; !exist {
-			meta_code_new[state.Code] = 1
-		}
+		add_meta_code(state.Code)
 
 		o.List = append(o.List, state)
 
